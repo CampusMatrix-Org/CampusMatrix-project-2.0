@@ -1,0 +1,438 @@
+openapi: 3.0.3
+info:
+  title: CampusMatrix API
+  version: 2.1.0
+  description: Complete production-grade API contract for CampusMatrix including AI, Stress Analytics, and Admin controls. (Bug Fixed Version)
+servers:
+  - url: http://localhost:8080/api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: User Preferences
+  - name: Dashboard
+  - name: Tasks & Exams
+  - name: Library
+  - name: AI Assistant
+  - name: Analytics
+  - name: Admin
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+    RegisterRequest:
+      type: object
+      required:
+        - fullName
+        - email
+        - password
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+        degree:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+            role:
+              type: string
+              example: Student
+    UserPreferences:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum:
+            - light
+            - dark
+          example: dark
+        language:
+          type: string
+          example: en
+    StudentDashboard:
+      type: object
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        exams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exam'
+        flashcardDecks:
+          type: array
+          items:
+            type: string
+        focusSettings:
+          type: object
+          properties:
+            focusTime:
+              type: integer
+              example: 25
+            shortBreak:
+              type: integer
+              example: 5
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        courseId:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+        priority:
+          type: string
+          enum:
+            - low
+            - medium
+            - high
+        status:
+          type: string
+          enum:
+            - pending
+            - in-progress
+            - completed
+    Exam:
+      type: object
+      properties:
+        id:
+          type: string
+        subject:
+          type: string
+        examDate:
+          type: string
+          format: date-time
+        targetGrade:
+          type: string
+    Analytics:
+      type: object
+      properties:
+        studyHours:
+          type: number
+        completionRate:
+          type: number
+        stressLevel:
+          type: string
+          enum:
+            - Low
+            - Moderate
+            - High
+            - Severe
+        stressScore:
+          type: integer
+          example: 75
+        stressFactors:
+          type: array
+          items:
+            type: string
+            example: 3 pending high-priority tasks and 1 upcoming exam
+    FlashcardGenerateRequest:
+      type: object
+      required:
+        - rawText
+      properties:
+        rawText:
+          type: string
+          description: Text pasted by user to generate flashcards
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+        email:
+          type: string
+        degree:
+          type: string
+        status:
+          type: string
+          enum:
+            - Active
+            - Suspended
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      security: []
+      summary: Login user (Student or Admin)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login success (Returns JWT and Role)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      security: []
+      summary: Register new student
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /users/me/preferences:
+    get:
+      tags:
+        - User Preferences
+      summary: Get user theme and language
+      responses:
+        '200':
+          description: Returns UserPreferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferences'
+    put:
+      tags:
+        - User Preferences
+      summary: Update user theme and language
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferences'
+      responses:
+        '200':
+          description: Preferences updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /dashboard/me:
+    get:
+      tags:
+        - Dashboard
+      summary: Get all personalized user data (Tasks, Exams, Flashcards, Settings)
+      responses:
+        '200':
+          description: Returns StudentDashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentDashboard'
+  /tasks:
+    post:
+      tags:
+        - Tasks & Exams
+      summary: Create new task (Used in Pop-ups)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /exams:
+    post:
+      tags:
+        - Tasks & Exams
+      summary: Add new exam countdown (Used in Pop-ups)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exam'
+      responses:
+        '201':
+          description: Exam added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /library/upload:
+    post:
+      tags:
+        - Library
+      summary: Upload document (Used in Pop-ups)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                folder:
+                  type: string
+      responses:
+        '201':
+          description: File uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /ai/chat:
+    post:
+      tags:
+        - AI Assistant
+      summary: Chat with AI (Maintains history in DB)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+      responses:
+        '200':
+          description: AI response text
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  reply:
+                    type: string
+  /ai/flashcards/generate:
+    post:
+      tags:
+        - AI Assistant
+      summary: Generate flashcards from pasted text
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlashcardGenerateRequest'
+      responses:
+        '200':
+          description: Array of generated flashcards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    question:
+                      type: string
+                    answer:
+                      type: string
+  /analytics/me:
+    get:
+      tags:
+        - Analytics
+      summary: Get user analytics and calculated stress level
+      responses:
+        '200':
+          description: Returns Analytics object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics'
+  /admin/students:
+    get:
+      tags:
+        - Admin
+      summary: Get full student list
+      responses:
+        '200':
+          description: Array of Students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+    post:
+      tags:
+        - Admin
+      summary: Add a new student manually
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '201':
+          description: Student added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /admin/students/{id}:
+    put:
+      tags:
+        - Admin
+      summary: Update student details (Triggers confirmation pop-up on UI)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Student updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
