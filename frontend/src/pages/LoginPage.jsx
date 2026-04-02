@@ -34,8 +34,15 @@ function LoginPage() {
       });
 
       if (response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
-        localStorage.setItem('role', response.data.data.role);
+        const { token, role } = response.data.data;
+
+        if (formData.rememberMe) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('role', role);
+        } else {
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('role', role);
+        }
         
         alert("Login Successful! Going to Dashboard...");
         // navigate('/dashboard'); 
