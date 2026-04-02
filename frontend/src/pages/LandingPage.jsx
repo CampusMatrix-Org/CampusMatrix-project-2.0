@@ -35,7 +35,9 @@ function LandingPage() {
           <Link to="/register">
             <button className="btn primary-btn">Sign Up</button>
           </Link>
-          <button className="btn secondary-btn">Login</button>
+          <Link to="/login">
+            <button className="btn secondary-btn">Login</button>
+          </Link>
         </div>
 
         {/* Features list */}
