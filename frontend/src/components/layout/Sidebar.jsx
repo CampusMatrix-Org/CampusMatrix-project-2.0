@@ -14,6 +14,11 @@ function Sidebar() {
     { name: 'Settings', path: '/settings', icon: '⚙️' },
   ];
 
+
+  const totalStorageGB = 10;
+  const usedStorageGB = 6.5;
+  const storagePercentage = (usedStorageGB / totalStorageGB) * 100;
+
   return (
     <div className="sidebar">
       <div className="sidebar-logo">
@@ -34,13 +39,15 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-bottom">
-        {/* Classes okkoma storage walata change kala */}
         <div className="storage-widget">
           <p className="storage-title">Storage</p>
           <div className="storage-bar-bg">
-            <div className="storage-bar-fill" style={{ width: '65%' }}></div>
+            <div 
+              className="storage-bar-fill" 
+              style={{ width: `${storagePercentage}%` }}
+            ></div>
           </div>
-          <p className="storage-value">65% of 100GB used</p>
+          <p className="storage-value">{usedStorageGB}GB of {totalStorageGB}GB used</p>
         </div>
       </div>
     </div>
