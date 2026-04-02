@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: CampusMatrix API
-  version: 2.1.0
-  description: Complete production-grade API contract for CampusMatrix including AI, Stress Analytics, and Admin controls. (Bug Fixed Version)
+  version: 2.1.1
+  description: Complete production-grade API contract for CampusMatrix including AI, Stress Analytics, and Admin controls. (Updated with Forgot Password & Remember Me)
 servers:
   - url: http://localhost:8080/api/v1
 security:
@@ -194,11 +194,17 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - email
+                - password
               properties:
                 email:
                   type: string
                 password:
                   type: string
+                rememberMe:
+                  type: boolean
+                  description: If true, backend should issue a long-lived token
       responses:
         '200':
           description: Login success (Returns JWT and Role)
@@ -220,6 +226,57 @@ paths:
       responses:
         '201':
           description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /auth/forgot-password:
+    post:
+      tags:
+        - Auth
+      security: []
+      summary: Send password reset link to user's email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Reset link sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /auth/reset-password:
+    post:
+      tags:
+        - Auth
+      security: []
+      summary: Reset password using the token sent to email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - newPassword
+              properties:
+                token:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: Password reset successfully
           content:
             application/json:
               schema:
