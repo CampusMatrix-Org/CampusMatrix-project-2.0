@@ -1,5 +1,6 @@
 import React from 'react';
 import './LandingPage.css';
+import { Link } from 'react-router-dom';
 
 function LandingPage() {
   return (
@@ -31,7 +32,9 @@ function LandingPage() {
         </p>
 
         <div className="button-group">
-          <button className="btn primary-btn">Sign Up</button>
+          <Link to="/register">
+            <button className="btn primary-btn">Sign Up</button>
+          </Link>
           <button className="btn secondary-btn">Login</button>
         </div>
 
