@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage'; 
+import DashboardPage from './pages/DashboardPage';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} /> 
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   );
