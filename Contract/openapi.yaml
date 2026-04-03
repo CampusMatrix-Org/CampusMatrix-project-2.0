@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: CampusMatrix API
-  version: 2.1.1
-  description: Complete production-grade API contract for CampusMatrix including AI, Stress Analytics, and Admin controls. (Updated with Forgot Password & Remember Me)
+  version: 2.1.2
+  description: Complete production-grade API contract for CampusMatrix including AI, Stress Analytics, Admin controls, and new Dashboard UI widgets.
 servers:
   - url: http://localhost:8080/api/v1
 security:
@@ -31,6 +31,7 @@ components:
           example: true
         message:
           type: string
+          
     RegisterRequest:
       type: object
       required:
@@ -48,6 +49,7 @@ components:
           minLength: 6
         degree:
           type: string
+          
     LoginResponse:
       type: object
       properties:
@@ -64,6 +66,7 @@ components:
             role:
               type: string
               example: Student
+              
     UserPreferences:
       type: object
       properties:
@@ -76,9 +79,54 @@ components:
         language:
           type: string
           example: en
+          
     StudentDashboard:
       type: object
       properties:
+        # --- NEW DASHBOARD UI DATA ADDED HERE ---
+        storage:
+          type: object
+          properties:
+            usedGB:
+              type: number
+              format: float
+              example: 6.5
+            totalGB:
+              type: number
+              format: float
+              example: 10.0
+        schedule:
+          type: array
+          items:
+            type: object
+            properties:
+              time:
+                type: string
+              title:
+                type: string
+              location:
+                type: string
+              color:
+                type: string
+        semesterGoals:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              progress:
+                type: string
+              color:
+                type: string
+        currentGpa:
+          type: number
+          format: float
+          example: 3.8
+        totalCredits:
+          type: integer
+          example: 18
+        # --- PREVIOUS DATA RETAINED ---
         tasks:
           type: array
           items:
@@ -100,6 +148,7 @@ components:
             shortBreak:
               type: integer
               example: 5
+              
     Task:
       type: object
       properties:
@@ -109,6 +158,9 @@ components:
           type: string
         courseId:
           type: string
+        courseName:
+          type: string
+          description: Added for UI display (e.g. "Advanced Algorithms")
         dueDate:
           type: string
           format: date-time
@@ -124,6 +176,7 @@ components:
             - pending
             - in-progress
             - completed
+            
     Exam:
       type: object
       properties:
@@ -136,6 +189,7 @@ components:
           format: date-time
         targetGrade:
           type: string
+          
     Analytics:
       type: object
       properties:
@@ -158,6 +212,7 @@ components:
           items:
             type: string
             example: 3 pending high-priority tasks and 1 upcoming exam
+            
     FlashcardGenerateRequest:
       type: object
       required:
@@ -166,6 +221,7 @@ components:
         rawText:
           type: string
           description: Text pasted by user to generate flashcards
+          
     Student:
       type: object
       properties:
@@ -182,6 +238,7 @@ components:
           enum:
             - Active
             - Suspended
+
 paths:
   /auth/login:
     post:
@@ -212,6 +269,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
+                
   /auth/register:
     post:
       tags:
@@ -230,6 +288,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /auth/forgot-password:
     post:
       tags:
@@ -254,6 +313,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /auth/reset-password:
     post:
       tags:
@@ -281,6 +341,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /users/me/preferences:
     get:
       tags:
@@ -309,11 +370,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /dashboard/me:
     get:
       tags:
         - Dashboard
-      summary: Get all personalized user data (Tasks, Exams, Flashcards, Settings)
+      summary: Get all personalized user data (Tasks, Exams, Flashcards, Settings, Widgets)
       responses:
         '200':
           description: Returns StudentDashboard
@@ -321,6 +383,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentDashboard'
+                
   /tasks:
     post:
       tags:
@@ -338,6 +401,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /exams:
     post:
       tags:
@@ -355,6 +419,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /library/upload:
     post:
       tags:
@@ -378,6 +443,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /ai/chat:
     post:
       tags:
@@ -404,6 +470,7 @@ paths:
                     example: true
                   reply:
                     type: string
+                    
   /ai/flashcards/generate:
     post:
       tags:
@@ -428,6 +495,7 @@ paths:
                       type: string
                     answer:
                       type: string
+                      
   /analytics/me:
     get:
       tags:
@@ -440,6 +508,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Analytics'
+                
   /admin/students:
     get:
       tags:
@@ -470,6 +539,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SuccessResponse'
+                
   /admin/students/{id}:
     put:
       tags:
