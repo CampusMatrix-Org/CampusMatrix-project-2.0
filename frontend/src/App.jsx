@@ -1,23 +1,22 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import RegisterPage from './pages/RegisterPage';
-import LoginPage from './pages/LoginPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage'; 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { TaskProvider } from './context/TaskContext'; 
 import DashboardPage from './pages/DashboardPage';
+import TaskManagementPage from './pages/TaskManagementPage'; 
+import LoginPage from './pages/LoginPage';
 import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} /> 
-        <Route path="/dashboard" element={<DashboardPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <TaskProvider> 
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/tasks" element={<TaskManagementPage />} />
+        </Routes>
+      </TaskProvider>
+    </Router>
   );
 }
 
