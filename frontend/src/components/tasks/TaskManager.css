@@ -1,0 +1,149 @@
+/* Board Grid Layout */
+.board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  height: calc(100vh - 100px); 
+}
+
+/* Column Styles */
+.task-column {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid #F0F0F0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; 
+}
+
+.column-header {
+  padding: 20px 25px 0;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.column-header h3 {
+  font-size: 1.1rem;
+  color: #1A1A1A;
+  font-weight: 800;
+  margin: 0;
+}
+
+.column-content {
+  flex: 1;
+  padding: 0 25px 20px;
+}
+
+/* Task Card Styles */
+.task-card {
+  background: white;
+  border: 1.5px solid #F0F0F0;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: grab; 
+  transition: all 0.3s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.task-card:active {
+  cursor: grabbing; 
+}
+
+/* Priority Borders */
+.task-card.high { border-left: 4px solid #D63031; }
+.task-card.medium { border-left: 4px solid #FDCB6E; }
+.task-card.low { border-left: 4px solid #A0A0A0; }
+
+/* Priority Badges */
+.badge { font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 5px; margin-bottom: 8px; display: inline-block; letter-spacing: 0.5px; }
+.badge-high { background: #FFEAA7; color: #D63031; }
+.badge-medium { background: #FFF4E6; color: #D35400; }
+.badge-low { background: #F0F0F0; color: #636E72; }
+
+.task-card h4 { margin: 5px 0; font-size: 0.95rem; color: #1A1A1A; transition: color 0.3s; }
+.task-card p { margin: 0; font-size: 0.8rem; color: #888; transition: color 0.3s; }
+
+/* --- COMPLETED CARD GREEN STYLE --- */
+.task-card.completed-card {
+  background-color: #E8F5E9; 
+  border-color: #A5D6A7;
+  border-left: 4px solid #4CAF50; 
+}
+
+.task-card.completed-card h4 {
+  color: #2E7D32;
+  text-decoration: line-through; 
+}
+
+.task-card.completed-card p {
+  color: #4CAF50;
+}
+
+.task-card.completed-card .badge {
+  background: #C8E6C9;
+  color: #2E7D32;
+}
+
+/* Floating Action Button (FAB) */
+.fab-button {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  background: #FF7043;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0; 
+  padding-bottom: 5px; 
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(255, 112, 67, 0.3);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.fab-button:hover {
+  background: #E64A19;
+  box-shadow: 0 10px 20px rgba(230, 74, 25, 0.3);
+  transform: translateY(-5px);
+}
+
+/* Task Card Description & Date */
+.task-card .task-desc { 
+  margin: 0 0 12px 0; 
+  font-size: 0.8rem; 
+  color: #888; 
+  transition: color 0.3s; 
+}
+
+.task-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #A0A0A0;
+  border-top: 1px dashed #F0F0F0; 
+  padding-top: 10px;
+}
+
+.date-icon {
+  font-size: 0.85rem;
+}
+
+/* Completed Card Date Style */
+.task-card.completed-card .task-date {
+  color: #81C784;
+  border-top-color: #C8E6C9;
+}
