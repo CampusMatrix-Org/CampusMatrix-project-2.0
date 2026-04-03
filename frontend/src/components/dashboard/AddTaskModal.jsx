@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useTasks } from '../../context/TaskContext'; 
 import './Modal.css';
 
 function AddTaskModal({ isOpen, onClose }) {
+  const { addTask } = useTasks(); 
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    dueDate: ''
+    dueDate: '',
+    priority: 'medium' 
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,27 +25,26 @@ function AddTaskModal({ isOpen, onClose }) {
     setIsLoading(true);
     setError('');
 
-    try {
+    const payload = {
+      title: formData.title,
+      description: formData.description, 
+      dueDate: new Date(formData.dueDate).toISOString(),
+      status: 'to-do', 
+      priority: formData.priority 
+    };
 
+    try {
       const token = localStorage.getItem('token'); 
       
-      await axios.post('http://localhost:8080/api/v1/tasks', {
-        title: formData.title,
-        description: formData.description, 
-        dueDate: new Date(formData.dueDate).toISOString(),
-        status: 'pending',
-        priority: 'medium'
-      }, {
+      await axios.post('http://localhost:8080/api/v1/tasks', payload, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-
-      setFormData({ title: '', description: '', dueDate: '' });
+      addTask(payload); 
+      setFormData({ title: '', description: '', dueDate: '', priority: 'medium' });
       onClose();
-      
-
       alert('Task created successfully! 🎉'); 
       
     } catch (err) {
@@ -83,11 +85,26 @@ function AddTaskModal({ isOpen, onClose }) {
             <input 
               type="text" 
               name="description"
-              placeholder="First Project" 
+              placeholder="Description (e.g., Chapter 4 homework)" 
               value={formData.description}
               onChange={handleChange}
               required
             />
+          </div>
+
+          {/* Priority Dropdown */}
+          <div className="form-group">
+            <label>Priority Level</label>
+            <select 
+              name="priority" 
+              value={formData.priority} 
+              onChange={handleChange} 
+              style={{ width: '100%', padding: '12px 15px', borderRadius: '12px', border: '1.5px solid #EAEAEA', outline: 'none', cursor: 'pointer' }}
+            >
+              <option value="high">High Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="low">Low Priority</option>
+            </select>
           </div>
 
           <div className="form-group">
