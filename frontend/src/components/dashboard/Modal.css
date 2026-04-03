@@ -1,0 +1,134 @@
+/* Modal Overlay with Blur effect */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Card */
+.modal-card {
+  background: white;
+  width: 450px;
+  border-radius: 20px;
+  padding: 35px 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #A0A0A0;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #D63031;
+}
+
+.modal-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.6rem;
+  color: #1A1A1A;
+  font-weight: 800;
+}
+
+.modal-header p {
+  margin: 0 0 25px 0;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2D3436;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #FF7043;
+  box-shadow: 0 0 0 3px rgba(255, 112, 67, 0.1);
+}
+
+.btn-primary {
+  background: #FF7043;
+  color: white;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #E64A19;
+  box-shadow: 0 5px 15px rgba(230, 74, 25, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #FFB09C;
+  cursor: not-allowed;
+}
+
+.modal-error {
+  background: #FFEAA7;
+  color: #D63031;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Date Input Calendar Icon Customization & Hover */
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #FFF0EB;
+}

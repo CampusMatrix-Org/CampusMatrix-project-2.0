@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import AddTaskModal from './AddTaskModal';
 
 function PendingAssignments() {
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+
   return (
     <div className="widget-card flex-col">
       <div className="widget-header">
@@ -38,9 +41,22 @@ function PendingAssignments() {
           <p>Java OOP Workshop • Practical</p>
         </div>
       </div>
+      
       <div className="widget-fixed-footer">
-        <button className="btn outline-btn full-width">+ Add New Task</button>
+
+        <button 
+          className="btn outline-btn full-width" 
+          onClick={() => setIsModalOpen(true)}
+        >
+          + Add New Task
+        </button>
       </div>
+
+
+      <AddTaskModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }
