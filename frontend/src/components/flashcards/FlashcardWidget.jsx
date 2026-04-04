@@ -115,7 +115,6 @@ function FlashcardWidget({ onEditClick }) {
                 </div>
               </div>
 
-              {/* අලුතින් දාපු Navigation ටික */}
               <div className="card-navigation">
                 <button className="nav-btn" onClick={handlePrev} disabled={currentCardIndex === 0} title="Previous Card">
                   &larr;
