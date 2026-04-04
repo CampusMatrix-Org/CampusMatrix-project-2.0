@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './StudyTools.css';
 
-
+// Dummy data
 const toolsData = [
   { id: 1, title: 'Smart Flashcards', description: 'Spaced-repetition systems that adapt to your specific learning pace.', icon: '📇' },
   { id: 2, title: 'Focus Timer', description: 'Pomodoro techniques and LoFi audio to keep you in the deep work zone.', icon: '⏱️' },
@@ -20,7 +21,11 @@ function StudyToolsList() {
       
       <div className="study-tools-container">
         {toolsData.map((tool) => (
-          <div className="tool-card" key={tool.id}>
+          <Link 
+            to={tool.title === 'Smart Flashcards' ? '/smart-flashcards' : '#'} 
+            className="tool-card" 
+            key={tool.id}
+          >
             <div className="tool-icon-box">
               {tool.icon}
             </div>
@@ -28,7 +33,7 @@ function StudyToolsList() {
               <h4>{tool.title}</h4>
               <p>{tool.description}</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
