@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import TaskManagementPage from './pages/TaskManagementPage'; 
 import CalendarPage from './pages/CalendarPage';
 import StudyToolsPage from './pages/StudyToolsPage';
+import FlashcardsPage from './pages/FlashcardsPage';
 import LoginPage from './pages/LoginPage';
 import './App.css';
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/tasks" element={<TaskManagementPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/study-tools" element={<StudyToolsPage />} />
+          <Route path="/smart-flashcards" element={<FlashcardsPage />} />
         </Routes>
       </TaskProvider>
     </Router>
