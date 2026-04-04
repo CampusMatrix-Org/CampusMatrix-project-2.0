@@ -1,0 +1,65 @@
+.calendar-container {
+  flex: 1;
+  padding-bottom: 10px;
+}
+
+/* Overriding default react-big-calendar styles to match CampusMatrix */
+.rbc-calendar {
+  font-family: 'Inter', sans-serif;
+}
+
+.rbc-toolbar button {
+  border-radius: 8px;
+  color: #636E72;
+  border: 1px solid #EAEAEA;
+}
+
+.rbc-toolbar button.rbc-active {
+  background-color: #FF7043;
+  color: white;
+  border-color: #FF7043;
+  box-shadow: none;
+}
+
+.rbc-toolbar button:hover:not(.rbc-active) {
+  background-color: #FFF0EB;
+}
+
+.rbc-today {
+  background-color: #FFF9F6; /* Light orange for today */
+}
+
+.rbc-header {
+  padding: 10px 0;
+  font-weight: 700;
+  color: #2D3436;
+  border-bottom: 2px solid #F0F0F0;
+}
+
+/* Legend Styles */
+.calendar-legend {
+  display: flex;
+  gap: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #F0F0F0;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #636E72;
+}
+
+.color-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.color-box.blue { background-color: #2196F3; }
+.color-box.red { background-color: #FF5252; }
+.color-box.green { background-color: #4CAF50; }

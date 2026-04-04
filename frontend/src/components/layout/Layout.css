@@ -66,3 +66,13 @@
 .profile-name { font-size: 0.95rem; font-weight: 700; color: #2D3436; margin: 0; }
 .profile-degree { font-size: 0.75rem; color: #888; margin: 0; }
 .profile-avatar img { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; }
+
+/* Shared scroll area style for column content */
+.scrollable { 
+  flex: 1; 
+  overflow-y: auto; 
+  padding-right: 5px; 
+}
+/* Custom scrollbar neatness */
+.scrollable::-webkit-scrollbar { width: 4px; }
+.scrollable::-webkit-scrollbar-thumb { background-color: #E0E0E0; border-radius: 4px; }
