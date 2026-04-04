@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
-import './ForgotPasswordPage.css';
+import './LoginPage.css'; // Using the master CSS!
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -10,87 +10,42 @@ function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setMessage('');
-
+    e.preventDefault(); setLoading(true); setError(''); setMessage('');
     try {
       const response = await api.post('/auth/forgot-password', { email });
-      
-      if (response.data.success) {
-        setMessage("Success! We've sent password reset instructions to your email.");
-        setEmail(''); 
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to send reset instructions. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+      if (response.data.success) { setMessage("Success! We've sent password reset instructions to your email."); setEmail(''); }
+    } catch (err) { setError(err.response?.data?.message || "Failed to send reset instructions."); } 
+    finally { setLoading(false); }
   };
 
   return (
-    <div className="forgot-container">
-      {/* Left Panel */}
-      <div className="left-panel">
-        <div className="illustration-container">
-          <img src="/student.png" alt="Student Studying" className="student-img" />
-        </div>
-        
-        <div className="left-content">
-          <div className="logo-small">
-            <span className="icon">🏛️</span> CampusMatrix
-          </div>
-          <h1 className="left-title">Secure your access</h1>
-          <p className="left-subtitle">
-            Your progress is safe with us. Just follow the instructions to reset your password and continue your journey.
-          </p>
+    <div className="auth-container">
+      <div className="auth-left-panel">
+        <div className="auth-illustration-container"><img src="/student.png" alt="Student Studying" className="auth-student-img" /></div>
+        <div className="auth-left-content">
+          <div className="auth-logo-small"><span className="icon">🏛️</span> CampusMatrix</div>
+          <h1 className="auth-left-title">Secure your access</h1>
+          <p className="auth-left-subtitle">Your progress is safe with us. Just follow the instructions to reset your password.</p>
         </div>
       </div>
-
-      {/* Right Panel */}
-      <div className="right-panel">
-        {/* orange pulse animation */}
-        <div className="animated-bg">
-          <div className="ring orange-ring ring-1"></div>
-          <div className="ring orange-ring ring-2"></div>
-          <div className="ring orange-ring ring-3"></div>
-          <div className="ring orange-ring ring-4"></div>
-        </div>
-
-        <div className="form-container text-center">
-          <h2 className="form-title">Forgot Password?</h2>
-          <p className="form-subtitle">No worries, we'll send you reset instructions.</p>
-
-          {/* Messages */}
-          {error && <div className="error-message">{error}</div>}
-          {message && <div className="success-message">{message}</div>}
-
+      <div className="auth-right-panel">
+        <div className="auth-animated-bg"><div className="auth-ring ring-1"></div></div>
+        <div className="auth-form-container" style={{ textAlign: 'center' }}>
+          <h2 className="auth-form-title">Forgot Password?</h2>
+          <p className="auth-form-subtitle">No worries, we'll send you reset instructions.</p>
+          {error && <div className="auth-error-message">{error}</div>}
+          {message && <div className="auth-success-message">{message}</div>}
           <form onSubmit={handleSubmit}>
-            <div className="input-group text-left">
+            <div className="auth-input-group" style={{ textAlign: 'left' }}>
               <label>University Email</label>
-              <input 
-                type="email" 
-                name="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                placeholder="name@university.edu" 
-                required 
-              />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
-
-            <button type="submit" className="btn primary-btn full-width" disabled={loading}>
-              {loading ? "Sending..." : "Reset Password"}
-            </button>
+            <button type="submit" className="auth-btn auth-primary-btn" disabled={loading}>{loading ? "Sending..." : "Reset Password"}</button>
           </form>
-
-          <Link to="/login" className="back-to-login">
-            &larr; Back to Login
-          </Link>
+          <Link to="/login" className="auth-back-to-login">&larr; Back to Login</Link>
         </div>
       </div>
     </div>
   );
 }
-
 export default ForgotPasswordPage;
