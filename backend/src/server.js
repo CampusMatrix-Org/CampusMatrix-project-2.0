@@ -1,17 +1,21 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import connectDB from './config/db.js';
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Middlewares
-app.use(cors()); // Allow frontend to make requests
-app.use(express.json()); // Allow server to accept JSON data
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-// A simple test route to ensure the server is working
+// Connect to MongoDB
+connectDB();
+
+// Health route
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -19,10 +23,14 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
-// Set the port
+// Root route
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
+// Start server
 const PORT = process.env.PORT || 8080;
 
-// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
