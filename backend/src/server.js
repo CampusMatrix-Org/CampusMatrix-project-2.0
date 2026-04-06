@@ -2,18 +2,19 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
 connectDB();
+
+// Auth routes
+app.use('/api/v1/auth', authRoutes);
 
 // Health route
 app.get('/api/v1/health', (req, res) => {
@@ -23,12 +24,10 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
-// Root route
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-// Start server
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
