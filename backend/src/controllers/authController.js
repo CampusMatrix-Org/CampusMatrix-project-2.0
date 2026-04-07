@@ -138,3 +138,19 @@ export const getMe = async (req, res) => {
     });
   }
 };
+
+export const adminOnly = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome Admin',
+    data: req.user
+  });
+};
+
+export const studentOnly = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome Student',
+    data: req.user
+  });
+};
