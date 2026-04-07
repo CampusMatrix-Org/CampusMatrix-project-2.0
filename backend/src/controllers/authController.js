@@ -121,3 +121,20 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+export const getMe = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      message: 'Protected route accessed successfully',
+      data: req.user
+    });
+  } catch (error) {
+    console.error('GET ME ERROR:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
