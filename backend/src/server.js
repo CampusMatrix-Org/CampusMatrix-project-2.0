@@ -1,17 +1,24 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+// import authRoutes from './routes/authRoutes.js';
+// import userRoutes from './routes/userRoutes.js';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Middlewares
-app.use(cors()); // Allow frontend to make requests
-app.use(express.json()); // Allow server to accept JSON data
+app.use(cors());
+app.use(express.json());
 
-// A simple test route to ensure the server is working
+connectDB();
+
+// Routes
+// app.use('/api/v1/auth', authRoutes);
+// app.use('/api/v1/users', userRoutes);
+
+// Health route
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -19,10 +26,12 @@ app.get('/api/v1/health', (req, res) => {
   });
 });
 
-// Set the port
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
 const PORT = process.env.PORT || 8080;
 
-// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
