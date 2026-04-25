@@ -2,8 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+
 // import authRoutes from './routes/authRoutes.js';
 // import userRoutes from './routes/userRoutes.js';
+
+import taskRoutes from './routes/taskRoutes.js';
+import examRoutes from './routes/examRoutes.js';
+import calendarRoutes from './routes/calendarRoutes.js';
+import studySessionRoutes from './routes/studySessionRoutes.js';
 
 dotenv.config();
 
@@ -17,6 +23,11 @@ connectDB();
 // Routes
 // app.use('/api/v1/auth', authRoutes);
 // app.use('/api/v1/users', userRoutes);
+
+app.use('/api/v1/tasks', taskRoutes);
+app.use('/api/v1/exams', examRoutes);
+app.use('/api/v1/calendar', calendarRoutes);
+app.use('/api/v1/study-sessions', studySessionRoutes);
 
 // Health route
 app.get('/api/v1/health', (req, res) => {
