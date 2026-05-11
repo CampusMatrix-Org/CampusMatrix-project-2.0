@@ -1,15 +1,23 @@
 import Task from '../models/Task.js';
+import mongoose from 'mongoose';
 
 export const createTask = async (req, res) => {
   try {
     const { userId, title, description, courseId, courseName, dueDate, priority, status } = req.body;
 
-    if (!userId || !title) {
-      return res.status(400).json({
-        success: false,
-        message: 'userId and title are required'
-      });
-    }
+ if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Valid userId is required'
+  });
+}
+
+if (!title) {
+  return res.status(400).json({
+    success: false,
+    message: 'Title is required'
+  });
+}
 
     const task = await Task.create({
       userId,
@@ -39,12 +47,12 @@ export const getTasks = async (req, res) => {
   try {
     const { userId, status, priority } = req.query;
 
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        message: 'userId is required'
-      });
-    }
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Valid userId is required'
+  });
+}
 
     const filter = { userId };
 
@@ -69,6 +77,20 @@ export const getTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
   try {
     const { userId } = req.query;
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Invalid task ID'
+  });
+}
+
+if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Valid userId is required'
+  });
+}
 
     const task = await Task.findOne({
       _id: req.params.id,
@@ -97,6 +119,20 @@ export const getTaskById = async (req, res) => {
 export const updateTask = async (req, res) => {
   try {
     const { userId } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Invalid task ID'
+  });
+}
+
+if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Valid userId is required'
+  });
+}
 
     const task = await Task.findOneAndUpdate(
       { _id: req.params.id, userId },
@@ -128,6 +164,20 @@ export const deleteTask = async (req, res) => {
   try {
     const { userId } = req.query;
 
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Invalid task ID'
+  });
+}
+
+if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Valid userId is required'
+  });
+}
+
     const task = await Task.findOneAndDelete({
       _id: req.params.id,
       userId
@@ -155,6 +205,20 @@ export const deleteTask = async (req, res) => {
 export const updateTaskStatus = async (req, res) => {
   try {
     const { userId, status } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Invalid task ID'
+  });
+}
+
+if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+  return res.status(400).json({
+    success: false,
+    message: 'Valid userId is required'
+  });
+}
 
     if (!status) {
       return res.status(400).json({
