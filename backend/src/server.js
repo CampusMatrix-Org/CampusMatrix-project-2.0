@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 // import authRoutes from './routes/authRoutes.js';
 // import userRoutes from './routes/userRoutes.js';
@@ -28,6 +29,7 @@ app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/exams', examRoutes);
 app.use('/api/v1/calendar', calendarRoutes);
 app.use('/api/v1/study-sessions', studySessionRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // Health route
 app.get('/api/v1/health', (req, res) => {
