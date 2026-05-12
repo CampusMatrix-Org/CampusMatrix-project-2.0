@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   // --- Auth & Basic Profile ---
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true, lowercase: true },
+  studentId: { type: String, unique: true, sparse: true },
   password: { type: String, required: true }, // Will be hashed later
   role: { type: String, enum: ['Student', 'Admin'], default: 'Student' },
   degree: { type: String },
