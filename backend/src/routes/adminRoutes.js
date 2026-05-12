@@ -6,7 +6,11 @@ import {
   getStudents,
   addStudent,
   updateStudent,
-  updateStudentStatus
+  updateStudentStatus,
+  getResources,
+  getResourceById,
+  updateResourceModerationStatus,
+  deleteResource
 } from '../controllers/adminController.js';
 
 const router = express.Router();
@@ -19,4 +23,8 @@ router.post('/students', addStudent);
 router.put('/students/:id', updateStudent);
 router.patch('/students/:id/status', updateStudentStatus);
 
+router.get('/resources', getResources);
+router.get('/resources/:id', getResourceById);
+router.patch('/resources/:id/moderation', updateResourceModerationStatus);
+router.delete('/resources/:id', deleteResource);
 export default router;

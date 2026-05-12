@@ -253,3 +253,182 @@ export const updateStudentStatus = async (req, res) => {
     });
   }
 };
+
+export const getResources = async (req, res) => {
+  try {
+    const {
+      search,
+      status,
+      fileType,
+      page = 1,
+      limit = 10
+    } = req.query;
+
+    const filter = {};
+
+    if (status && status !== 'all') {
+      filter.moderationStatus = status;
+    }
+
+    if (fileType && fileType !== 'all') {
+      filter.fileType = fileType;
+    }
+
+    if (search) {
+      filter.$or = [
+        { fileName: { $regex: search, $options: 'i' } },
+        { folder: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const resources = await Document.find(filter)
+      .populate('userId', 'fullName email')
+      .populate('reviewedBy', 'fullName email')
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    const total = await Document.countDocuments(filter);
+
+    res.status(200).json({
+      success: true,
+      count: resources.length,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / Number(limit)),
+      data: resources
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const getResourceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid resource ID'
+      });
+    }
+
+    const resource = await Document.findById(id)
+      .populate('userId', 'fullName email')
+      .populate('reviewedBy', 'fullName email');
+
+    if (!resource) {
+      return res.status(404).json({
+        success: false,
+        message: 'Resource not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: resource
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const updateResourceModerationStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { moderationStatus, reviewedBy, rejectionReason } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid resource ID'
+      });
+    }
+
+    if (!['pending', 'approved', 'rejected', 'flagged'].includes(moderationStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: 'moderationStatus must be pending, approved, rejected or flagged'
+      });
+    }
+
+    if (reviewedBy && !mongoose.Types.ObjectId.isValid(reviewedBy)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid reviewer ID'
+      });
+    }
+
+    const resource = await Document.findByIdAndUpdate(
+      id,
+      {
+        moderationStatus,
+        reviewedBy: reviewedBy || null,
+        reviewedAt: new Date(),
+        rejectionReason: rejectionReason || ''
+      },
+      { new: true, runValidators: true }
+    )
+      .populate('userId', 'fullName email')
+      .populate('reviewedBy', 'fullName email');
+
+    if (!resource) {
+      return res.status(404).json({
+        success: false,
+        message: 'Resource not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Resource marked as ${moderationStatus}`,
+      data: resource
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const deleteResource = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid resource ID'
+      });
+    }
+
+    const resource = await Document.findByIdAndDelete(id);
+
+    if (!resource) {
+      return res.status(404).json({
+        success: false,
+        message: 'Resource not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Resource deleted successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
