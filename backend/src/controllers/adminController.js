@@ -432,3 +432,163 @@ export const deleteResource = async (req, res) => {
     });
   }
 };
+
+export const updateSystemSettings = async (req, res) => {
+  try {
+    let settings = await SystemSetting.findOne();
+
+    if (!settings) {
+      settings = await SystemSetting.create({});
+    }
+
+    const allowedUpdates = {
+      maintenanceMode: req.body.maintenanceMode,
+      twoFactorAuth: req.body.twoFactorAuth,
+      dailyApiLimit: req.body.dailyApiLimit,
+      tokensUsed: req.body.tokensUsed,
+      geminiApiKeyMasked: req.body.geminiApiKeyMasked
+    };
+
+    Object.keys(allowedUpdates).forEach(
+      key => allowedUpdates[key] === undefined && delete allowedUpdates[key]
+    );
+
+    const updatedSettings = await SystemSetting.findByIdAndUpdate(
+      settings._id,
+      allowedUpdates,
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'System settings updated successfully',
+      data: updatedSettings
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const updateMaintenanceMode = async (req, res) => {
+  try {
+    const { maintenanceMode } = req.body;
+
+    if (typeof maintenanceMode !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        message: 'maintenanceMode must be true or false'
+      });
+    }
+
+    let settings = await SystemSetting.findOne();
+
+    if (!settings) {
+      settings = await SystemSetting.create({});
+    }
+
+    settings.maintenanceMode = maintenanceMode;
+    await settings.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Maintenance mode ${maintenanceMode ? 'enabled' : 'disabled'}`,
+      data: settings
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const updateTwoFactorAuth = async (req, res) => {
+  try {
+    const { twoFactorAuth } = req.body;
+
+    if (typeof twoFactorAuth !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        message: 'twoFactorAuth must be true or false'
+      });
+    }
+
+    let settings = await SystemSetting.findOne();
+
+    if (!settings) {
+      settings = await SystemSetting.create({});
+    }
+
+    settings.twoFactorAuth = twoFactorAuth;
+    await settings.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Two-factor authentication ${twoFactorAuth ? 'enabled' : 'disabled'}`,
+      data: settings
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const updateApiUsageSettings = async (req, res) => {
+  try {
+    const { dailyApiLimit, tokensUsed, geminiApiKeyMasked } = req.body;
+
+    const updates = {};
+
+    if (dailyApiLimit !== undefined) {
+      if (typeof dailyApiLimit !== 'number' || dailyApiLimit < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'dailyApiLimit must be a positive number'
+        });
+      }
+      updates.dailyApiLimit = dailyApiLimit;
+    }
+
+    if (tokensUsed !== undefined) {
+      if (typeof tokensUsed !== 'number' || tokensUsed < 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'tokensUsed must be a positive number'
+        });
+      }
+      updates.tokensUsed = tokensUsed;
+    }
+
+    if (geminiApiKeyMasked !== undefined) {
+      updates.geminiApiKeyMasked = geminiApiKeyMasked;
+    }
+
+    let settings = await SystemSetting.findOne();
+
+    if (!settings) {
+      settings = await SystemSetting.create({});
+    }
+
+    const updatedSettings = await SystemSetting.findByIdAndUpdate(
+      settings._id,
+      updates,
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'API usage settings updated successfully',
+      data: updatedSettings
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

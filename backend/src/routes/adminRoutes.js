@@ -10,7 +10,11 @@ import {
   getResources,
   getResourceById,
   updateResourceModerationStatus,
-  deleteResource
+  deleteResource,
+  updateSystemSettings,
+  updateMaintenanceMode,
+  updateTwoFactorAuth,
+  updateApiUsageSettings
 } from '../controllers/adminController.js';
 
 const router = express.Router();
@@ -27,4 +31,9 @@ router.get('/resources', getResources);
 router.get('/resources/:id', getResourceById);
 router.patch('/resources/:id/moderation', updateResourceModerationStatus);
 router.delete('/resources/:id', deleteResource);
+
+router.patch('/settings', updateSystemSettings);
+router.patch('/settings/maintenance', updateMaintenanceMode);
+router.patch('/settings/2fa', updateTwoFactorAuth);
+router.patch('/settings/api-usage', updateApiUsageSettings);
 export default router;
