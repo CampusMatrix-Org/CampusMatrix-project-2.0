@@ -14,7 +14,10 @@ import {
   updateSystemSettings,
   updateMaintenanceMode,
   updateTwoFactorAuth,
-  updateApiUsageSettings
+  updateApiUsageSettings,
+  getAdminProfile,
+  updateAdminProfile,
+  changeAdminPassword
 } from '../controllers/adminController.js';
 
 const router = express.Router();
@@ -36,4 +39,8 @@ router.patch('/settings', updateSystemSettings);
 router.patch('/settings/maintenance', updateMaintenanceMode);
 router.patch('/settings/2fa', updateTwoFactorAuth);
 router.patch('/settings/api-usage', updateApiUsageSettings);
+
+router.get('/profile/:id', getAdminProfile);
+router.put('/profile/:id', updateAdminProfile);
+router.patch('/change-password/:id', changeAdminPassword);
 export default router;

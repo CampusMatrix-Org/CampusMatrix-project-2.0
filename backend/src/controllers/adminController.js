@@ -592,3 +592,139 @@ export const updateApiUsageSettings = async (req, res) => {
     });
   }
 };
+
+export const getAdminProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid admin ID'
+      });
+    }
+
+    const admin = await User.findOne({ _id: id, role: 'Admin' })
+      .select('-password -resetPasswordToken -resetPasswordExpire');
+
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin profile not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: admin
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const updateAdminProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullName, email, degree } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid admin ID'
+      });
+    }
+
+    const updates = {};
+
+    if (fullName !== undefined) updates.fullName = fullName;
+    if (email !== undefined) updates.email = email;
+    if (degree !== undefined) updates.degree = degree;
+
+    const admin = await User.findOneAndUpdate(
+      { _id: id, role: 'Admin' },
+      updates,
+      { new: true, runValidators: true }
+    ).select('-password -resetPasswordToken -resetPasswordExpire');
+
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin profile not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Admin profile updated successfully',
+      data: admin
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const changeAdminPassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid admin ID'
+      });
+    }
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password and new password are required'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'New password must be at least 6 characters'
+      });
+    }
+
+    const admin = await User.findOne({ _id: id, role: 'Admin' });
+
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin profile not found'
+      });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(currentPassword, admin.password);
+
+    if (!isPasswordMatch) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect'
+      });
+    }
+
+    admin.password = await bcrypt.hash(newPassword, 10);
+    await admin.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
