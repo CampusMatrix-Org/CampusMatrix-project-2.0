@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Layout.css';
 import { useSettings } from '../../context/SettingsContext';
 
 function Header() {
   const { t } = useSettings();
+  const navigate = useNavigate();
 
   return (
     <header className="header">
@@ -16,7 +18,7 @@ function Header() {
         <button className="notification-btn">
           🔔 <span className="notification-dot"></span>
         </button>
-        <div className="profile-section">
+        <div className="profile-section" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
           <div className="profile-info">
             <h4 className="profile-name">Jeewantha</h4>
             <p className="profile-degree">Software Engineering</p>
