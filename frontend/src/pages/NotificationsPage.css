@@ -1,0 +1,268 @@
+
+.noti-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header & Badge */
+.noti-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.noti-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.noti-page-title {
+  font-size: 1.8rem;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.noti-badge {
+  background: #FFDDCB;
+  color: #FF7043;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.noti-mark-read-btn {
+  background: transparent;
+  border: none;
+  color: #1A1A1A;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+
+.noti-mark-read-btn:hover {
+  color: #FF7043;
+}
+
+/* Tabs */
+.noti-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1.5px solid #FFDDCB;
+  padding-bottom: 15px;
+  overflow-x: auto;
+}
+
+.noti-tab {
+  background: transparent;
+  border: 1px solid #EAEAEA;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.noti-tab:hover {
+  border-color: #FF7043;
+  color: #FF7043;
+}
+
+.noti-tab.active {
+  background: #FF7043;
+  color: #FFF;
+  border-color: #FF7043;
+}
+
+/* Notification Groups & Cards */
+.noti-group {
+  margin-bottom: 35px;
+}
+
+.noti-group-title {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.noti-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.noti-card {
+  background: #FFF;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.noti-card:hover {
+  border-color: #FFDDCB;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.noti-card.unread {
+  background: #FFF9F6;
+  border-left: 4px solid #FF7043;
+  border-color: #FFDDCB;
+}
+
+.noti-icon {
+  font-size: 1.5rem;
+  background: #F8F9FA;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.noti-card.unread .noti-icon {
+  background: #FFFFFF;
+}
+
+.noti-content {
+  flex: 1;
+}
+
+.noti-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.noti-top h4 {
+  margin: 0;
+  color: #1A1A1A;
+  font-size: 1.05rem;
+}
+
+.noti-time {
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.noti-content p {
+  color: #666;
+  font-size: 0.95rem;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+/* Tags */
+.noti-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.noti-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.tag-system { background: #E3F2FD; color: #1976D2; }
+.tag-user { background: #F3E5F5; color: #7B1FA2; }
+.tag-default { background: #F5F5F5; color: #616161; }
+
+.noti-empty {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+  font-size: 1.1rem;
+}
+
+
+body.dark-mode .noti-page-title,
+body.dark-mode .noti-mark-read-btn {
+  color: #FFFFFF;
+}
+
+body.dark-mode .noti-badge {
+  background: #33211b;
+  color: #FF7043;
+}
+
+body.dark-mode .noti-tabs {
+  border-color: #2A2A2A;
+}
+
+body.dark-mode .noti-tab {
+  border-color: #333;
+  color: #A0A0A0;
+}
+
+body.dark-mode .noti-tab:hover {
+  border-color: #FF7043;
+  color: #FF7043;
+}
+
+body.dark-mode .noti-tab.active {
+  background: #FF7043;
+  color: #FFF;
+  border-color: #FF7043;
+}
+
+body.dark-mode .noti-card {
+  background: #1E1E1E;
+  border-color: #2A2A2A;
+}
+
+body.dark-mode .noti-card.unread {
+  background: #241A16; 
+  border-left-color: #FF7043;
+  border-color: #33211b;
+}
+
+body.dark-mode .noti-card:hover {
+  border-color: #FF7043;
+  background: #242424;
+}
+
+body.dark-mode .noti-top h4 {
+  color: #FFFFFF;
+}
+
+body.dark-mode .noti-content p {
+  color: #A0A0A0;
+}
+
+body.dark-mode .noti-icon {
+  background: #2A2A2A;
+}
+
+body.dark-mode .noti-card.unread .noti-icon {
+  background: #121212;
+}
+
+body.dark-mode .tag-system { background: rgba(25, 118, 210, 0.2); color: #64B5F6; }
+body.dark-mode .tag-user { background: rgba(123, 31, 162, 0.2); color: #BA68C8; }
+body.dark-mode .tag-default { background: #333; color: #E0E0E0; }

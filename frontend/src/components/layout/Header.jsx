@@ -15,7 +15,7 @@ function Header() {
       </div>
 
       <div className="header-right">
-        <button className="notification-btn">
+        <button className="notification-btn" onClick={() => navigate('/notifications')}>
           🔔 <span className="notification-dot"></span>
         </button>
         <div className="profile-section" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>

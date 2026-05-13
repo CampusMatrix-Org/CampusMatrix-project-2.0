@@ -19,6 +19,7 @@ import AIAssistantPage from './pages/AIAssistantPage';
 import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import NotificationsPage from './pages/NotificationsPage';
 
 import './App.css';
 
@@ -44,6 +45,7 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
           </Routes>
         </TaskProvider>
       </Router>
