@@ -1,6 +1,4 @@
-/* =========================================
-   1. GLOBAL RESET & BASE STYLES
-========================================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,9 +13,7 @@ html, body, #root {
   background-color: #FFF9F6; 
 }
 
-/* =========================================
-   2. GLOBAL DARK MODE STYLES
-========================================= */
+
 body.dark-mode {
   background-color: #121212;
   color: #E0E0E0;
@@ -47,9 +43,7 @@ body.dark-mode .widget-card {
   color: #E0E0E0;
 }
 
-/* =========================================
-   3. LAYOUT (SIDEBAR, HEADER, STORAGE)
-========================================= */
+
 /* Sidebar */
 body.dark-mode .sidebar {
   background-color: #1E1E1E;
@@ -80,9 +74,7 @@ body.dark-mode .storage-title { color: #E0E0E0; }
 body.dark-mode .storage-value { color: #888; }
 body.dark-mode .storage-bar-bg { background-color: #333; }
 
-/* =========================================
-   4. PAGES (DASHBOARD, TASKS, STUDY TOOLS)
-========================================= */
+
 /* Columns & Cards */
 body.dark-mode .task-column, body.dark-mode .kanban-column { background-color: #1A1A1A; border-color: #2A2A2A; }
 body.dark-mode .task-card, body.dark-mode .assignment-card { background-color: #242424; border-color: #333; }
@@ -105,9 +97,7 @@ body.dark-mode .breadcrumb { color: #E0E0E0 !important; }
 body.dark-mode .breadcrumb a { color: #FF7043 !important; }
 body.dark-mode .breadcrumb span { color: #888 !important; }
 
-/* =========================================
-   5. FLASHCARDS COMPONENT
-========================================= */
+
 body.dark-mode .card-face, body.dark-mode .mini-card { background-color: #242424; border: 1px solid #333; }
 body.dark-mode .card-text, body.dark-mode .mini-card-q { color: #FFFFFF; }
 body.dark-mode .mini-card-a { color: #A0A0A0; }
@@ -117,13 +107,8 @@ body.dark-mode .tab-btn, body.dark-mode .nav-btn, body.dark-mode .deck-select-in
 body.dark-mode .tab-btn.active { background-color: #33211b; border-color: #FF7043; color: #FF7043; }
 body.dark-mode .nav-btn:hover:not(:disabled) { background-color: #33211b; color: #FF7043; }
 
-/* =========================================
-   6. ALL MODALS, POPUPS & OVERLAYS (OPTIMIZED)
-========================================= */
-/* Overlays */
-body.dark-mode div[class*="overlay"] {
-  background-color: rgba(0, 0, 0, 0.7) !important;
-}
+
+body.dark-mode div[class*="overlay"] { background-color: rgba(0, 0, 0, 0.7) !important; }
 
 /* Modal Containers */
 body.dark-mode div[class*="modal"],
@@ -135,54 +120,38 @@ body.dark-mode .modal-box {
   border: 1px solid #2A2A2A !important;
 }
 
-/* Modal Headings */
-body.dark-mode div[class*="modal"] h2,
-body.dark-mode div[class*="modal"] h3,
-body.dark-mode div[class*="popup"] h2,
-body.dark-mode div[class*="popup"] h3,
-body.dark-mode .share-title {
-  color: #FFFFFF !important;
-}
+/* Modal Texts */
+body.dark-mode div[class*="modal"] h2, body.dark-mode div[class*="modal"] h3,
+body.dark-mode div[class*="popup"] h2, body.dark-mode div[class*="popup"] h3,
+body.dark-mode .share-title { color: #FFFFFF !important; }
 
-/* Modal Texts & Labels */
-body.dark-mode div[class*="modal"] p,
-body.dark-mode div[class*="modal"] label,
-body.dark-mode div[class*="popup"] p,
-body.dark-mode div[class*="popup"] label,
-body.dark-mode .share-subtitle {
-  color: #A0A0A0 !important;
-}
+body.dark-mode div[class*="modal"] p, body.dark-mode div[class*="modal"] label,
+body.dark-mode div[class*="popup"] p, body.dark-mode div[class*="popup"] label,
+body.dark-mode .share-subtitle { color: #A0A0A0 !important; }
 
-/* Modal Inputs & Textareas */
-body.dark-mode div[class*="modal"] input,
-body.dark-mode div[class*="modal"] textarea,
-body.dark-mode div[class*="modal"] select,
-body.dark-mode div[class*="popup"] input,
-body.dark-mode div[class*="popup"] textarea,
-body.dark-mode div[class*="popup"] select,
+/* Modal Inputs */
+body.dark-mode div[class*="modal"] input, body.dark-mode div[class*="modal"] textarea,
+body.dark-mode div[class*="modal"] select, body.dark-mode div[class*="popup"] input,
+body.dark-mode div[class*="popup"] textarea, body.dark-mode div[class*="popup"] select,
 body.dark-mode .link-input-wrapper input {
   background-color: #121212 !important;
   color: #FFFFFF !important;
   border: 1px solid #333 !important;
 }
 
-body.dark-mode div[class*="modal"] input:focus,
-body.dark-mode div[class*="modal"] textarea:focus,
-body.dark-mode div[class*="modal"] select:focus {
-  border-color: #FF7043 !important;
-}
-
-/* Modal Action Buttons */
-body.dark-mode .close-btn, body.dark-mode .share-close { color: #888; }
-body.dark-mode .close-btn:hover, body.dark-mode .share-close:hover { color: #FFF; }
-body.dark-mode .btn-cancel, body.dark-mode .del-cancel, body.dark-mode .btn-reset { background-color: #2A2A2A; color: #E0E0E0; border-color: #333; }
-body.dark-mode .btn-cancel:hover, body.dark-mode .del-cancel:hover { background-color: #333; color: #FFF; }
+body.dark-mode div[class*="modal"] input:focus, body.dark-mode div[class*="modal"] textarea:focus,
+body.dark-mode div[class*="modal"] select:focus { border-color: #FF7043 !important; }
 
 /* Social Icons in Share Modal */
 body.dark-mode .social-circle { background-color: #2A2A2A; border-color: #333; color: #E0E0E0; }
 body.dark-mode .social-icon-wrapper:hover .social-circle { background-color: #33211b; border-color: #FF7043; color: #FF7043; }
 
-/* --- Fix Cancel Buttons in Modals --- */
+
+/* Close Buttons */
+body.dark-mode .close-btn, body.dark-mode .share-close { color: #888; }
+body.dark-mode .close-btn:hover, body.dark-mode .share-close:hover { color: #FFF; }
+
+/* Cancel & Secondary Buttons */
 body.dark-mode button[class*="cancel"],
 body.dark-mode .cancel-btn,
 body.dark-mode .btn-cancel,
@@ -193,25 +162,78 @@ body.dark-mode .del-cancel {
   transition: all 0.2s ease;
 }
 
-body.dark-mode button[class*="cancel"]:hover,
-body.dark-mode .cancel-btn:hover,
-body.dark-mode .btn-cancel:hover,
-body.dark-mode .del-cancel:hover {
+body.dark-mode button[class*="cancel"]:hover, body.dark-mode .cancel-btn:hover,
+body.dark-mode .btn-cancel:hover, body.dark-mode .del-cancel:hover {
   background-color: #2A2A2A !important;
   color: #FFFFFF !important;
   border-color: #555 !important;
 }
 
-/* --- Fix Reset to Defaults Button (Settings Page) --- */
+/* Reset to Defaults Button */
 body.dark-mode .btn-reset {
   background-color: transparent !important;
   color: #A0A0A0 !important;
   border: none !important;
   box-shadow: none !important;
 }
-
 body.dark-mode .btn-reset:hover {
   background-color: transparent !important;
   color: #FFFFFF !important;
   text-decoration: underline !important;
+}
+
+
+/* --- 1. Paste Your Notes Textarea --- */
+body.dark-mode .ai-textarea {
+  background-color: #121212 !important;
+  color: #E0E0E0 !important;
+  border: 1px solid #333 !important;
+}
+
+body.dark-mode .ai-textarea:focus {
+  border-color: #FF7043 !important;
+}
+
+/* --- 2. AI-Generated Flashcards (FORCED DARK) --- */
+body.dark-mode .ai-gen-card {
+  background-color: #242424 !important;
+  border: 1px solid #333 !important;
+}
+
+body.dark-mode .ai-gen-card-label {
+  color: #888 !important; /* "QUESTION 01" label */
+}
+
+body.dark-mode .ai-gen-card-text,
+body.dark-mode .ai-gen-card h3 {
+  color: #FFFFFF !important; /* Question text */
+}
+
+/* "Click generate to create more cards" button */
+body.dark-mode .ai-add-more-btn {
+  background-color: transparent !important;
+  border: 2px dashed #444 !important;
+  color: #A0A0A0 !important;
+}
+
+body.dark-mode .ai-add-more-btn:hover {
+  border-color: #FF7043 !important;
+  color: #FF7043 !important;
+  background-color: #33211b !important;
+}
+
+/* --- 3. Chat Input Bar (REVERT TO LIGHT MODE) --- */
+body.dark-mode .ai-chat-bar {
+  background-color: #FFFFFF !important;
+  border: 1px solid #EAEAEA !important;
+}
+
+body.dark-mode .ai-chat-input {
+  background-color: #FFFFFF !important;
+  color: #1A1A1A !important; /* Text color inside chat input */
+  border: none !important;
+}
+
+body.dark-mode .ai-chat-input::placeholder {
+  color: #888 !important;
 }
