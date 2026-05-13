@@ -17,6 +17,8 @@ import StudyToolsPage from './pages/StudyToolsPage';
 import FlashcardsPage from './pages/FlashcardsPage';
 import AIAssistantPage from './pages/AIAssistantPage';
 import SettingsPage from './pages/SettingsPage';
+import ProfilePage from './pages/ProfilePage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 
 import './App.css';
 
@@ -40,6 +42,8 @@ function App() {
             <Route path="/smart-flashcards" element={<FlashcardsPage />}/>
             <Route path="/ai-assistant" element={<AIAssistantPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/change-password" element={<ChangePasswordPage />} />
           </Routes>
         </TaskProvider>
       </Router>

@@ -140,8 +140,12 @@ function ProfilePage() {
 
               {/* Danger Zone (Change Password & Sign Out) */}
               <div className="profile-danger-zone">
-                <button className="btn-outline">🔒 Change Password</button>
-                <button className="btn-outline-danger" onClick={() => setIsSignOutModalOpen(true)}>🚪 Sign Out</button>
+                <button className="btn-outline" onClick={() => navigate('/change-password')}>
+                  🔒 Change Password
+                </button>
+                <button className="btn-outline-danger" onClick={() => setIsSignOutModalOpen(true)}>
+                  🚪 Sign Out
+                </button>
               </div>
 
             </div>
