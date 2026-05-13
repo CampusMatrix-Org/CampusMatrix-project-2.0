@@ -1,0 +1,272 @@
+/* --- AI Workspace Layout --- */
+.ai-workspace {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  gap: 20px;
+}
+
+.ai-split-panels {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  min-height: 0; /* Important for scrollable children */
+}
+
+/* --- Left & Right Panels --- */
+.ai-panel {
+  flex: 1;
+  background: white;
+  border-radius: 20px;
+  border: 1.5px solid #F0F0F0;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.ai-panel-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin: 0 0 5px 0;
+}
+
+.ai-panel-subtitle {
+  font-size: 0.9rem;
+  color: #636E72;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* --- Left Panel: Text Area --- */
+.ai-textarea {
+  flex: 1;
+  width: 100%;
+  border: none;
+  resize: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: #2D3436;
+  outline: none;
+  background: transparent;
+  line-height: 1.6;
+}
+
+.ai-textarea::placeholder {
+  color: #B2BEC3;
+}
+
+.ai-generate-btn {
+  background: #FF7043;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s;
+  margin-top: 15px;
+}
+
+.ai-generate-btn:hover {
+  background: #E65C2F;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 112, 67, 0.25);
+}
+
+/* --- Right Panel: Generated Cards --- */
+.ai-cards-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 10px;
+}
+
+.ai-gen-card {
+  background: white;
+  border: 2px solid #FFF0EB;
+  border-radius: 16px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+
+.ai-gen-card:hover {
+  border-color: #FF7043;
+}
+
+.ai-gen-card-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #888;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.ai-gen-card-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ai-add-more-btn {
+  background: #FAFAFA;
+  border: 1.5px dashed #E0E0E0;
+  color: #888;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-add-more-btn:hover {
+  border-color: #FF7043;
+  color: #FF7043;
+  background: #FFF0EB;
+}
+
+.ai-icon-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #636E72;
+  transition: color 0.2s;
+  padding: 5px;
+}
+
+.ai-icon-btn:hover {
+  color: #FF7043;
+}
+
+/* --- Bottom Chat Bar --- */
+.ai-chat-bar {
+  background: white;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px 8px 25px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+}
+
+.ai-chat-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1A1A1A;
+  background: transparent;
+}
+
+.ai-chat-input::placeholder {
+  color: #A0A0A0;
+}
+
+.ai-chat-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-upload-btn, .ai-send-btn {
+  background: #FFF0EB;
+  color: #FF7043;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ai-send-btn {
+  background: #FF7043;
+  color: white;
+}
+
+.ai-upload-btn:hover { background: #FFE0D4; }
+.ai-send-btn:hover { background: #E65C2F; transform: scale(1.05); }
+
+/* --- Share Modal --- */
+.share-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.share-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.share-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #888;
+}
+
+.share-title { font-size: 1.4rem; font-weight: 800; color: #1A1A1A; margin: 0 0 5px 0; }
+.share-subtitle { color: #636E72; font-size: 0.9rem; margin-bottom: 25px; }
+
+.social-icons { display: flex; justify-content: space-between; margin-bottom: 30px; }
+.social-icon-wrapper { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+.social-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: #FAFAFA; border: 1.5px solid #F0F0F0; transition: all 0.2s; color: #1A1A1A; }
+.social-icon-wrapper:hover .social-circle { background: #FFF0EB; border-color: #FF7043; color: #FF7043; transform: translateY(-3px); }
+.social-label { font-size: 0.75rem; font-weight: 600; color: #636E72; }
+
+.link-group { text-align: left; }
+.link-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #636E72; margin-bottom: 8px; }
+.link-input-wrapper { display: flex; border: 1.5px solid #EAEAEA; border-radius: 12px; overflow: hidden; }
+.link-input-wrapper input { flex: 1; padding: 12px; border: none; outline: none; background: #FAFAFA; font-size: 0.9rem; color: #888; }
+.copy-btn { background: #FF7043; color: white; border: none; padding: 0 20px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+.copy-btn:hover { background: #E65C2F; }
+
+.secure-badge { text-align: center; font-size: 0.7rem; font-weight: 700; color: #A0A0A0; margin-top: 25px; letter-spacing: 1px; }

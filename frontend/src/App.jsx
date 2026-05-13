@@ -14,6 +14,7 @@ import TaskManagementPage from './pages/TaskManagementPage';
 import CalendarPage from './pages/CalendarPage';
 import StudyToolsPage from './pages/StudyToolsPage';
 import FlashcardsPage from './pages/FlashcardsPage';
+import AIAssistantPage from './pages/AIAssistantPage';
 
 import './App.css';
 
@@ -33,7 +34,8 @@ function App() {
           <Route path="/tasks" element={<TaskManagementPage />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/study-tools" element={<StudyToolsPage />} />
-          <Route path="/smart-flashcards" element={<FlashcardsPage />} />
+          <Route path="/smart-flashcards" element={<FlashcardsPage />}/>
+          <Route path="/ai-assistant" element={<AIAssistantPage />} />
         </Routes>
       </TaskProvider>
     </Router>
