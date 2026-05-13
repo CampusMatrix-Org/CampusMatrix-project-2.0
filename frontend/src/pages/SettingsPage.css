@@ -1,0 +1,198 @@
+/* --- Settings Page Layout --- */
+.settings-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.settings-header h1 {
+  font-size: 2rem;
+  color: #1A1A1A;
+  margin-bottom: 5px;
+}
+
+.settings-header p {
+  color: #636E72;
+  margin-bottom: 40px;
+}
+
+.settings-section {
+  background: white;
+  border-radius: 16px;
+  border: 1.5px solid #F0F0F0;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.settings-section h3 {
+  font-size: 1.1rem;
+  color: #636E72;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.setting-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.setting-icon {
+  font-size: 1.5rem;
+  background: #FAFAFA;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #EAEAEA;
+}
+
+.setting-text h4 {
+  margin: 0 0 5px 0;
+  color: #1A1A1A;
+  font-size: 1.05rem;
+}
+
+.setting-text p {
+  margin: 0;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+/* --- Custom Toggle Switch --- */
+.toggle-switch {
+  width: 50px;
+  height: 26px;
+  background: #EAEAEA;
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-switch.active {
+  background: #FF7043;
+}
+
+.toggle-knob {
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.toggle-switch.active .toggle-knob {
+  transform: translateX(24px);
+}
+
+/* --- Language Selector Button --- */
+.lang-selector-btn {
+  background: #FAFAFA;
+  border: 1.5px solid #EAEAEA;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-selector-btn:hover {
+  border-color: #FF7043;
+}
+
+/* --- Action Buttons --- */
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.btn-reset {
+  background: transparent;
+  color: #636E72;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-reset:hover { color: #1A1A1A; text-decoration: underline; }
+
+.btn-save {
+  background: #FF7043;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-save:hover { background: #E65C2F; transform: translateY(-2px); }
+
+/* --- Language Modal --- */
+.lang-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.lang-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.lang-modal h2 { margin-top: 0; margin-bottom: 20px; font-size: 1.2rem; }
+
+.lang-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.lang-option:hover { border-color: #FF7043; background: #FFF0EB; }
+.lang-option.selected { border-color: #FF7043; background: #FFF0EB; font-weight: bold; }
+
+.lang-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}

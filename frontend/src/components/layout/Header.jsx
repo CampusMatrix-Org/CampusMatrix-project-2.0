@@ -1,12 +1,15 @@
 import React from 'react';
 import './Layout.css';
+import { useSettings } from '../../context/SettingsContext';
 
 function Header() {
+  const { t } = useSettings();
+
   return (
     <header className="header">
       <div className="search-bar">
         <span className="search-icon">🔍</span>
-        <input type="text" placeholder="Search courses, tasks, or study materials..." />
+        <input type="text" placeholder={t('searchPlaceholder')} />
       </div>
 
       <div className="header-right">

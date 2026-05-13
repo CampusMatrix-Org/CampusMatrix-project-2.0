@@ -1,19 +1,21 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Layout.css';
+import { useSettings } from '../../context/SettingsContext';
 
 function Sidebar() {
   const location = useLocation();
+  const { t } = useSettings();
 
+  // මෙතන name වෙනුවට tKey කියලා දාලා translation dictionary එකට connect කරා
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: '📊' },
-    { name: 'Tasks', path: '/tasks', icon: '✅' },
-    { name: 'Calendar', path: '/calendar', icon: '📅' },
-    { name: 'Study Tools', path: '/study-tools', icon: '🧠' },
-    { name: 'AI Study Assistant', path: '/ai-assistant', icon: '🤖' },
-    { name: 'Settings', path: '/settings', icon: '⚙️' },
+    { tKey: 'dashboard', path: '/dashboard', icon: '📊' },
+    { tKey: 'tasks', path: '/tasks', icon: '✅' },
+    { tKey: 'calendar', path: '/calendar', icon: '📅' },
+    { tKey: 'studyTools', path: '/study-tools', icon: '🧠' },
+    { tKey: 'aiAssistant', path: '/ai-assistant', icon: '🤖' },
+    { tKey: 'settings', path: '/settings', icon: '⚙️' },
   ];
-
 
   const totalStorageGB = 10;
   const usedStorageGB = 6.5;
@@ -28,12 +30,12 @@ function Sidebar() {
       <nav className="sidebar-nav">
         {navItems.map((item) => (
           <Link 
-            key={item.name} 
+            key={item.tKey} 
             to={item.path} 
             className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
           >
             <span className="nav-icon">{item.icon}</span>
-            {item.name}
+            {t(item.tKey)}
           </Link>
         ))}
       </nav>
