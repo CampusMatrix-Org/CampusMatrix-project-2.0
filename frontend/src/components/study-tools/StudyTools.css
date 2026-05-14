@@ -1,3 +1,29 @@
+/* Breadcrumb Navigation */
+.breadcrumb {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.breadcrumb span {
+  color: #888;
+  font-weight: 500;
+}
+
+.breadcrumb a {
+  color: #888;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+  color: #FF7043;
+}
+
 /* Container for the tools list */
 .study-tools-container {
   display: flex;
@@ -74,4 +100,17 @@
 .tool-card:hover .tool-info h4,
 .tool-card:hover .tool-info p {
   color: white;
+}
+
+/* Dark Mode Support */
+body.dark-mode .breadcrumb {
+  color: #FFF;
+}
+
+body.dark-mode .breadcrumb a {
+  color: #A0A0A0;
+}
+
+body.dark-mode .breadcrumb a:hover {
+  color: #FF7043;
 }

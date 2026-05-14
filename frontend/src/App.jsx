@@ -20,6 +20,7 @@ import SettingsPage from './pages/SettingsPage';
 import ProfilePage from './pages/ProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import NotificationsPage from './pages/NotificationsPage';
+import FocusTimerPage from './pages/FocusTimerPage';
 
 import './App.css';
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/study-tools" element={<StudyToolsPage />} />
             <Route path="/smart-flashcards" element={<FlashcardsPage />}/>
+            <Route path="/focus-timer" element={<FocusTimerPage />} />
             <Route path="/ai-assistant" element={<AIAssistantPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
