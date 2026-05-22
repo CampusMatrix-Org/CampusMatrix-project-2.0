@@ -89,35 +89,7 @@
   color: #2E7D32;
 }
 
-/* Floating Action Button (FAB) */
-.fab-button {
-  position: fixed;
-  bottom: 40px;
-  right: 40px;
-  width: 60px;
-  height: 60px;
-  background: #FF7043;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  font-size: 2.5rem;
-  font-weight: 600;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0; 
-  padding-bottom: 5px; 
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(255, 112, 67, 0.3);
-  transition: all 0.3s ease;
-  z-index: 100;
-}
 
-.fab-button:hover {
-  background: #E64A19;
-  box-shadow: 0 10px 20px rgba(230, 74, 25, 0.3);
-  transform: translateY(-5px);
-}
 
 /* Task Card Description & Date */
 .task-card .task-desc { 

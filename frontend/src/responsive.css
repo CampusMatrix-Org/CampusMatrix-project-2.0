@@ -1,0 +1,168 @@
+/* Global Responsive Styles for CampusMatrix */
+
+/* --- Layout & Sidebar --- */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 200px !important;
+  }
+  .search-bar {
+    width: 250px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Layout */
+  .dashboard-layout {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Make sidebar a horizontal scrollable row on mobile */
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid #F0F0F0 !important;
+    flex-direction: row !important;
+    padding: 10px !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+  .sidebar-logo {
+    display: none !important; /* Hide logo to save space */
+  }
+  .sidebar-nav {
+    flex-direction: row !important;
+    gap: 10px !important;
+    padding: 0 !important;
+  }
+  .nav-item {
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+  }
+  .sidebar-bottom {
+    display: none !important;
+  }
+
+  /* Header adjustments */
+  .header {
+    padding: 10px 15px !important;
+    flex-wrap: wrap !important;
+    height: auto !important;
+    gap: 10px !important;
+  }
+  .search-bar {
+    width: 100% !important;
+    order: 3 !important; /* Move search below header content */
+  }
+  
+  .page-content {
+    padding: 15px !important;
+    overflow-y: visible !important;
+  }
+
+  .main-content {
+    overflow-y: auto !important;
+  }
+
+  /* Auth Pages (Login & Register) */
+  .auth-container {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+  }
+  .auth-left-panel {
+    display: none !important; /* Hide illustration on small screens */
+  }
+  .auth-right-panel {
+    padding: 20px !important;
+  }
+  .auth-form-container {
+    max-height: none !important;
+    padding: 30px 20px !important;
+    margin: auto !important;
+  }
+
+  /* Dashboard Grid */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  /* Welcome Banner */
+  .welcome-banner {
+    padding: 20px !important;
+  }
+  .banner-buttons {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .btn-white, .btn-outline-white {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Task Management Kanban */
+  .board-grid {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    gap: 20px !important;
+  }
+  .task-column {
+    min-height: 400px !important;
+  }
+
+  /* Settings Page */
+  .settings-layout {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  .settings-sidebar {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #F0F0F0 !important;
+    flex-direction: row !important;
+    padding: 10px !important;
+    overflow-x: auto !important;
+  }
+  .settings-tab {
+    padding: 10px 15px !important;
+    white-space: nowrap !important;
+  }
+  .settings-content {
+    padding: 15px !important;
+  }
+  .setting-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  
+  /* Study Tools & AI Assistant */
+  .tools-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ai-split-panels {
+    flex-direction: column !important;
+  }
+
+  /* General Cards */
+  .widget-card, .study-card, .tool-card {
+    height: auto !important;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .header-right {
+    gap: 10px !important;
+  }
+  .profile-name {
+    display: none !important;
+  }
+  .profile-degree {
+    display: none !important;
+  }
+  .auth-form-title {
+    font-size: 1.5rem !important;
+  }
+}

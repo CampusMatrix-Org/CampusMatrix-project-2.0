@@ -9,6 +9,8 @@
   font-size: 2rem;
   color: #1A1A1A;
   margin-bottom: 5px;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .settings-header p {
@@ -126,6 +128,7 @@
   justify-content: flex-end;
   gap: 15px;
   margin-top: 40px;
+  flex-wrap: wrap;
 }
 
 .btn-reset {

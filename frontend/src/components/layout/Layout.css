@@ -13,7 +13,7 @@
 .sidebar { width: 260px; background: white; display: flex; flex-direction: column; border-right: 1px solid #F0F0F0; padding: 20px 0; }
 .sidebar-logo { font-size: 1.4rem; font-weight: 800; padding: 0 25px 30px; color: #1A1A1A; }
 .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 0 15px; }
-.nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; text-decoration: none; color: #636E72; font-weight: 600; border-radius: 12px; transition: all 0.2s; }
+.nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; text-decoration: none; color: #636E72; font-weight: 600; border-radius: 12px; transition: all 0.2s; border-right: 4px solid transparent; }
 .nav-item:hover { background: #FFF9F6; color: #FF7043; }
 .nav-item.active { background: #FFF0EB; color: #FF7043; border-right: 4px solid #FF7043; }
 .sidebar-bottom { padding: 20px; }

@@ -126,9 +126,7 @@
 .label-dot.blue { background: #2E86AB; }
 .label-dot.green { background: #4CAF50; }
 
-/* FAB Upload Button */
-.fab-upload { position: absolute; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: #FF7043; color: white; font-size: 2rem; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 112, 67, 0.4); display: flex; justify-content: center; align-items: center; transition: 0.2s; }
-.fab-upload:hover { transform: translateY(-5px); background: #E65C2F; }
+
 
 /* --- Upload Modal --- */
 .upload-modal { background: #FFF; width: 90%; max-width: 500px; border-radius: 20px; overflow: hidden; }

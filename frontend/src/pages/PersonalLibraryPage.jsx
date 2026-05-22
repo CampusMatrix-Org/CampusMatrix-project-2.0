@@ -112,10 +112,10 @@ function PersonalLibraryPage() {
           <div className="library-workspace">
             
             {/* Breadcrumbs */}
-            <div className="library-breadcrumb">
-              <span className="library-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
-              <span className="library-separator"> &gt; </span>
-              <span className="library-current">Personal Library</span>
+            <div className="study-breadcrumb">
+              <span className="sb-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
+              <span className="sb-separator"> &gt; </span>
+              <span className="sb-current">Personal Library</span>
             </div>
 
             <div className="library-content-area">
@@ -229,7 +229,7 @@ function PersonalLibraryPage() {
               </div>
             </div>
 
-            <button className="fab-upload" onClick={handleUploadClick}>+</button>
+            <button className="fab-button" onClick={handleUploadClick}>+</button>
 
           </div>
         </div>
@@ -243,7 +243,7 @@ function PersonalLibraryPage() {
           <div className="upload-modal">
             <div className="upload-modal-header">
               <h3>Upload Documents</h3>
-              <button className="close-btn" onClick={closeUploadModal}>✕</button>
+              <button className="close-btn" onClick={closeUploadModal}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
             </div>
             <div className="upload-modal-body">
               <div className="upload-dropzone">

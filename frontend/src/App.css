@@ -93,9 +93,41 @@ body.dark-mode .tool-card p, body.dark-mode .study-tool-item p { color: #A0A0A0;
 body.dark-mode .tool-icon, body.dark-mode .icon-wrapper { background-color: #2A2A2A; }
 
 /* Breadcrumb Navigation */
-body.dark-mode .breadcrumb { color: #E0E0E0 !important; }
-body.dark-mode .breadcrumb a { color: #FF7043 !important; }
-body.dark-mode .breadcrumb span { color: #888 !important; }
+.study-breadcrumb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 30px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  width: 100%;
+}
+.study-breadcrumb a, .study-breadcrumb .sb-link {
+  color: #888;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.study-breadcrumb a:hover, .study-breadcrumb .sb-link:hover {
+  color: #FF7043;
+}
+.study-breadcrumb .sb-separator {
+  color: #888;
+  font-weight: 500;
+  margin: 0 10px;
+}
+.study-breadcrumb .sb-current {
+  color: #1A1A1A;
+  font-weight: 700;
+}
+
+body.dark-mode .study-breadcrumb { color: #E0E0E0; }
+body.dark-mode .study-breadcrumb .sb-current { color: #FFFFFF; }
+body.dark-mode .study-breadcrumb a, body.dark-mode .study-breadcrumb .sb-link { color: #A0A0A0; }
+body.dark-mode .study-breadcrumb a:hover, body.dark-mode .study-breadcrumb .sb-link:hover { color: #FF7043; }
+body.dark-mode .study-breadcrumb .sb-separator { color: #888; }
 
 
 body.dark-mode .card-face, body.dark-mode .mini-card { background-color: #242424; border: 1px solid #333; }
@@ -148,8 +180,32 @@ body.dark-mode .social-icon-wrapper:hover .social-circle { background-color: #33
 
 
 /* Close Buttons */
-body.dark-mode .close-btn, body.dark-mode .share-close { color: #888; }
-body.dark-mode .close-btn:hover, body.dark-mode .share-close:hover { color: #FFF; }
+.close-btn, .modal-close, .share-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #A0A0A0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 4px;
+  border-radius: 8px;
+}
+.close-btn:hover, .modal-close:hover, .share-close:hover {
+  color: #FF7043;
+  background: rgba(255, 112, 67, 0.1);
+  transform: scale(1.05);
+}
+
+body.dark-mode .close-btn, body.dark-mode .share-close, body.dark-mode .modal-close { 
+  color: #888; 
+  background: transparent;
+}
+body.dark-mode .close-btn:hover, body.dark-mode .share-close:hover, body.dark-mode .modal-close:hover { 
+  color: #FFF; 
+  background: rgba(255, 255, 255, 0.1);
+}
 
 /* Cancel & Secondary Buttons */
 body.dark-mode button[class*="cancel"],
@@ -198,6 +254,36 @@ body.dark-mode .ai-textarea:focus {
 body.dark-mode .ai-gen-card {
   background-color: #242424 !important;
   border: 1px solid #333 !important;
+}
+
+/* Floating Action Button (FAB) */
+.fab-button {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  background: #FF7043;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 2.5rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0; 
+  padding-bottom: 5px; 
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(255, 112, 67, 0.3);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.fab-button:hover {
+  background: #E64A19;
+  box-shadow: 0 10px 20px rgba(230, 74, 25, 0.3);
+  transform: translateY(-5px);
 }
 
 body.dark-mode .ai-gen-card-label {
