@@ -4,6 +4,7 @@ import Header from '../components/layout/Header';
 import StudyToolsList from '../components/study-tools/StudyToolsList';
 import './DashboardPage.css'; // Shared layout styles
 
+
 function StudyToolsPage() {
   return (
     <div className="dashboard-layout">
