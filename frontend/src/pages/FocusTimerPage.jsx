@@ -77,13 +77,19 @@ function FocusTimerPage() {
   };
 
   const saveSettings = () => {
-    setSettings({ ...tempSettings });
+    const newSettings = {
+      ...tempSettings,
+      focus: Math.max(1, parseInt(tempSettings.focus) || 25),
+      shortBreak: Math.max(1, parseInt(tempSettings.shortBreak) || 5),
+      longBreak: Math.max(1, parseInt(tempSettings.longBreak) || 15)
+    };
+    setSettings(newSettings);
     setIsSettingsOpen(false);
     // Reset current timer if settings changed
     setIsActive(false);
-    if (mode === 'focus') setTimeLeft(tempSettings.focus * 60);
-    if (mode === 'shortBreak') setTimeLeft(tempSettings.shortBreak * 60);
-    if (mode === 'longBreak') setTimeLeft(tempSettings.longBreak * 60);
+    if (mode === 'focus') setTimeLeft(newSettings.focus * 60);
+    if (mode === 'shortBreak') setTimeLeft(newSettings.shortBreak * 60);
+    if (mode === 'longBreak') setTimeLeft(newSettings.longBreak * 60);
   };
 
   return (
@@ -96,10 +102,10 @@ function FocusTimerPage() {
           <div className="timer-workspace">
             
             {/* Breadcrumbs */}
-            <div className="timer-breadcrumb">
-              <span className="timer-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
-              <span className="timer-separator"> &gt; </span>
-              <span className="timer-current">Focus Timer</span>
+            <div className="study-breadcrumb">
+              <span className="sb-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
+              <span className="sb-separator"> &gt; </span>
+              <span className="sb-current">Focus Timer</span>
             </div>
 
             <div className="timer-main-card">
@@ -170,7 +176,7 @@ function FocusTimerPage() {
           <div className="modal-content settings-modal-box">
             <div className="settings-modal-header">
               <h3>Timer Settings</h3>
-              <button className="close-btn" onClick={() => setIsSettingsOpen(false)}>✕</button>
+              <button className="close-btn" onClick={() => setIsSettingsOpen(false)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
             </div>
             
             <div className="settings-modal-body">
@@ -180,15 +186,15 @@ function FocusTimerPage() {
                 <div className="duration-inputs">
                   <div className="d-input">
                     <label>Focus</label>
-                    <input type="number" value={tempSettings.focus} onChange={(e) => setTempSettings({...tempSettings, focus: e.target.value})} />
+                    <input type="number" min="1" value={tempSettings.focus} onChange={(e) => setTempSettings({...tempSettings, focus: e.target.value})} />
                   </div>
                   <div className="d-input">
                     <label>Short Break</label>
-                    <input type="number" value={tempSettings.shortBreak} onChange={(e) => setTempSettings({...tempSettings, shortBreak: e.target.value})} />
+                    <input type="number" min="1" value={tempSettings.shortBreak} onChange={(e) => setTempSettings({...tempSettings, shortBreak: e.target.value})} />
                   </div>
                   <div className="d-input">
                     <label>Long Break</label>
-                    <input type="number" value={tempSettings.longBreak} onChange={(e) => setTempSettings({...tempSettings, longBreak: e.target.value})} />
+                    <input type="number" min="1" value={tempSettings.longBreak} onChange={(e) => setTempSettings({...tempSettings, longBreak: e.target.value})} />
                   </div>
                 </div>
               </div>

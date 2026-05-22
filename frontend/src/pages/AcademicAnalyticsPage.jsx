@@ -5,7 +5,7 @@ import Header from '../components/layout/Header';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import './AcademicAnalyticsPage.css';
 
-
+// Dummy Data
 const gpaData = [
   { name: 'SEM 1', gpa: 3.2 },
   { name: 'SEM 2', gpa: 3.4 },

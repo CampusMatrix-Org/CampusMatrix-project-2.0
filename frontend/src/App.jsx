@@ -21,10 +21,11 @@ import ProfilePage from './pages/ProfilePage';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import NotificationsPage from './pages/NotificationsPage';
 import FocusTimerPage from './pages/FocusTimerPage';
-import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import PersonalLibraryPage from './pages/PersonalLibraryPage';
+import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 
 import './App.css';
+import './responsive.css';
 
 function App() {
   return (
@@ -50,8 +51,8 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
             <Route path="/personal-library" element={<PersonalLibraryPage />} />
+            <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
 
           </Routes>
         </TaskProvider>

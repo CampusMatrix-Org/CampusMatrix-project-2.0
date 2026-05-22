@@ -18,7 +18,7 @@ function StudyToolsList() {
       <div className="widget-header">
         <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>Study Tools</h3>
       </div>
-
+      
       <div className="study-tools-container">
         {toolsData.map((tool) => (
           <Link 

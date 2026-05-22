@@ -80,8 +80,8 @@ function FlashcardWidget({ onEditClick }) {
     <div className="widget-card flex-col" style={{ height: 'calc(100vh - 120px)', position: 'relative' }}>
       
       <div className="flashcard-header">
-        <div className="breadcrumb">
-          <Link to="/study-tools">Study Tools</Link> <span>{'>'}</span> Smart Flashcards
+        <div className="study-breadcrumb">
+          <Link className="sb-link" to="/study-tools">Study Tools</Link> <span className="sb-separator">&gt;</span> <span className="sb-current">Smart Flashcards</span>
         </div>
       </div>
 
