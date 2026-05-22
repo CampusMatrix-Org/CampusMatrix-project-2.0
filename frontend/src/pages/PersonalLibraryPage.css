@@ -1,0 +1,182 @@
+
+
+/* The Main White Container (100% Match with Focus Timer & Flashcards) */
+.library-workspace {
+  background: #FFFFFF;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 24px;
+  width: 100%;
+  height: 100%; 
+  padding: 30px; 
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  position: relative; /* For FAB */
+}
+
+.library-workspace::-webkit-scrollbar { width: 6px; }
+.library-workspace::-webkit-scrollbar-thumb { background-color: #EAEAEA; border-radius: 10px; }
+
+/* Breadcrumbs */
+.library-breadcrumb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 30px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  width: 100%;
+}
+.library-link { color: #888; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+.library-link:hover { color: #FF7043; }
+.library-separator { color: #888; font-weight: 500; margin: 0 10px; }
+.library-current { color: #1A1A1A; font-weight: 700; }
+
+/* Layout Grid */
+.library-content-area {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+.library-main-section { flex: 1; }
+.library-side-section { width: 250px; }
+
+/* Headers */
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.section-header h3 { margin: 0; font-size: 1.2rem; color: #1A1A1A; }
+.view-all-btn { background: none; border: none; color: #FF7043; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
+.doc-header { margin-top: 40px; border-bottom: 1.5px solid #F0F0F0; padding-bottom: 15px; }
+
+/* Folders Grid */
+.folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+.folder-card {
+  border: 1.5px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #FFF;
+}
+.folder-card:hover { border-color: #FF7043; box-shadow: 0 5px 15px rgba(255,112,67,0.05); transform: translateY(-2px); }
+.folder-icon { font-size: 2rem; }
+.folder-info h4 { margin: 0 0 5px 0; font-size: 1rem; color: #1A1A1A; }
+.folder-info p { margin: 0; font-size: 0.8rem; color: #888; }
+
+/* Doc Controls & View Toggles */
+.doc-controls { display: flex; align-items: center; gap: 15px; }
+.sort-label { font-size: 0.85rem; color: #888; font-weight: 600; }
+.sort-label select { border: none; font-weight: 700; color: #1A1A1A; outline: none; background: transparent; cursor: pointer; }
+
+.view-toggle-container { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+.view-toggles { display: flex; gap: 5px; background: #F8F9FA; padding: 4px; border-radius: 10px; border: 1.5px solid #EAEAEA;}
+.view-btn { background: transparent; border: none; padding: 6px; border-radius: 6px; color: #A0A0A0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.view-btn:hover { color: #1A1A1A; }
+.view-btn.active { background: #FFF; color: #FF7043; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+/* Documents List View */
+.doc-list { width: 100%; }
+.doc-list-header { display: flex; padding: 10px 20px; border-bottom: 2px solid #F0F0F0; font-size: 0.8rem; font-weight: 800; color: #888; letter-spacing: 1px; }
+.doc-list-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #F0F0F0; transition: background 0.2s; }
+.doc-list-item:hover { background: #FAFAFA; }
+
+.col-name { flex: 2; display: flex; align-items: center; gap: 15px; }
+.col-size { flex: 1; font-size: 0.9rem; color: #666; }
+.col-modified { flex: 1; font-size: 0.9rem; color: #666; }
+.col-owner { flex: 1; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #1A1A1A; font-weight: 600; }
+.col-actions { width: 50px; text-align: center; }
+
+.doc-name { font-weight: 600; color: #1A1A1A; }
+.doc-icon { font-size: 1.4rem; }
+.owner-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: white; }
+.owner-avatar.me { background: #FF7043; }
+.owner-avatar.other { background: #2E86AB; }
+
+/* Documents Grid View */
+.doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+.doc-grid-card { border: 1.5px solid #F0F0F0; border-radius: 16px; padding: 20px; background: #FFF; transition: 0.2s; }
+.doc-grid-card:hover { border-color: #FFDDCB; box-shadow: 0 5px 15px rgba(255,112,67,0.05); }
+.doc-grid-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+.doc-grid-body .doc-name { font-size: 0.95rem; margin: 0 0 5px 0; line-height: 1.3; }
+.doc-grid-body .doc-meta { font-size: 0.8rem; color: #888; margin: 0; }
+
+/* Action Menu & Dropdown */
+.relative { position: relative; }
+.action-menu-btn { background: none; border: none; font-size: 1.2rem; color: #A0A0A0; cursor: pointer; padding: 0 10px; }
+.action-menu-btn:hover { color: #1A1A1A; }
+.action-dropdown { position: absolute; right: 0; top: 100%; background: #FFF; border: 1px solid #EAEAEA; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 5px; z-index: 10; min-width: 120px; }
+.action-dropdown button { display: block; width: 100%; text-align: left; padding: 8px 15px; background: none; border: none; font-size: 0.9rem; color: #1A1A1A; cursor: pointer; border-radius: 4px; }
+.action-dropdown button:hover { background: #F8F9FA; }
+.action-dropdown button.delete-text { color: #D63031; }
+.action-dropdown button.delete-text:hover { background: #FDEDED; }
+
+/* Labels Widget */
+.labels-widget { background: #FAFAFA; border: 1.5px solid #F0F0F0; border-radius: 16px; padding: 20px; }
+.labels-widget h3 { margin: 0 0 15px 0; font-size: 1rem; color: #1A1A1A; }
+.labels-list { list-style: none; padding: 0; margin: 0; }
+.labels-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #666; font-weight: 600; margin-bottom: 12px; cursor: pointer; }
+.labels-list li:hover { color: #1A1A1A; }
+.label-dot { width: 10px; height: 10px; border-radius: 50%; }
+.label-dot.orange { background: #FF7043; }
+.label-dot.blue { background: #2E86AB; }
+.label-dot.green { background: #4CAF50; }
+
+/* FAB Upload Button */
+.fab-upload { position: absolute; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: #FF7043; color: white; font-size: 2rem; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 112, 67, 0.4); display: flex; justify-content: center; align-items: center; transition: 0.2s; }
+.fab-upload:hover { transform: translateY(-5px); background: #E65C2F; }
+
+/* --- Upload Modal --- */
+.upload-modal { background: #FFF; width: 90%; max-width: 500px; border-radius: 20px; overflow: hidden; }
+.upload-modal-header { padding: 20px 25px; border-bottom: 1.5px solid #F0F0F0; display: flex; justify-content: space-between; align-items: center; }
+.upload-modal-header h3 { margin: 0; font-size: 1.2rem; color: #1A1A1A; }
+.upload-modal-body { padding: 25px; }
+
+.upload-dropzone { border: 2px dashed #FFDBCF; background: #FFF9F6; border-radius: 16px; padding: 40px 20px; text-align: center; margin-bottom: 25px; transition: 0.2s; }
+.upload-dropzone:hover { border-color: #FF7043; background: #FFF0EB; }
+.dropzone-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.upload-dropzone h4 { margin: 0 0 5px 0; color: #1A1A1A; }
+.upload-dropzone p { margin: 0 0 15px 0; font-size: 0.9rem; color: #666; }
+.upload-dropzone .sub-text { font-size: 0.8rem; color: #A0A0A0; margin-bottom: 20px; }
+.browse-btn { background: #FF7043; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+
+.selected-files h4 { margin: 0 0 15px 0; font-size: 0.95rem; color: #1A1A1A; }
+.files-scroll-area { max-height: 150px; overflow-y: auto; padding-right: 5px; }
+.files-scroll-area::-webkit-scrollbar { width: 4px; }
+.files-scroll-area::-webkit-scrollbar-thumb { background-color: #EAEAEA; border-radius: 10px; }
+.file-item { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid #F0F0F0; border-radius: 12px; padding: 12px 15px; margin-bottom: 10px; }
+.file-info { display: flex; align-items: center; gap: 15px; }
+.file-info .f-name { margin: 0; font-size: 0.9rem; font-weight: 600; color: #1A1A1A; }
+.file-info .f-size { margin: 0; font-size: 0.8rem; color: #888; }
+.remove-file-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; opacity: 0.6; }
+.remove-file-btn:hover { opacity: 1; color: #D63031; }
+.no-files-text { color: #888; font-size: 0.9rem; font-style: italic; }
+
+.upload-modal-footer { padding: 20px 25px; background: #F8F9FA; border-top: 1.5px solid #F0F0F0; display: flex; justify-content: flex-end; gap: 10px; }
+.btn-upload { background: #FF7043; color: #FFF; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;}
+.btn-upload:disabled { background: #FFDDCB; cursor: not-allowed; }
+
+/* --- Dark Mode --- */
+body.dark-mode .library-workspace { background: #1E1E1E; border-color: #2A2A2A; }
+body.dark-mode .library-current, body.dark-mode .section-header h3, body.dark-mode .folder-info h4, body.dark-mode .doc-name, body.dark-mode .labels-widget h3 { color: #FFF; }
+body.dark-mode .folder-card, body.dark-mode .labels-widget, body.dark-mode .doc-grid-card { background: #121212; border-color: #2A2A2A; }
+body.dark-mode .folder-card:hover, body.dark-mode .doc-grid-card:hover { border-color: #FF7043; }
+body.dark-mode .doc-list-item:hover { background: #242424; }
+body.dark-mode .doc-list-header, body.dark-mode .doc-list-item, body.dark-mode .doc-header { border-color: #2A2A2A; }
+body.dark-mode .sort-label select { color: #FFF; }
+body.dark-mode .view-toggles { background: #121212; border-color: #2A2A2A; }
+body.dark-mode .view-btn.active { background: #242424; color: #FF7043; }
+body.dark-mode .action-dropdown { background: #1E1E1E; border-color: #333; }
+body.dark-mode .action-dropdown button { color: #E0E0E0; }
+body.dark-mode .action-dropdown button:hover { background: #2A2A2A; }
+
+body.dark-mode .upload-modal { background: #1E1E1E; }
+body.dark-mode .upload-modal-header, body.dark-mode .upload-modal-footer { border-color: #333; }
+body.dark-mode .upload-modal-footer { background: #121212; }
+body.dark-mode .upload-modal-header h3, body.dark-mode .upload-dropzone h4, body.dark-mode .selected-files h4, body.dark-mode .file-info .f-name { color: #FFF; }
+body.dark-mode .upload-dropzone { background: #241A16; border-color: #33211b; }
+body.dark-mode .file-item { border-color: #333; }

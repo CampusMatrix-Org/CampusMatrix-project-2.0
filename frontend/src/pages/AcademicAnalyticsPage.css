@@ -1,0 +1,242 @@
+
+/* The Main White Container (Same as Smart Flashcards & Focus Timer) */
+.analytics-workspace {
+  background: #FFFFFF;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 24px;
+  width: 100%;
+  height: 100%; 
+  padding: 30px; 
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.analytics-workspace::-webkit-scrollbar { width: 6px; }
+.analytics-workspace::-webkit-scrollbar-thumb { background-color: #EAEAEA; border-radius: 10px; }
+
+/* Breadcrumbs */
+.analytics-breadcrumb {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  width: 100%;
+}
+.analytics-link { color: #888; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+.analytics-link:hover { color: #FF7043; }
+.analytics-separator { color: #888; font-weight: 500; margin: 0 10px; }
+.analytics-current { color: #1A1A1A; font-weight: 700; }
+
+.analytics-subtitle {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metric-card {
+  background: #FFF;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.metric-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #636E72;
+}
+
+.metric-trend {
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+.metric-trend.positive { background: #E8F5E9; color: #4CAF50; }
+.metric-trend.requirement { background: #F8F9FA; color: #888; border: 1px solid #EAEAEA;}
+
+.metric-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.progress-bar-bg { height: 6px; background: #F0F0F0; border-radius: 3px; margin-top: 15px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: #FF7043; border-radius: 3px; }
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-card {
+  background: #FFF;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.chart-header h3 { margin: 0 0 5px 0; font-size: 1.1rem; color: #1A1A1A; }
+.chart-header p { margin: 0; font-size: 0.85rem; color: #888; }
+.chart-select { padding: 5px 10px; border-radius: 8px; border: 1.5px solid #EAEAEA; color: #666; font-weight: 600; outline: none; }
+.chart-legend { font-size: 0.8rem; font-weight: 600; color: #666; display: flex; align-items: center; gap: 8px;}
+.legend-dot { width: 10px; height: 10px; background: #FF7043; border-radius: 50%; display: inline-block; }
+
+.chart-container {
+  height: 250px;
+  width: 100%;
+}
+
+/* Skills Section */
+.skills-section {
+  background: #FAFAFA;
+  border: 1.5px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.skills-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: #1A1A1A; }
+.skills-header p { margin: 0 0 25px 0; font-size: 0.9rem; color: #888; }
+
+.circular-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+.circular-skill-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circular-progress {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.inner-circle {
+  width: 100px;
+  height: 100px;
+  background: #FFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1A1A1A;
+}
+
+.circular-skill-card h4 { margin: 0 0 5px 0; font-size: 0.95rem; color: #1A1A1A; }
+.circular-skill-card p { margin: 0; font-size: 0.8rem; color: #888; }
+
+/* Workload Section */
+.workload-section {
+  background: #FFF9F6;
+  border: 1.5px solid #FFDDCB;
+  border-radius: 16px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.workload-info { flex: 1; }
+.workload-info h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: #1A1A1A; }
+.workload-desc { color: #666; font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; }
+
+.stress-tip {
+  display: flex;
+  gap: 15px;
+  background: #FFF;
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 4px solid #FF7043;
+}
+.stress-tip strong { font-size: 0.85rem; color: #1A1A1A; display: block; margin-bottom: 5px; }
+.stress-tip p { margin: 0; font-size: 0.85rem; color: #666; }
+
+.stress-meter-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stress-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 8px solid #1A1A1A;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.stress-circle span { font-size: 0.8rem; font-weight: 700; color: #888; margin-bottom: 5px;}
+.stress-circle strong { font-size: 1.1rem; font-weight: 800; color: #1A1A1A; }
+
+.workload-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.w-bar-row { display: flex; flex-direction: column; gap: 8px; }
+.w-label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: #666; }
+.badge { background: #FFDDCB; color: #FF7043; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; }
+.w-bg { height: 8px; background: #F0F0F0; border-radius: 4px; overflow: hidden; }
+.w-fill { height: 100%; border-radius: 4px; }
+
+
+/* DARK MODE OVERRIDES */
+body.dark-mode .analytics-workspace { background: #1E1E1E; border-color: #2A2A2A; }
+body.dark-mode .analytics-current, body.dark-mode .metric-value, body.dark-mode .chart-header h3, body.dark-mode .skills-header h3, body.dark-mode .circular-skill-card h4, body.dark-mode .workload-info h3 { color: #FFF; }
+body.dark-mode .metric-card, body.dark-mode .chart-card { background: #121212; border-color: #2A2A2A; }
+body.dark-mode .skills-section { background: #121212; border-color: #2A2A2A; }
+body.dark-mode .inner-circle { background: #121212; color: #FFF; }
+body.dark-mode .workload-section { background: #241A16; border-color: #33211b; }
+body.dark-mode .stress-tip { background: #121212; }
+body.dark-mode .stress-circle { border-color: #FFF; }
+body.dark-mode .stress-circle strong { color: #FFF; }
+body.dark-mode .metric-trend.requirement { background: #1E1E1E; border-color: #333; }
