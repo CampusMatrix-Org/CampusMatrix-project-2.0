@@ -1,6 +1,6 @@
 
 
-/* The Main White Container (100% Match with Focus Timer & Flashcards) */
+/* The Main White Container */
 .library-workspace {
   background: #FFFFFF;
   border: 1.5px solid #F0F0F0;
@@ -10,7 +10,7 @@
   padding: 30px; 
   overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  position: relative; /* For FAB */
+  position: relative;
 }
 
 .library-workspace::-webkit-scrollbar { width: 6px; }

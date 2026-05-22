@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './StudyTools.css';
 
-// Dummy data (අලුතින් හදපු පේජස් වල Routes මෙතනට ඇඩ් කරලා තියෙන්නේ)
+
 const toolsData = [
   { id: 1, title: 'Smart Flashcards', description: 'Spaced-repetition systems that adapt to your specific learning pace.', icon: '📇', route: '/smart-flashcards' },
   { id: 2, title: 'Focus Timer', description: 'Pomodoro techniques and LoFi audio to keep you in the deep work zone.', icon: '⏱️', route: '/focus-timer' },
@@ -18,11 +18,11 @@ function StudyToolsList() {
       <div className="widget-header">
         <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>Study Tools</h3>
       </div>
-
+      
       <div className="study-tools-container">
         {toolsData.map((tool) => (
           <Link 
-            to={tool.route} /* කෙලින්ම Array එකේ තියෙන Route එක මෙතනින් ගන්නවා */
+            to={tool.route} 
             className="tool-card" 
             key={tool.id}
           >
