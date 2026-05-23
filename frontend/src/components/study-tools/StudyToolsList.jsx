@@ -9,7 +9,7 @@ const toolsData = [
   { id: 3, title: 'Academic Analytics', description: 'Visual feedback on your study patterns and grade projections.', icon: '📊', route: '/academic-analytics' },
   { id: 4, title: 'Personal Library', description: 'High-end file management for your academic resources.', icon: '📚', route: '/personal-library' },
   { id: 5, title: 'Exam Countdown', description: 'Stay ahead with smart, color-coded urgency timers for major exams.', icon: '⏳', route: '/exam-countdown' },
-  { id: 6, title: 'Study Plan Generator', description: 'Transform your course materials into a structured academic schedule tailored to your pace and goals.', icon: '🗓️', route: '#' }
+  { id: 6, title: 'Study Plan Generator', description: 'Transform your course materials into a structured academic schedule tailored to your pace and goals.', icon: '🗓️', route: '/study-plan-generator' }
 ];
 
 function StudyToolsList() {

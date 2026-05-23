@@ -24,6 +24,7 @@ import FocusTimerPage from './pages/FocusTimerPage';
 import PersonalLibraryPage from './pages/PersonalLibraryPage';
 import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import ExamCountdownPage from './pages/ExamCountdownPage';
+import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
 
 import './App.css';
 import './responsive.css';
@@ -55,6 +56,7 @@ function App() {
             <Route path="/personal-library" element={<PersonalLibraryPage />} />
             <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
             <Route path="/exam-countdown" element={<ExamCountdownPage />} />
+            <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
           </Routes>
         </TaskProvider>
       </Router>
