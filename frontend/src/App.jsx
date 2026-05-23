@@ -24,7 +24,7 @@ import FocusTimerPage from './pages/FocusTimerPage';
 import PersonalLibraryPage from './pages/PersonalLibraryPage';
 import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import ExamCountdownPage from './pages/ExamCountdownPage';
-import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
+import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';c
 
 import './App.css';
 import './responsive.css';
