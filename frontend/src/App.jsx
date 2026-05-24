@@ -3,13 +3,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TaskProvider } from './context/TaskContext'; 
 import { SettingsProvider } from './context/SettingsContext';
 
-// Auth Pages
+// --- Auth Pages ---
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
-// Main App Pages
+// --- Main App Pages ---
 import DashboardPage from './pages/DashboardPage';
 import TaskManagementPage from './pages/TaskManagementPage'; 
 import CalendarPage from './pages/CalendarPage';
@@ -24,7 +24,10 @@ import FocusTimerPage from './pages/FocusTimerPage';
 import PersonalLibraryPage from './pages/PersonalLibraryPage';
 import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import ExamCountdownPage from './pages/ExamCountdownPage';
-import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';c
+import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
+
+// --- Admin Pages (Methana thama aluth eka thiyenne) ---
+import AdminDashboardPage from './pages/AdminDashboardPage';
 
 import './App.css';
 import './responsive.css';
@@ -41,7 +44,7 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             
-            {/* Protected Main Routes (Dashboard & Tools) */}
+            {/* Protected Main Routes (Student Dashboard & Tools) */}
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/tasks" element={<TaskManagementPage />} />
             <Route path="/calendar" element={<CalendarPage />} />
@@ -57,6 +60,10 @@ function App() {
             <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
             <Route path="/exam-countdown" element={<ExamCountdownPage />} />
             <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
+            
+            {/* --- Admin Routes --- */}
+            <Route path="/admin" element={<AdminDashboardPage />} />
+
           </Routes>
         </TaskProvider>
       </Router>
