@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useTasks } from '../../context/TaskContext'; 
 import TaskCard from '../tasks/TaskCard'; 
 import AddTaskModal from './AddTaskModal';
+import { useSettings } from '../../context/SettingsContext';
 
 function PendingAssignments() {
   const { tasks } = useTasks(); 
+  const { t } = useSettings();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Filter tasks with 'to-do' status to display in Pending Assignments
@@ -13,7 +15,7 @@ function PendingAssignments() {
   return (
     <div className="widget-card flex-col">
       <div className="widget-header">
-        <h3>Pending Assignments</h3>
+        <h3>{t('pendingAssignments')}</h3>
       </div>
       <div className="widget-scroll-area">
         {/* Render only Pending (To Do) tasks */}
@@ -27,7 +29,7 @@ function PendingAssignments() {
           className="btn outline-btn full-width" 
           onClick={() => setIsModalOpen(true)}
         >
-          + Add New Task
+          {t('addNewTask')}
         </button>
       </div>
 

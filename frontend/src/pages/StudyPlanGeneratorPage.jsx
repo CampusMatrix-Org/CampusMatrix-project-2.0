@@ -1,23 +1,113 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StudyPlanGeneratorPage.css';
-import { LuPlus, LuCalendar } from "react-icons/lu"; // 
+import { LuPlus, LuCalendar } from "react-icons/lu"; 
+import { FiLoader, FiCheckCircle } from "react-icons/fi";
 
 // Layout Components Import
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
+import { useTasks } from '../context/TaskContext';
 
 const StudyPlanGeneratorPage = () => {
   const navigate = useNavigate();
+  const { addTask } = useTasks();
+  const fileInputRef = useRef(null);
+  
   const [intensity, setIntensity] = useState('Moderate');
   const [date, setDate] = useState('');
   const [commitment, setCommitment] = useState('3 - 4 Hours');
 
-  // Dummy documents data
-  const documents = [
+  // Dynamic Documents State
+  const [documents, setDocuments] = useState([
     { id: 1, name: 'Calculus_Syllabus.pdf', size: '1.2 MB', uploaded: '2h ago', color: '#FF4D4F', bg: '#FFE0E0' },
     { id: 2, name: 'Physics_Notes_V2.pdf', size: '4.5 MB', uploaded: '1d ago', color: '#1890FF', bg: '#E6F7FF' }
-  ];
+  ]);
+
+  // AI Generation States
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedPlan, setGeneratedPlan] = useState(null);
+
+  // File Upload Handlers
+  const handleAddMoreClick = () => {
+    if (fileInputRef.current) fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      const newDocs = files.map((f, index) => ({
+        id: Date.now() + index,
+        name: f.name,
+        size: (f.size / (1024 * 1024)).toFixed(1) + ' MB',
+        uploaded: 'Just now',
+        color: '#20C997', // Greenish for new
+        bg: '#E6FCF5'
+      }));
+      setDocuments([...documents, ...newDocs]);
+    }
+  };
+
+  // AI Mock Generation
+  const generateStudyPlan = () => {
+    if (!date) {
+      alert("Please select a target exam date.");
+      return;
+    }
+    if (documents.length === 0) {
+      alert("Please add at least one document for the AI to analyze.");
+      return;
+    }
+
+    setIsGenerating(true);
+
+    // Simulate AI processing delay
+    setTimeout(() => {
+      // Create mock plan tasks
+      const mockTasks = [
+        {
+          title: `Study Session 1: ${documents[0]?.name.split('.')[0] || 'Core Concepts'}`,
+          description: `AI Generated task based on ${intensity} intensity plan.`,
+          priority: 'high',
+          type: 'task'
+        },
+        {
+          title: `Practice Questions for ${date}`,
+          description: `Daily ${commitment} commitment requirement.`,
+          priority: 'medium',
+          type: 'task'
+        },
+        {
+          title: 'Review Notes and Summary',
+          description: 'Spaced repetition block for uploaded materials.',
+          priority: 'medium',
+          type: 'lecture'
+        }
+      ];
+
+      // Automatically add to TaskContext (Calendar & Tasks)
+      const targetDateObj = new Date(date);
+      mockTasks.forEach((task, index) => {
+        // Distribute dates leading up to the exam
+        const taskDate = new Date(targetDateObj);
+        taskDate.setDate(taskDate.getDate() - (index + 1));
+        
+        addTask({
+          title: task.title,
+          description: task.description,
+          status: 'to-do',
+          priority: task.priority,
+          dueDate: taskDate.toISOString(),
+          type: task.type
+        });
+      });
+
+      setGeneratedPlan(mockTasks);
+      setIsGenerating(false);
+    }, 2500); // 2.5s generation time
+  };
+
+
 
   return (
     <div className="dashboard-layout">
@@ -28,15 +118,13 @@ const StudyPlanGeneratorPage = () => {
         <Header />
         
         <div className="page-content">
-          <div className="spg-container scrollable">
+          <div className="spg-workspace">
             
             {/* Title Breadcrumb */}
-            <div className="spg-breadcrumb">
-              <h1 className="breadcrumb-light" onClick={() => navigate('/study-tools')}>
-                Study Tools
-              </h1>
-              <span className="breadcrumb-arrow">&gt;</span>
-              <h1 className="breadcrumb-dark">Study Plan Generator</h1>
+            <div className="study-breadcrumb">
+              <span className="sb-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
+              <span className="sb-separator"> &gt; </span>
+              <span className="sb-current">Study Plan Generator</span>
             </div>
 
             <div className="spg-layout">
@@ -50,7 +138,14 @@ const StudyPlanGeneratorPage = () => {
                       <h2>Selected Documents</h2>
                       <p>Files used as context for your study plan</p>
                     </div>
-                    <button className="spg-add-btn">
+                    <input 
+                      type="file" 
+                      multiple 
+                      ref={fileInputRef} 
+                      style={{ display: 'none' }} 
+                      onChange={handleFileChange} 
+                    />
+                    <button className="spg-add-btn" onClick={handleAddMoreClick}>
                       <LuPlus size={18} /> Add More
                     </button>
                   </div>
@@ -70,14 +165,47 @@ const StudyPlanGeneratorPage = () => {
                   </div>
                 </div>
 
-                {/* Empty State / Ready to Curate */}
-                <div className="spg-empty-state">
-                  <div className="spg-empty-icon" style={{ fontSize: '28px' }}>
-                    ✨ 
+                {/* AI Generation State or Generated Plan View */}
+                {isGenerating ? (
+                  <div className="spg-generating-state">
+                    <FiLoader className="spg-spinner" size={48} />
+                    <h3>AI is analyzing your materials...</h3>
+                    <p>Extracting topics, calculating difficulty, and scheduling your study blocks.</p>
                   </div>
-                  <h3>Ready to curate?</h3>
-                  <p>Configure your goals on the right and tap generate to see<br/>your AI-crafted academic path appear here.</p>
-                </div>
+                ) : generatedPlan ? (
+                  <div className="spg-generated-view">
+                    <div className="spg-success-banner">
+                      <FiCheckCircle size={24} color="#20C997" />
+                      <div>
+                        <h3>Study Plan Generated!</h3>
+                        <p>We've automatically added these blocks to your Tasks & Calendar.</p>
+                      </div>
+                    </div>
+                    
+                    <div className="spg-plan-list">
+                      {generatedPlan.map((task, idx) => (
+                        <div className="spg-plan-item" key={idx}>
+                          <div className="spg-plan-item-left">
+                            <span className={`spg-plan-dot ${task.type}`}></span>
+                            <div className="spg-plan-item-info">
+                              <h4>{task.title}</h4>
+                              <p>{task.description}</p>
+                            </div>
+                          </div>
+                          <span className={`spg-plan-badge priority-${task.priority}`}>{task.priority}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="spg-empty-state">
+                    <div className="spg-empty-icon" style={{ fontSize: '28px' }}>
+                      ✨ 
+                    </div>
+                    <h3>Ready to curate?</h3>
+                    <p>Configure your goals on the right and tap generate to see<br/>your AI-crafted academic path appear here.</p>
+                  </div>
+                )}
 
               </div>
 
@@ -123,8 +251,8 @@ const StudyPlanGeneratorPage = () => {
                   </div>
 
                 
-                  <button className="spg-generate-btn">
-                    ⚡ Generate Study Plan
+                  <button className="spg-generate-btn" onClick={generateStudyPlan} disabled={isGenerating}>
+                    {isGenerating ? 'Generating...' : '⚡ Generate Study Plan'}
                   </button>
                 </div>
 

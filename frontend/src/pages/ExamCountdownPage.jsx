@@ -6,6 +6,7 @@ import { LuCalendar, LuLightbulb, LuUsers, LuTrendingUp, LuPlus, LuX, LuCalendar
 // Layout Components Import
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
+import { useTasks } from '../context/TaskContext';
 
 const ExamCountdownPage = () => {
   const navigate = useNavigate();
@@ -18,11 +19,11 @@ const ExamCountdownPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const [exams, setExams] = useState([
-    { id: 1, title: 'Data Structures', target: 'A', datetime: '2026-12-15T09:00', priority: 'high' },
-    { id: 2, title: 'Algorithms', target: 'A-', datetime: '2026-12-19T14:00', priority: 'medium' },
-    { id: 3, title: 'Computer Networks', target: 'A', datetime: '2027-01-05T11:30', priority: 'low' }
-  ]);
+  const { tasks, addTask, updateTask, deleteTask } = useTasks();
+  const exams = tasks.filter(t => t.type === 'exam').map(t => ({
+    ...t,
+    datetime: t.dueDate 
+  }));
 
   // Modals State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,8 +64,10 @@ const ExamCountdownPage = () => {
   };
 
   const openEditModal = (exam) => {
-    const [date, time] = exam.datetime.split('T');
-    setFormData({ id: exam.id, title: exam.title, date, time, target: exam.target, priority: exam.priority });
+    const dateObj = new Date(exam.datetime);
+    const date = dateObj.toISOString().split('T')[0];
+    const time = dateObj.toTimeString().slice(0, 5);
+    setFormData({ id: exam.id, title: exam.title, date, time, target: exam.target || 'A', priority: exam.priority });
     setIsEditing(true);
     setIsModalOpen(true);
   };
@@ -76,7 +79,7 @@ const ExamCountdownPage = () => {
   };
 
   const confirmDelete = () => {
-    setExams(exams.filter(exam => exam.id !== examToDelete));
+    deleteTask(examToDelete);
     setIsDeleteModalOpen(false);
     setExamToDelete(null);
   };
@@ -94,22 +97,25 @@ const ExamCountdownPage = () => {
     const newExam = {
       id: isEditing ? formData.id : Date.now(),
       title: formData.title,
+      description: `Target Grade: ${formData.target}`,
       target: formData.target,
-      datetime: `${formData.date}T${formData.time}`,
-      priority: formData.priority
+      dueDate: new Date(`${formData.date}T${formData.time}`).toISOString(),
+      priority: formData.priority,
+      status: 'to-do',
+      type: 'exam'
     };
 
     if (isEditing) {
-      setExams(exams.map(ex => ex.id === formData.id ? newExam : ex));
+      updateTask(newExam);
     } else {
-      setExams([...exams, newExam]);
+      addTask(newExam);
     }
     setIsModalOpen(false);
   };
 
   // Filters & Sorting 
   const filteredExams = exams.filter(exam => {
-    const isCompleted = new Date(exam.datetime) <= currentTime;
+    const isCompleted = new Date(exam.datetime) <= currentTime || exam.status === 'completed';
     if (activeFilter === 'Completed') return isCompleted;
     return !isCompleted; 
   }).sort((a, b) => {
@@ -130,18 +136,13 @@ const ExamCountdownPage = () => {
         <Header />
 
         <div className="page-content">
-          <div className="ec-container scrollable">
+          <div className="ec-workspace">
             
             {/* Title Breadcrumb */}
-            <div className="ec-page-breadcrumb">
-              <h1 
-                className="breadcrumb-light" 
-                onClick={() => navigate('/study-tools')}
-              >
-                Study Tools
-              </h1>
-              <span className="breadcrumb-arrow">&gt;</span>
-              <h1 className="breadcrumb-dark">Exam Countdown</h1>
+            <div className="study-breadcrumb">
+              <span className="sb-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
+              <span className="sb-separator"> &gt; </span>
+              <span className="sb-current">Exam Countdown</span>
             </div>
 
             {/* Filter Bar */}
@@ -159,7 +160,7 @@ const ExamCountdownPage = () => {
                 <div className="ec-empty-state">No exams found in this category.</div>
               ) : (
                 filteredExams.map((exam) => {
-                  const isCompleted = new Date(exam.datetime) <= currentTime;
+                  const isCompleted = new Date(exam.datetime) <= currentTime || exam.status === 'completed';
                   const timeLeft = calculateTimeLeft(exam.datetime);
                   const details = getPriorityDetails(exam.priority, isCompleted);
                   const dateObj = new Date(exam.datetime);
@@ -200,15 +201,11 @@ const ExamCountdownPage = () => {
               )}
             </div>
 
-            <div className="ec-fab-container">
-              <button className="ec-fab-btn" onClick={openAddModal}>
-                <LuPlus size={24} />
-              </button>
-            </div>
+            <button className="fab-button" onClick={openAddModal}>+</button>
 
             {/* Bottom Cards */}
             <div className="ec-bottom-cards">
-              <div className="ec-info-card"><LuLightbulb className="ec-info-icon" size={24} color="#FF5722" /><h3>Study Tip</h3><p>Active recall and spaced repetition are your best friends.</p></div>
+              <div className="ec-info-card"><LuLightbulb className="ec-info-icon" size={24} color="#FF7043" /><h3>Study Tip</h3><p>Active recall and spaced repetition are your best friends.</p></div>
               <div className="ec-info-card"><LuUsers className="ec-info-icon" size={24} color="#5C7CFA" /><h3>Study Groups</h3><p>Join the active study group for your upcoming exams.</p></div>
               <div className="ec-info-card"><LuTrendingUp className="ec-info-icon" size={24} color="#20C997" /><h3>Overall Progress</h3><div className="ec-progress-bar"><div className="ec-progress-fill" style={{ width: '65%' }}></div></div><p className="ec-progress-text">65% of course materials covered.</p></div>
             </div>
@@ -223,10 +220,10 @@ const ExamCountdownPage = () => {
           <div className="ec-modal">
             <div className="ec-modal-header">
               <div className="flex-align">
-                <LuCalendarDays color="#FF5722" size={20} />
+                <LuCalendarDays color="#FF7043" size={20} />
                 <h3>{isEditing ? 'Edit Exam' : 'Add New Exam'}</h3>
               </div>
-              <button className="ec-modal-close" onClick={() => setIsModalOpen(false)}><LuX size={20} /></button>
+              <button className="modal-close" onClick={() => setIsModalOpen(false)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
             </div>
             <form onSubmit={handleSubmit} className="ec-modal-form">
               <div className="ec-form-group">

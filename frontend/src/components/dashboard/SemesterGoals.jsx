@@ -1,6 +1,8 @@
 import React from 'react';
+import { useSettings } from '../../context/SettingsContext';
 
 function SemesterGoals() {
+  const { t } = useSettings();
   const goals = [
     { title: 'CampusMatrix Project', progress: '85%', color: '#FF7043' },
     { title: 'Java & OOP Mastery', progress: '92%', color: '#0984E3' },
@@ -22,8 +24,8 @@ function SemesterGoals() {
   return (
     <div className="widget-card flex-col">
       <div className="widget-header">
-        <h3>Semester Goals</h3>
-        <span className="subtitle-tag">Spring 2026</span>
+        <h3>{t('semesterGoals')}</h3>
+        <span className="subtitle-tag">{t('spring2026')}</span>
       </div>
       
       <div className="widget-scroll-area">
@@ -46,11 +48,11 @@ function SemesterGoals() {
       <div className="widget-fixed-footer stats-footer">
         <div className="stat-box">
           <h2>3.8</h2>
-          <p>CURRENT GPA</p>
+          <p>{t('currentGpa')}</p>
         </div>
         <div className="stat-box border-left">
           <h2>18</h2>
-          <p>CREDITS</p>
+          <p>{t('credits')}</p>
         </div>
       </div>
     </div>

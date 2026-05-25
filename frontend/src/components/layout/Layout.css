@@ -27,6 +27,17 @@
 .header { height: 80px; background: white; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
 .search-bar { display: flex; align-items: center; background: #F8F9FA; padding: 10px 20px; border-radius: 20px; width: 400px; border: 1px solid #EAEAEA; }
 .search-bar input { border: none; background: transparent; outline: none; width: 100%; margin-left: 10px; font-size: 0.9rem; }
+.search-container { position: relative; }
+.search-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1.5px solid #EAEAEA; border-radius: 12px; margin-top: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 100; max-height: 300px; overflow-y: auto; }
+.search-dropdown::-webkit-scrollbar { width: 4px; }
+.search-dropdown::-webkit-scrollbar-thumb { background-color: #E0E0E0; border-radius: 4px; }
+.search-result-item { display: flex; align-items: center; padding: 12px 15px; gap: 12px; cursor: pointer; border-bottom: 1px solid #F8F9FA; transition: background 0.2s; }
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: #FFF9F6; }
+.result-icon { font-size: 18px; }
+.result-info h4 { margin: 0; font-size: 13px; color: #1A1A1A; font-weight: 700; }
+.result-info p { margin: 0; font-size: 11px; color: #888; text-transform: capitalize; }
+.search-no-results { padding: 15px; text-align: center; color: #888; font-size: 13px; }
 .header-right { display: flex; align-items: center; gap: 15px; } 
 
 /* Notification Button Hover Fixes */

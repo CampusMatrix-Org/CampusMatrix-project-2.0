@@ -1,9 +1,11 @@
 import React from 'react';
 import { useTasks } from '../../context/TaskContext';
 import { Link } from 'react-router-dom'; 
+import { useSettings } from '../../context/SettingsContext';
 
 function TodaySchedule() {
   const { tasks } = useTasks();
+  const { t } = useSettings();
 
   const todayString = new Date().toDateString();
 
@@ -28,15 +30,15 @@ function TodaySchedule() {
   return (
     <div className="widget-card flex-col">
       <div className="widget-header">
-        <h3>Today's Schedule</h3>
-        <Link to="/calendar">See Full</Link>
+        <h3>{t('todaySchedule')}</h3>
+        <Link to="/calendar">{t('seeFull')}</Link>
       </div>
       
       <div className="widget-scroll-area">
         {todaysTasks.length === 0 ? (
           <div style={{ textAlign: 'center', color: '#888', marginTop: '30px' }}>
-            <p style={{ fontWeight: '600', marginBottom: '5px' }}>No events for today!</p>
-            <p style={{ fontSize: '0.8rem' }}>(Drag an event to today in the Calendar to see it here)</p>
+            <p style={{ fontWeight: '600', marginBottom: '5px' }}>{t('noEvents')}</p>
+            <p style={{ fontSize: '0.8rem' }}>{t('dragEvent')}</p>
           </div>
         ) : (
           <div className="timeline">

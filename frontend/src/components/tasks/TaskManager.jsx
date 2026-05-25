@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import { useTasks } from '../../context/TaskContext';
 import TaskColumn from './TaskColumn';
 import AddTaskModal from '../dashboard/AddTaskModal';
+import { useSettings } from '../../context/SettingsContext';
 import './TaskManager.css';
 
 function TaskManager() {
   const { tasks, updateTaskStatus } = useTasks();
+  const { t } = useSettings();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Column structure based on task status
   const columns = [
-    { title: 'To Do', status: 'to-do', tasks: tasks.filter(t => t.status === 'to-do') },
-    { title: 'In Progress', status: 'in-progress', tasks: tasks.filter(t => t.status === 'in-progress') },
-    { title: 'Completed', status: 'completed', tasks: tasks.filter(t => t.status === 'completed') },
+    { title: t('todo'), status: 'to-do', tasks: tasks.filter(t => t.status === 'to-do') },
+    { title: t('inProgress'), status: 'in-progress', tasks: tasks.filter(t => t.status === 'in-progress') },
+    { title: t('completed'), status: 'completed', tasks: tasks.filter(t => t.status === 'completed') },
   ];
 
   return (

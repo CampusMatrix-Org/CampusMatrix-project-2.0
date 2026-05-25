@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSettings } from '../../context/SettingsContext';
 import './StudyTools.css';
 
 
@@ -13,10 +14,36 @@ const toolsData = [
 ];
 
 function StudyToolsList() {
+  const { t } = useSettings();
+
+  const getTranslatedTitle = (title) => {
+    switch (title) {
+      case 'Smart Flashcards': return t('flashcards');
+      case 'Focus Timer': return t('focusTimer');
+      case 'Academic Analytics': return t('academicAnalytics');
+      case 'Personal Library': return t('libraryTitle');
+      case 'Exam Countdown': return t('examCountdown');
+      case 'Study Plan Generator': return t('studyPlan');
+      default: return title;
+    }
+  };
+
+  const getTranslatedDescription = (title) => {
+    switch (title) {
+      case 'Smart Flashcards': return t('flashcardsDesc');
+      case 'Focus Timer': return t('focusTimerDesc');
+      case 'Academic Analytics': return t('academicAnalyticsDesc');
+      case 'Personal Library': return t('libraryDesc2');
+      case 'Exam Countdown': return t('examCountdownDesc');
+      case 'Study Plan Generator': return t('studyPlanDesc');
+      default: return "";
+    }
+  };
+
   return (
     <div className="widget-card flex-col" style={{ height: 'calc(100vh - 120px)', overflowY: 'auto' }}>
       <div className="widget-header">
-        <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>Study Tools</h3>
+        <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>{t('studyToolsTitle')}</h3>
       </div>
       
       <div className="study-tools-container">
@@ -30,8 +57,8 @@ function StudyToolsList() {
               {tool.icon}
             </div>
             <div className="tool-info">
-              <h4>{tool.title}</h4>
-              <p>{tool.description}</p>
+              <h4>{getTranslatedTitle(tool.title)}</h4>
+              <p>{getTranslatedDescription(tool.title)}</p>
             </div>
           </Link>
         ))}
