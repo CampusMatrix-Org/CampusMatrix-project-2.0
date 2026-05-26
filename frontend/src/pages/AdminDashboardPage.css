@@ -60,9 +60,7 @@
 .log-info p { margin: 0; font-size: 12px; color: #888; line-height: 1.4; }
 
 
-/* ========================================================= */
-/*                   GENERATE REPORT MODAL                   */
-/* ========================================================= */
+
 .report-modal-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center;
@@ -137,9 +135,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 .modal-btn-submit:hover { background: #D84315; }
 
 
-/* ========================================================= */
-/*              CUSTOM CALENDAR POPUP                        */
-/* ========================================================= */
+
 .custom-cal-overlay {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.2); display: flex; align-items: center; justify-content: center;

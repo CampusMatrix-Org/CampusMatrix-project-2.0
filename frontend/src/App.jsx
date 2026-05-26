@@ -25,8 +25,7 @@ import PersonalLibraryPage from './pages/PersonalLibraryPage';
 import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import ExamCountdownPage from './pages/ExamCountdownPage';
 import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
-
-// --- Admin Pages (Methana thama aluth eka thiyenne) ---
+import StudentManagementPage from './pages/StudentManagementPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
 import './App.css';
@@ -61,7 +60,7 @@ function App() {
             <Route path="/exam-countdown" element={<ExamCountdownPage />} />
             <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
             
-            {/* --- Admin Routes --- */}
+           <Route path="/admin/users" element={<StudentManagementPage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />
 
           </Routes>
