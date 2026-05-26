@@ -25,8 +25,11 @@ import PersonalLibraryPage from './pages/PersonalLibraryPage';
 import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import ExamCountdownPage from './pages/ExamCountdownPage';
 import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
+
 import StudentManagementPage from './pages/StudentManagementPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import ResourceModerationPage from './pages/ResourceModerationPage';
+
 
 import './App.css';
 import './responsive.css';
@@ -59,9 +62,10 @@ function App() {
             <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
             <Route path="/exam-countdown" element={<ExamCountdownPage />} />
             <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
-            
+
            <Route path="/admin/users" element={<StudentManagementPage />} />
             <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/resources" element={<ResourceModerationPage />} />
 
           </Routes>
         </TaskProvider>
