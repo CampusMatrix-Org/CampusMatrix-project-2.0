@@ -5,15 +5,20 @@ import './AdminDashboardPage.css';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 
+import { useMaintenance } from '../context/MaintenanceContext';
+
 const AdminDashboardPage = () => {
+  
+  const { isMaintenanceMode } = useMaintenance();
+
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Custom Calendar State
-  const [calendarOpenFor, setCalendarOpenFor] = useState(null); // 'start' or 'end'
+  const [calendarOpenFor, setCalendarOpenFor] = useState(null); 
   const [startDate, setStartDate] = useState('10/01/2023');
   const [endDate, setEndDate] = useState('10/31/2023');
-  const [tempSelectedDay, setTempSelectedDay] = useState(5); // Highlighted day in calendar
+  const [tempSelectedDay, setTempSelectedDay] = useState(5); 
   
   // Form States for the Modal
   const [reportType, setReportType] = useState('student');
@@ -31,7 +36,6 @@ const AdminDashboardPage = () => {
     { id: 5, type: 'config', icon: '⚙️', title: 'Config change', desc: 'SMTP settings modified by admin', time: '6h ago', color: '#595959', bg: '#F5F5F5' },
   ];
 
-  // Helper to render calendar days (Oct 2023 starts on Sunday)
   const renderCalendarDays = () => {
     let days = [];
     for (let i = 1; i <= 31; i++) {
@@ -67,6 +71,24 @@ const AdminDashboardPage = () => {
         <div className="page-content">
           <div className="admin-container scrollable">
             
+            {/* 3. Maintenance Alert Banner (Only visible if ON) */}
+            {isMaintenanceMode && (
+              <div style={{ 
+                backgroundColor: '#FFFBE6', border: '1px solid #FFE58F', padding: '16px 20px', 
+                borderRadius: '8px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' 
+              }}>
+                <span style={{ fontSize: '24px' }}>⚠️</span>
+                <div>
+                  <h4 style={{ margin: '0 0 4px 0', color: '#D46B08', fontSize: '14px', fontWeight: '700' }}>
+                    Maintenance Mode is Active
+                  </h4>
+                  <p style={{ margin: 0, color: '#8C8C8C', fontSize: '13px' }}>
+                    Students are currently locked out of the system. Remember to disable this in System Settings when updates are complete.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Page Header */}
             <div className="admin-page-header">
               <div>
@@ -74,9 +96,7 @@ const AdminDashboardPage = () => {
                 <p>Welcome back, here's what's happening today.</p>
               </div>
               <div className="admin-header-actions">
-                <button className="admin-btn-outline">
-                  📅 Last 30 Days
-                </button>
+                <button className="admin-btn-outline">📅 Last 30 Days</button>
                 <button className="admin-btn-primary" onClick={() => setIsModalOpen(true)}>
                   ➕ Generate Report
                 </button>
@@ -311,7 +331,6 @@ const AdminDashboardPage = () => {
         <div className="custom-cal-overlay" onClick={() => setCalendarOpenFor(null)}>
           <div className="custom-cal-container" onClick={e => e.stopPropagation()}>
             
-            {/* Calendar Header */}
             <div className="custom-cal-header">
               <button className="custom-cal-close" onClick={() => setCalendarOpenFor(null)}>✕</button>
               <span className="custom-cal-subtitle">SELECT A DATE</span>
@@ -324,7 +343,6 @@ const AdminDashboardPage = () => {
               </div>
             </div>
             
-            {/* Calendar Body */}
             <div className="custom-cal-body">
               <div className="cal-weekdays">
                 <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
@@ -334,7 +352,6 @@ const AdminDashboardPage = () => {
               </div>
             </div>
 
-            {/* Calendar Footer */}
             <div className="custom-cal-footer">
               <button className="cal-btn-cancel" onClick={() => setCalendarOpenFor(null)}>Cancel</button>
               <button className="cal-btn-select" onClick={handleDateSelect}>Select Date</button>

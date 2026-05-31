@@ -1,7 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// --- Context Providers ---
 import { TaskProvider } from './context/TaskContext'; 
 import { SettingsProvider } from './context/SettingsContext';
+import { MaintenanceProvider } from './context/MaintenanceContext'; 
 
 // --- Auth Pages ---
 import LandingPage from './pages/LandingPage';
@@ -26,10 +29,11 @@ import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
 import ExamCountdownPage from './pages/ExamCountdownPage';
 import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
 
-import StudentManagementPage from './pages/StudentManagementPage';
+// --- Admin Pages ---
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import StudentManagementPage from './pages/StudentManagementPage';
 import ResourceModerationPage from './pages/ResourceModerationPage';
-
+import SystemSettingsPage from './pages/SystemSettingsPage'; 
 
 import './App.css';
 import './responsive.css';
@@ -37,39 +41,43 @@ import './responsive.css';
 function App() {
   return (
     <SettingsProvider>
-      <Router>
-        <TaskProvider> 
-          <Routes>
-            {/* Public Auth Routes */}
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            
-            {/* Protected Main Routes (Student Dashboard & Tools) */}
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/tasks" element={<TaskManagementPage />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/study-tools" element={<StudyToolsPage />} />
-            <Route path="/smart-flashcards" element={<FlashcardsPage />}/>
-            <Route path="/focus-timer" element={<FocusTimerPage />} />
-            <Route path="/ai-assistant" element={<AIAssistantPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/change-password" element={<ChangePasswordPage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/personal-library" element={<PersonalLibraryPage />} />
-            <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
-            <Route path="/exam-countdown" element={<ExamCountdownPage />} />
-            <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
+      <MaintenanceProvider> 
+        <Router>
+          <TaskProvider> 
+            <Routes>
+              {/* Public Auth Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              
+              {/* Protected Main Routes (Student Dashboard & Tools) */}
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/tasks" element={<TaskManagementPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/study-tools" element={<StudyToolsPage />} />
+              <Route path="/smart-flashcards" element={<FlashcardsPage />}/>
+              <Route path="/focus-timer" element={<FocusTimerPage />} />
+              <Route path="/ai-assistant" element={<AIAssistantPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/change-password" element={<ChangePasswordPage />} />
+              <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/personal-library" element={<PersonalLibraryPage />} />
+              <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
+              <Route path="/exam-countdown" element={<ExamCountdownPage />} />
+              <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin/users" element={<StudentManagementPage />} />
+              <Route path="/admin/resources" element={<ResourceModerationPage />} />
+              <Route path="/admin/settings" element={<SystemSettingsPage />} /> {/* අලුත් Route එක */}
 
-           <Route path="/admin/users" element={<StudentManagementPage />} />
-            <Route path="/admin" element={<AdminDashboardPage />} />
-            <Route path="/admin/resources" element={<ResourceModerationPage />} />
-
-          </Routes>
-        </TaskProvider>
-      </Router>
+            </Routes>
+          </TaskProvider>
+        </Router>
+      </MaintenanceProvider>
     </SettingsProvider>
   );
 }
