@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StudyPlanGeneratorPage.css';
 import { LuPlus, LuCalendar } from "react-icons/lu"; 
@@ -184,7 +184,7 @@ const StudyPlanGeneratorPage = () => {
                     
                     <div className="spg-plan-list">
                       {generatedPlan.map((task, idx) => (
-                        <div className="spg-plan-item" key={idx}>
+                        <div className="spg-plan-item" key={`plan-task-${idx}`}>
                           <div className="spg-plan-item-left">
                             <span className={`spg-plan-dot ${task.type}`}></span>
                             <div className="spg-plan-item-info">

@@ -1,0 +1,227 @@
+
+.admin-profile-bg {
+  background-color: #FFF6EC !important; 
+  padding: 50px 20px;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+  
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+/* Container limits the width */
+.admin-profile-bg .admin-container {
+  width: 100%;
+  max-width: 750px; 
+}
+
+.profile-page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+  width: 100%; 
+}
+
+/* Profile Card matching the UI */
+.profile-card {
+  background: white;
+  border: 1px solid #FFD8C4;
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(230, 74, 25, 0.02);
+}
+
+/* Photo Section */
+.profile-photo-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #FFF0E5;
+  margin-bottom: 30px;
+}
+
+.profile-avatar-large {
+  width: 90px;
+  height: 90px;
+  background-color: #FF7043;
+  color: white;
+  font-size: 32px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.profile-photo-actions h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.profile-photo-actions p {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: #888;
+}
+
+.photo-btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-upload {
+  background-color: #FF7043;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-upload:hover { background-color: #F4511E; }
+
+.btn-remove {
+  background-color: white;
+  color: #FF7043;
+  border: 1px solid #FFD8C4;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-remove:hover { border-color: #FF7043; }
+
+/* Form Grid */
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+  border-color: #FF7043;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+/* Update Actions */
+.profile-update-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #FFF0E5;
+  margin-bottom: 30px;
+}
+
+.last-updated {
+  font-size: 13px;
+  color: #999;
+}
+
+.update-btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-cancel {
+  background-color: #FAFAFA;
+  color: #666;
+  border: 1px solid #E0E0E0;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-cancel:hover { background-color: #F0F0F0; border-color: #CCC; }
+
+.btn-update {
+  background-color: #FF7043;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-update:hover { background-color: #F4511E; }
+
+/* Security Actions */
+.profile-security-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.btn-security, .btn-signout {
+  background-color: white;
+  border: 1px solid #E0E0E0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+
+.btn-security:hover { border-color: #FF7043; color: #FF7043; }
+
+.btn-signout {
+  border-color: #FFE5E5;
+  color: #FF4D4F;
+}
+.btn-signout:hover {
+  background-color: #FFF1F0;
+  border-color: #FF4D4F;
+}
+.sec-icon {
+  font-size: 14px;
+}
