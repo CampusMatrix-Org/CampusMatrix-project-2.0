@@ -323,3 +323,132 @@ body.dark-mode .ai-chat-input {
 body.dark-mode .ai-chat-input::placeholder {
   color: #888 !important;
 }
+
+/* =========================================
+   🌙 GLOBAL DARK THEME FOR ADMIN DASHBOARD
+   ========================================= */
+
+/* Main Backgrounds */
+body.dark-theme {
+  background-color: #121212 !important;
+  color: #E0E0E0;
+}
+body.dark-theme .admin-profile-bg,
+body.dark-theme .sys-bg,
+body.dark-theme .page-content,
+body.dark-theme .dashboard-layout {
+  background-color: #121212 !important;
+}
+
+/* --- Admin Sidebar --- */
+body.dark-theme .admin-sidebar {
+  background-color: #1E1E1E;
+  border-right: 1px solid #333;
+}
+body.dark-theme .admin-logo h2,
+body.dark-theme .admin-bottom-info h4 { color: #F0F0F0; }
+body.dark-theme .admin-nav-item { color: #A0A0A0; }
+
+body.dark-theme .admin-nav-item:hover {
+  background-color: #2A2A2A;
+  color: #FF7043;
+}
+body.dark-theme .admin-nav-item.active {
+  background-color: #382015; /* Dark Orange Tint */
+  color: #FF7043;
+}
+body.dark-theme .admin-bottom-profile {
+  background-color: #2A2A2A;
+  border-color: #333;
+}
+
+/* --- Admin Header --- */
+body.dark-theme .header {
+  background-color: #1E1E1E;
+  border-bottom: 1px solid #333;
+}
+body.dark-theme .search-bar input {
+  background-color: #2A2A2A;
+  color: #F0F0F0;
+  border-color: #444;
+}
+body.dark-theme .search-bar input::placeholder { color: #888; }
+body.dark-theme .profile-name { color: #F0F0F0 !important; }
+body.dark-theme .notification-btn {
+  background-color: #2A2A2A;
+  color: #F0F0F0;
+}
+body.dark-theme .notification-btn:hover { background-color: #3A3A3A; }
+
+/* --- Cards (Profile, Settings, Dashboard) --- */
+body.dark-theme .profile-card,
+body.dark-theme .sys-card,
+body.dark-theme .admin-stat-card,
+body.dark-theme .admin-panel-card {
+  background-color: #1E1E1E;
+  border-color: #333;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+body.dark-theme .sys-card-header,
+body.dark-theme .admin-panel-header {
+  border-bottom-color: #333;
+}
+body.dark-theme .profile-page-title,
+body.dark-theme .sys-card-header h2,
+body.dark-theme .stat-title,
+body.dark-theme .stat-value,
+body.dark-theme h1, body.dark-theme h2, body.dark-theme h3 {
+  color: #F0F0F0 !important;
+}
+body.dark-theme p, body.dark-theme .stat-label {
+  color: #A0A0A0 !important;
+}
+
+/* --- Inputs & Forms --- */
+body.dark-theme .form-group label,
+body.dark-theme .api-key-section label {
+  color: #E0E0E0;
+}
+body.dark-theme .form-group input, 
+body.dark-theme .form-group select, 
+body.dark-theme .form-group textarea,
+body.dark-theme .input-wrapper input {
+  background-color: #2A2A2A;
+  color: #F0F0F0;
+  border-color: #444;
+}
+body.dark-theme .form-group input:focus, 
+body.dark-theme .form-group select:focus, 
+body.dark-theme .form-group textarea:focus {
+  border-color: #FF7043;
+}
+
+/* --- Specific Buttons & Elements --- */
+body.dark-theme .profile-update-actions,
+body.dark-theme .profile-photo-section { border-bottom-color: #333; }
+body.dark-theme .profile-photo-actions h3 { color: #F0F0F0; }
+
+body.dark-theme .btn-cancel,
+body.dark-theme .btn-security,
+body.dark-theme .btn-signout,
+body.dark-theme .btn-remove {
+  background-color: #2A2A2A;
+  color: #E0E0E0;
+  border-color: #444;
+}
+body.dark-theme .btn-cancel:hover,
+body.dark-theme .btn-security:hover {
+  background-color: #3A3A3A;
+  color: #FFF;
+}
+body.dark-theme .btn-remove:hover {
+  border-color: #FF7043;
+  color: #FF7043;
+}
+body.dark-theme .api-stat-box {
+  background-color: #2A2A2A;
+  border-color: #333;
+}
+body.dark-theme .setting-toggle-row { border-bottom-color: #333; }
+body.dark-theme .setting-toggle-row strong { color: #F0F0F0; }
+body.dark-theme .sys-footer-text { color: #666; }
