@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './AdminSidebar.css';
 import { useAdmin } from '../../context/AdminContext'; 
 
 function AdminSidebar() {
   const location = useLocation();
+  const navigate = useNavigate(); 
   const { adminData } = useAdmin();
 
   const adminNavItems = [
@@ -21,6 +22,15 @@ function AdminSidebar() {
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
+  };
+
+  
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out from the Admin Panel?");
+    
+    if (confirmLogout) {
+      navigate('/login'); 
+    }
   };
 
   return (
@@ -45,7 +55,8 @@ function AdminSidebar() {
 
       <div className="admin-sidebar-footer">
         <div className="admin-bottom-profile">
-          {/* Avatar Area with Image rendering logic */}
+          
+          {/* Avatar Area */}
           <div className="admin-avatar-small" style={{ overflow: 'hidden' }}>
             {adminData.profilePhoto ? (
               <img src={adminData.profilePhoto} alt="Admin" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -53,11 +64,21 @@ function AdminSidebar() {
               getInitials(adminData?.fullName || 'Admin User')
             )}
           </div>
+          
           <div className="admin-bottom-info">
             <h4>{adminData?.fullName || 'Admin User'}</h4>
             <p>{adminData?.email || 'admin@campusmatrix.edu'}</p>
           </div>
-          <button className="logout-btn" title="Logout">🚪</button>
+          
+          
+          <button className="logout-btn" title="Logout" onClick={handleLogout} style={{ color: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+          
         </div>
       </div>
     </aside>

@@ -398,7 +398,7 @@ body.dark-theme .sys-card-header h2,
 body.dark-theme .stat-title,
 body.dark-theme .stat-value,
 body.dark-theme h1, body.dark-theme h2, body.dark-theme h3 {
-  color: #F0F0F0 !important;
+  color: #ece4e4 !important;
 }
 body.dark-theme p, body.dark-theme .stat-label {
   color: #A0A0A0 !important;
@@ -452,3 +452,209 @@ body.dark-theme .api-stat-box {
 body.dark-theme .setting-toggle-row { border-bottom-color: #333; }
 body.dark-theme .setting-toggle-row strong { color: #F0F0F0; }
 body.dark-theme .sys-footer-text { color: #666; }
+
+
+body.dark-theme .search-bar,
+body.dark-theme .search-bar input {
+  background-color: #FFFFFF !important;
+  color: #1A1A1A !important;
+  border-color: #E0E0E0 !important;
+}
+
+body.dark-theme .search-bar input::placeholder {
+  color: #888 !important;
+}
+
+
+body.dark-theme .api-stat-box .stat-val {
+  color: #FFFFFF !important; 
+}
+
+
+body.dark-theme .api-stat-box .stat-label,
+body.dark-theme .api-stat-box .stat-unit {
+  color: #A0A0A0 !important;
+}
+
+/* =========================================
+   🌙 DARK MODE: STUDENT MANAGEMENT TABLE
+   ========================================= */
+
+body.dark-theme .student-table-container,
+body.dark-theme .table-card,
+body.dark-theme .admin-container > div[style*="background"], 
+body.dark-theme .admin-container .bg-white {
+  background-color: #1E1E1E !important;
+  border: 1px solid #333 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+
+body.dark-theme .table-search-bar input,
+body.dark-theme .table-controls input,
+body.dark-theme [placeholder="Search by ID, Name, Email..."] {
+  background-color: #121212 !important;
+  color: #F0F0F0 !important;
+  border: 1px solid #333 !important;
+}
+
+/* Filters & Export Buttons */
+body.dark-theme .table-controls button,
+body.dark-theme .filter-btn,
+body.dark-theme .export-btn {
+  background-color: #2A2A2A !important;
+  color: #E0E0E0 !important;
+  border: 1px solid #444 !important;
+}
+body.dark-theme .table-controls button:hover,
+body.dark-theme .filter-btn:hover,
+body.dark-theme .export-btn:hover {
+  background-color: #3A3A3A !important;
+}
+
+/* Table Header (Top Titles) */
+body.dark-theme table th {
+  background-color: #2A2A2A !important;
+  color: #A0A0A0 !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+/* Table Rows & Cells */
+body.dark-theme table td {
+  border-bottom: 1px solid #333 !important;
+  color: #E0E0E0 !important;
+}
+
+/* Hover effect for Table Rows */
+body.dark-theme table tbody tr:hover td {
+  background-color: #252525 !important;
+}
+
+
+body.dark-theme table td strong,
+body.dark-theme table td h4,
+body.dark-theme .student-name {
+  color: #F0F0F0 !important; 
+}
+body.dark-theme table td p,
+body.dark-theme table td span,
+body.dark-theme .student-email {
+  color: #888 !important; 
+}
+
+/* Action Buttons (Edit / Block) */
+body.dark-theme .action-btn,
+body.dark-theme table td button {
+  color: #888 !important;
+  background: transparent !important;
+  border: none !important;
+}
+body.dark-theme .action-btn:hover,
+body.dark-theme table td button:hover {
+  color: #FF7043 !important;
+}
+
+
+body.dark-theme .pagination,
+body.dark-theme .pagination-text {
+  color: #A0A0A0 !important;
+}
+body.dark-theme .pagination button {
+  color: #A0A0A0 !important;
+}
+body.dark-theme .pagination button.active {
+  background-color: #FF7043 !important;
+  color: #FFF !important;
+  border-color: #FF7043 !important;
+}
+
+body.dark-theme .table-search-bar input,
+body.dark-theme [placeholder="Search by ID, Name, Email..."] {
+  background-color: #FFFFFF !important; 
+  color: #1A1A1A !important; 
+  border: none !important;
+}
+
+body.dark-theme [placeholder="Search by ID, Name, Email..."]::placeholder {
+  color: #888 !important; 
+}
+
+
+
+body.dark-theme .student-table .s-name,
+body.dark-theme .student-table .s-id,
+body.dark-theme .student-table .s-date {
+  color: #FFFFFF !important; 
+}
+
+body.dark-theme .student-table .s-email {
+  color: #A0A0A0 !important; 
+}
+
+/* =========================================
+   🌙 DARK MODE: RESOURCE MODERATION CARDS (Corrected)
+   ========================================= */
+
+/* Main Card Container */
+body.dark-theme .res-card {
+  background-color: #1E1E1E !important;
+  border: 1px solid #333 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+body.dark-theme .res-preview {
+  background-color: #2A2A2A !important;
+  border-bottom: 1px solid #333 !important;
+}
+
+
+body.dark-theme .preview-tag,
+body.dark-theme .type-badge {
+  background-color: #333 !important;
+  color: #E0E0E0 !important;
+  border: 1px solid #444 !important;
+}
+
+
+body.dark-theme .res-title {
+  color: #FFFFFF !important; 
+}
+
+/* Author Name & Time */
+body.dark-theme .up-name,
+body.dark-theme .up-time {
+  color: #A0A0A0 !important;
+}
+
+
+body.dark-theme .btn-approve {
+  background-color: #1A3320 !important; 
+  color: #4CAF50 !important; 
+  border: 1px solid #2E5939 !important;
+}
+
+
+body.dark-theme .btn-delete-icon {
+  background-color: #331A1A !important;
+  color: #F44336 !important;
+  border: 1px solid #592E2E !important;
+}
+
+body.dark-theme .btn-delete-icon:hover {
+  background-color: #4A2525 !important;
+}
+
+body.dark-theme .student-page-header .btn-orange-solid,
+body.dark-theme .student-page-header .btn-orange-solid span {
+  color: #FFFFFF !important;
+}
+
+
+body.dark-theme .logout-btn {
+  opacity: 0.8;
+}
+body.dark-theme .logout-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
