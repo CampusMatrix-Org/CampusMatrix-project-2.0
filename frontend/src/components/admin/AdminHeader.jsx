@@ -25,7 +25,7 @@ function AdminHeader() {
       </div>
 
       <div className="header-right">
-        <button className="notification-btn" title="System Alerts">
+        <button className="notification-btn" title="System Alerts" onClick={() => navigate('/admin/notifications')}>
           🔔 <span className="notification-dot" style={{ background: '#F5222D' }}></span>
         </button>
 

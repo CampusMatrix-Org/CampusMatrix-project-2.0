@@ -37,6 +37,7 @@ import StudentManagementPage from './pages/StudentManagementPage';
 import ResourceModerationPage from './pages/ResourceModerationPage';
 import SystemSettingsPage from './pages/SystemSettingsPage';
 import AdminProfilePage from './pages/AdminProfilePage';
+import AdminNotificationsPage from './pages/AdminNotificationsPage';
 
 import './App.css';
 import './responsive.css';
@@ -79,6 +80,8 @@ function App() {
                   <Route path="/admin/resources" element={<ResourceModerationPage />} />
                   <Route path="/admin/settings" element={<SystemSettingsPage />} />
                   <Route path="/admin/profile" element={<AdminProfilePage />} />
+                  
+                  <Route path="/admin/notifications" element={<AdminNotificationsPage />} />
 
                 </Routes>
               </TaskProvider>
