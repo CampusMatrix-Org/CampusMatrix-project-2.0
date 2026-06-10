@@ -41,9 +41,9 @@ function StudyToolsList() {
   };
 
   return (
-    <div className="widget-card flex-col" style={{ height: 'calc(100vh - 120px)', overflowY: 'auto' }}>
-      <div className="widget-header">
-        <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>{t('studyToolsTitle')}</h3>
+    <div className="study-tools-wrapper">
+      <div className="study-tools-header" style={{ marginBottom: '20px', padding: '0 15px' }}>
+        <h3 style={{ fontSize: '1.4rem', fontWeight: '800', margin: 0 }}>{t('studyToolsTitle')}</h3>
       </div>
       
       <div className="study-tools-container">

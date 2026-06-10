@@ -240,3 +240,28 @@ body.dark-mode .stress-tip { background: #121212; }
 body.dark-mode .stress-circle { border-color: #FFF; }
 body.dark-mode .stress-circle strong { color: #FFF; }
 body.dark-mode .metric-trend.requirement { background: #1E1E1E; border-color: #333; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .analytics-workspace {
+    padding: 15px !important;
+  }
+  .metrics-grid, .charts-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .circular-skills-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .workload-section {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 20px !important;
+  }
+  .stress-tip {
+    flex-direction: column !important;
+    text-align: left !important;
+  }
+  .chart-container {
+    height: 200px !important;
+  }
+}

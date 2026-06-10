@@ -114,3 +114,48 @@ body.dark-mode .breadcrumb a {
 body.dark-mode .breadcrumb a:hover {
   color: #FF7043;
 }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .study-tools-wrapper {
+    padding: 10px 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  
+  .study-tools-wrapper .widget-header {
+    padding: 0 15px;
+    margin-bottom: 10px;
+  }
+
+  .study-tools-container {
+    padding: 0 15px;
+    gap: 12px;
+  }
+  
+  .tool-card {
+    flex-direction: row;
+    padding: 15px;
+    align-items: flex-start;
+    border-radius: 12px;
+  }
+  
+  .tool-icon-box {
+    min-width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+    margin-right: 15px;
+    border-radius: 10px;
+  }
+  
+  .tool-info h4 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  
+  .tool-info p {
+    font-size: 0.85rem;
+  }
+}

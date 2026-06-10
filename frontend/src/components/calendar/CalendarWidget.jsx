@@ -33,7 +33,7 @@ const CustomToolbar = (toolbar) => {
   };
 
   return (
-    <div className="rbc-toolbar" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '2px solid #F0F0F0', marginBottom: '15px' }}>
+    <div className="rbc-toolbar">
       <span className="rbc-toolbar-label" style={{ fontWeight: '800', fontSize: '1.2rem', color: '#1A1A1A', textAlign: 'left' }}>
         {toolbar.label}
       </span>
@@ -104,7 +104,7 @@ function CalendarWidget() {
   };
 
   return (
-    <div className="widget-card flex-col" style={{ height: 'calc(100vh - 120px)' }}>
+    <div className="widget-card flex-col calendar-widget-card">
       <div className="widget-header">
         <h3>Visualizing your academic success</h3>
       </div>

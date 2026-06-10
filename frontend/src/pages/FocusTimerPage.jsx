@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
@@ -25,6 +25,14 @@ function FocusTimerPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [tempSettings, setTempSettings] = useState({ ...settings });
 
+  const handleModeSwitch = useCallback((newMode) => {
+    setMode(newMode);
+    setIsActive(false);
+    if (newMode === 'focus') setTimeLeft(settings.focus * 60);
+    if (newMode === 'shortBreak') setTimeLeft(settings.shortBreak * 60);
+    if (newMode === 'longBreak') setTimeLeft(settings.longBreak * 60);
+  }, [settings.focus, settings.shortBreak, settings.longBreak]);
+
   // Timer Countdown Logic
   useEffect(() => {
     let interval = null;
@@ -33,6 +41,7 @@ function FocusTimerPage() {
         setTimeLeft((time) => time - 1);
       }, 1000);
     } else if (timeLeft === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsActive(false);
       // Play sound here in a real app
       alert(`${mode === 'focus' ? 'Focus session' : 'Break'} completed!`);
@@ -45,15 +54,7 @@ function FocusTimerPage() {
       }
     }
     return () => clearInterval(interval);
-  }, [isActive, timeLeft, mode, settings]);
-
-  const handleModeSwitch = (newMode) => {
-    setMode(newMode);
-    setIsActive(false);
-    if (newMode === 'focus') setTimeLeft(settings.focus * 60);
-    if (newMode === 'shortBreak') setTimeLeft(settings.shortBreak * 60);
-    if (newMode === 'longBreak') setTimeLeft(settings.longBreak * 60);
-  };
+  }, [isActive, timeLeft, mode, settings, handleModeSwitch]);
 
   const toggleTimer = () => setIsActive(!isActive);
 

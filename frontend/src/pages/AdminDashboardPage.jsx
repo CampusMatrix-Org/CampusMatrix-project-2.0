@@ -4,8 +4,17 @@ import './AdminDashboardPage.css';
 // Admin Components Import
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
-
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useMaintenance } from '../context/MaintenanceContext';
+
+const signupData = [
+  { name: 'JAN', signups: 120 },
+  { name: 'FEB', signups: 150 },
+  { name: 'MAR', signups: 300 },
+  { name: 'APR', signups: 280 },
+  { name: 'MAY', signups: 420 },
+  { name: 'JUN', signups: 500 },
+];
 
 const AdminDashboardPage = () => {
   
@@ -13,6 +22,7 @@ const AdminDashboardPage = () => {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLogsModalOpen, setIsLogsModalOpen] = useState(false);
   
   // Custom Calendar State
   const [calendarOpenFor, setCalendarOpenFor] = useState(null); 
@@ -34,6 +44,9 @@ const AdminDashboardPage = () => {
     { id: 3, type: 'policy', icon: '🛡️', title: 'Policy updated', desc: 'Revised student handbook v2.4', time: '2h ago', color: '#FAAD14', bg: '#FFFBE6' },
     { id: 4, type: 'alert', icon: '⚠️', title: 'Login failure detected', desc: 'Multiple attempts from IP 192.168.1.1', time: '4h ago', color: '#FF4D4F', bg: '#FFF1F0' },
     { id: 5, type: 'config', icon: '⚙️', title: 'Config change', desc: 'SMTP settings modified by admin', time: '6h ago', color: '#595959', bg: '#F5F5F5' },
+    { id: 6, type: 'user', icon: '👤', title: 'New user registered', desc: 'Student ID: #ST-9903', time: '8h ago', color: '#52C41A', bg: '#F6FFED' },
+    { id: 7, type: 'resource', icon: '🗂️', title: 'Resource flagged', desc: 'CS101 Midterm Masterclass', time: '12h ago', color: '#FAAD14', bg: '#FFFBE6' },
+    { id: 8, type: 'alert', icon: '⚠️', title: 'High CPU usage', desc: 'Server reached 95% CPU load', time: '1d ago', color: '#FF4D4F', bg: '#FFF1F0' },
   ];
 
   const renderCalendarDays = () => {
@@ -163,23 +176,32 @@ const AdminDashboardPage = () => {
                     <span className="legend-dot"></span> New Enrollments
                   </div>
                 </div>
-                <div className="admin-chart-container">
-                   <svg viewBox="0 0 500 200" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
-                      <path d="M0,180 Q50,160 100,130 T200,100 T300,80 T400,60 T500,20" fill="none" stroke="#E64A19" strokeWidth="6" strokeLinecap="round"/>
-                   </svg>
-                   <div className="chart-x-axis">
-                      <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span>
-                   </div>
+                <div className="admin-chart-container" style={{ width: '100%', height: 250, minHeight: 250 }}>
+                  <ResponsiveContainer width="100%" height="100%" minHeight={250}>
+                    <AreaChart data={signupData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorSignups" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#E64A19" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#E64A19" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F0F0F0" />
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} dy={10} />
+                      <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
+                      <Tooltip contentStyle={{borderRadius: '10px', border: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.1)'}} />
+                      <Area type="monotone" dataKey="signups" stroke="#E64A19" strokeWidth={3} fillOpacity={1} fill="url(#colorSignups)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
 
               <div className="admin-panel-card">
                 <div className="admin-panel-header">
                   <h3 style={{ fontSize: '16px' }}>Recent System Logs</h3>
-                  <button className="admin-link-btn">View All</button>
+                  <button className="admin-link-btn" onClick={() => setIsLogsModalOpen(true)}>View All</button>
                 </div>
                 <div className="admin-logs-list">
-                  {systemLogs.map(log => (
+                  {systemLogs.slice(0, 5).map(log => (
                     <div className="admin-log-item" key={log.id}>
                       <div className="log-icon" style={{ backgroundColor: log.bg, color: log.color }}>
                         {log.icon}
@@ -322,6 +344,43 @@ const AdminDashboardPage = () => {
               <button className="modal-btn-submit">📥 Generate & Download</button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* --- SYSTEM LOGS MODAL --- */}
+      {isLogsModalOpen && (
+        <div className="report-modal-overlay">
+          <div className="report-modal" style={{ maxWidth: '600px' }}>
+            <div className="report-modal-header">
+              <div>
+                <h2>All System Logs</h2>
+                <p>Complete history of system events and alerts.</p>
+              </div>
+              <button className="modal-close-btn" onClick={() => setIsLogsModalOpen(false)}>✕</button>
+            </div>
+            <div className="report-modal-body" style={{ padding: '20px', maxHeight: '60vh', overflowY: 'auto' }}>
+              <div className="admin-logs-list full-list">
+                {systemLogs.map(log => (
+                  <div className="admin-log-item" key={log.id} style={{ padding: '12px', borderBottom: '1px solid #F0F0F0' }}>
+                    <div className="log-icon" style={{ backgroundColor: log.bg, color: log.color }}>
+                      {log.icon}
+                    </div>
+                    <div className="log-info" style={{ flex: 1 }}>
+                      <h4>{log.title}</h4>
+                      <p>{log.desc}</p>
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#999', whiteSpace: 'nowrap' }}>
+                      {log.time}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="report-modal-footer">
+              <button className="modal-btn-cancel" onClick={() => setIsLogsModalOpen(false)}>Close</button>
+              <button className="modal-btn-submit">⬇️ Download Logs</button>
+            </div>
           </div>
         </div>
       )}

@@ -62,8 +62,23 @@
   cursor: pointer;
   transition: all 0.2s;
   background: #FFF;
+  position: relative;
 }
 .folder-card:hover { border-color: #FF7043; box-shadow: 0 5px 15px rgba(255,112,67,0.05); transform: translateY(-2px); }
+
+.folder-delete-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.folder-card:hover .folder-delete-icon { opacity: 0.5; }
+.folder-delete-icon:hover { opacity: 1 !important; transform: scale(1.1); }
 .folder-icon { font-size: 2rem; }
 .folder-info h4 { margin: 0 0 5px 0; font-size: 1rem; color: #1A1A1A; }
 .folder-info p { margin: 0; font-size: 0.8rem; color: #888; }
@@ -72,6 +87,27 @@
 .doc-controls { display: flex; align-items: center; gap: 15px; }
 .sort-label { font-size: 0.85rem; color: #888; font-weight: 600; }
 .sort-label select { border: none; font-weight: 700; color: #1A1A1A; outline: none; background: transparent; cursor: pointer; }
+
+/* Folder View Header */
+.folder-view-header {
+  margin-bottom: 20px;
+}
+.back-to-lib-btn {
+  background: transparent;
+  border: 1.5px solid #EAEAEA;
+  padding: 6px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 10px;
+  transition: 0.2s;
+}
+.back-to-lib-btn:hover {
+  background: #FAFAFA;
+  color: #1A1A1A;
+  border-color: #D0D0D0;
+}
 
 .view-toggle-container { display: flex; justify-content: flex-end; margin-bottom: 15px; }
 .view-toggles { display: flex; gap: 5px; background: #F8F9FA; padding: 4px; border-radius: 10px; border: 1.5px solid #EAEAEA;}
@@ -178,3 +214,276 @@ body.dark-mode .upload-modal-footer { background: #121212; }
 body.dark-mode .upload-modal-header h3, body.dark-mode .upload-dropzone h4, body.dark-mode .selected-files h4, body.dark-mode .file-info .f-name { color: #FFF; }
 body.dark-mode .upload-dropzone { background: #241A16; border-color: #33211b; }
 body.dark-mode .file-item { border-color: #333; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .library-workspace {
+    padding: 15px !important;
+  }
+  .library-content-area {
+    flex-direction: column !important;
+  }
+  .library-side-section {
+    width: 100% !important;
+  }
+  .doc-list-item {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .col-name {
+    width: 100% !important;
+    flex: none !important;
+  }
+  .col-size, .col-modified, .col-owner, .col-actions {
+    flex: 1 !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* --- View All Folders Modal --- */
+.all-folders-modal {
+  background: white;
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.all-folders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 30px;
+  border-bottom: 1.5px solid #F0F0F0;
+}
+
+.all-folders-title h3 {
+  margin: 0 0 5px 0;
+  font-size: 1.4rem;
+  color: #1A1A1A;
+}
+
+.folder-count {
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.all-folders-toolbar {
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: #FAFAFA;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.folder-search-container {
+  display: flex;
+  align-items: center;
+  background: #F8F9FA;
+  border: 1px solid #EAEAEA;
+  border-radius: 20px;
+  padding: 10px 20px;
+  flex: 1;
+  max-width: 400px;
+}
+
+.folder-search-icon {
+  margin-right: 10px;
+  color: #888;
+}
+
+.folder-search-input {
+  border: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.new-folder-btn {
+  background: #FFF;
+  border: 1.5px solid #FF7043;
+  color: #FF7043;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+.new-folder-btn:hover {
+  background: #FF7043;
+  color: white;
+}
+
+.all-folders-body {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.all-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* All Folders Dark Mode */
+body.dark-mode .all-folders-modal { background: #1E1E1E; border: 1px solid #333; }
+body.dark-mode .all-folders-header, body.dark-mode .all-folders-toolbar { border-color: #333; }
+body.dark-mode .all-folders-title h3 { color: #FFF; }
+body.dark-mode .all-folders-toolbar { background: #121212; }
+body.dark-mode .folder-search-container { background: #121212; border: 1px solid #333; }
+body.dark-mode .folder-search-input { background: transparent; color: #E0E0E0; }
+body.dark-mode .folder-search-input::placeholder { color: #666; }
+body.dark-mode .new-folder-btn { background: transparent; }
+body.dark-mode .new-folder-btn:hover { background: #FF7043; color: #FFF; }
+
+@media (max-width: 600px) {
+  .all-folders-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .folder-search-container {
+    max-width: 100%;
+  }
+}
+
+/* --- Create Folder Modal --- */
+.create-folder-modal {
+  background: white;
+  width: 90%;
+  max-width: 450px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.create-folder-modal h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+  color: #1A1A1A;
+}
+
+.modal-subtext {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 12px;
+  outline: none;
+  font-size: 0.95rem;
+  background: #F8F9FA;
+  transition: 0.2s;
+}
+
+.form-input:focus {
+  border-color: #FF7043;
+  background: white;
+}
+
+.folder-file-upload {
+  border: 2px dashed #EAEAEA;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  background: #FAFAFA;
+  cursor: pointer;
+  color: #888;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.folder-file-upload:hover {
+  border-color: #FF7043;
+  background: #FFF9F6;
+  color: #FF7043;
+}
+
+.upload-icon-small {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-lib-cancel {
+  background: transparent;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #666;
+  transition: 0.2s;
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-lib-cancel:hover {
+  background: #F8F9FA;
+  color: #1A1A1A;
+}
+
+.btn-lib-save {
+  background: linear-gradient(135deg, #FF7043, #FF5722);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(255, 112, 67, 0.3);
+}
+
+.btn-lib-save:hover {
+  background: linear-gradient(135deg, #F4511E, #E64A19);
+  box-shadow: 0 6px 16px rgba(255, 112, 67, 0.4);
+}
+
+/* Dark mode for Create Modal */
+body.dark-mode .create-folder-modal { background: #1E1E1E; border: 1px solid #333; }
+body.dark-mode .create-folder-modal h3 { color: #FFF; }
+body.dark-mode .form-group label { color: #E0E0E0; }
+body.dark-mode .form-input { background: #121212; border-color: #333; color: #FFF; box-shadow: none !important; }
+body.dark-mode .form-input:focus { border-color: #FF7043; }
+body.dark-mode .folder-file-upload { background: #121212; border-color: #333; }
+body.dark-mode .folder-file-upload:hover { background: #1A1210; border-color: #FF7043; }
+body.dark-mode .back-to-lib-btn { border-color: #333; color: #E0E0E0; }
+body.dark-mode .back-to-lib-btn:hover { background: #2A2A2A; border-color: #444; color: #FFF; }
+body.dark-mode .btn-lib-cancel { color: #E0E0E0; background: transparent; }
+body.dark-mode .btn-lib-cancel:hover { background: #2A2A2A; color: #FFF; }

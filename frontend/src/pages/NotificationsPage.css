@@ -3,7 +3,18 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
+
+.noti-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+.noti-list::-webkit-scrollbar { width: 6px; }
+.noti-list::-webkit-scrollbar-thumb { background-color: #E0E0E0; border-radius: 4px; }
 
 /* Header & Badge */
 .noti-header-section {
@@ -266,3 +277,12 @@ body.dark-mode .noti-card.unread .noti-icon {
 body.dark-mode .tag-system { background: rgba(25, 118, 210, 0.2); color: #64B5F6; }
 body.dark-mode .tag-user { background: rgba(123, 31, 162, 0.2); color: #BA68C8; }
 body.dark-mode .tag-default { background: #333; color: #E0E0E0; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .noti-container { padding: 15px !important; }
+  .noti-header-section { flex-direction: column !important; align-items: flex-start !important; gap: 15px !important; }
+  .noti-card { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
+  .noti-top { flex-direction: column !important; gap: 5px !important; }
+  .noti-time { margin-left: 0 !important; }
+}

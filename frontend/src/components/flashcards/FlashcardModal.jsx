@@ -13,12 +13,14 @@ function FlashcardModal({ isOpen, onClose, editData }) {
   // Pre-fill data if editing
   useEffect(() => {
     if (editData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         deck: 'Algorithms',
         question: editData.question || '',
         answer: editData.answer || ''
       });
     } else {
+       
       setFormData({ deck: 'Algorithms', question: '', answer: '' });
     }
   }, [editData, isOpen]);

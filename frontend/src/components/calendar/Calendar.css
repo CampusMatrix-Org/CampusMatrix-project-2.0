@@ -64,3 +64,70 @@
 .color-box.blue { background-color: #2196F3; }
 .color-box.red { background-color: #FF5252; }
 .color-box.green { background-color: #4CAF50; }
+
+/* --- Layout Defaults (previously inline) --- */
+.calendar-widget-card {
+  height: calc(100vh - 120px);
+}
+
+.rbc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 2px solid #F0F0F0;
+  margin-bottom: 15px;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .calendar-widget-card {
+    height: 550px !important; 
+    min-height: auto;
+    padding: 10px;
+  }
+
+  .rbc-toolbar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .rbc-toolbar .rbc-toolbar-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 5px 0;
+  }
+
+  .rbc-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 5px;
+  }
+
+  .rbc-toolbar button {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+
+  .rbc-calendar {
+    font-size: 11px; /* Smaller text for events */
+  }
+
+  .rbc-header {
+    padding: 5px 0;
+    font-size: 11px;
+  }
+
+  .calendar-legend {
+    gap: 10px;
+    padding-top: 10px;
+  }
+
+  .legend-item {
+    font-size: 0.75rem;
+  }
+}

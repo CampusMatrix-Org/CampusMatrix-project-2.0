@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 // --- Simple Translation Dictionary ---
@@ -77,6 +78,7 @@ export const SettingsProvider = ({ children }) => {
     return saved !== null ? JSON.parse(saved) : true;
   });
   const [desktopAlerts, setDesktopAlerts] = useState(() => JSON.parse(localStorage.getItem('cm_desktopAlerts')) || false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Apply Dark Mode Class to the entire <body>
   useEffect(() => {
@@ -113,6 +115,7 @@ export const SettingsProvider = ({ children }) => {
       language, setLanguage,
       emailNotifs, setEmailNotifs,
       desktopAlerts, setDesktopAlerts,
+      isMobileMenuOpen, setIsMobileMenuOpen,
       saveSettings, resetToDefaults, t
     }}>
       {children}

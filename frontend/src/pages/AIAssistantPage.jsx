@@ -12,6 +12,8 @@ function AIAssistantPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+  const [savedSuccess, setSavedSuccess] = useState(false);
+
   // Simulated AI Generation Logic
   const handleGenerate = () => {
     if (!notes.trim()) {
@@ -20,6 +22,7 @@ function AIAssistantPage() {
     }
     
     setIsGenerating(true);
+    setSavedSuccess(false);
     
     // Simulate API Delay
     setTimeout(() => {
@@ -29,16 +32,21 @@ function AIAssistantPage() {
       ];
       setGeneratedCards(newCards);
       setIsGenerating(false);
-
-      // --- Integration with Flashcards UI ---
-      // save this to localStorage so Smart Flashcards page can load them later!
-      const existingCards = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
-      const formattedForDB = newCards.map(c => ({
-        id: c.id, deck: "AI Generated", question: c.q, answer: c.a 
-      }));
-      localStorage.setItem('campusMatrixFlashcards', JSON.stringify([...existingCards, ...formattedForDB]));
-      
     }, 1500);
+  };
+
+  const handleSaveToFlashcards = () => {
+    if (generatedCards.length === 0) return;
+    const existingCards = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
+    const formattedForDB = generatedCards.map(c => ({
+      id: c.id, deck: "AI Generated", question: c.q, answer: c.a 
+    }));
+    const merged = [...existingCards, ...formattedForDB];
+    localStorage.setItem('campusMatrixFlashcards', JSON.stringify(merged));
+    // Fire storage event so FlashcardWidget updates in real-time
+    window.dispatchEvent(new Event('storage'));
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 3000);
   };
 
   const handleAddMore = () => {
@@ -120,6 +128,14 @@ function AIAssistantPage() {
                     <button className="ai-add-more-btn" onClick={handleAddMore}>
                       <span style={{ fontSize: '1.5rem', fontWeight: '400' }}>+</span>
                       Click generate to create more cards
+                    </button>
+
+                    <button 
+                      className="ai-save-btn"
+                      onClick={handleSaveToFlashcards}
+                      style={savedSuccess ? { background: '#52C41A' } : {}}
+                    >
+                      {savedSuccess ? '✅ Saved to Smart Flashcards!' : '💾 Save to Smart Flashcards'}
                     </button>
                   </>
                 )}

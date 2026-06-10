@@ -6,7 +6,7 @@ import { useAdmin } from '../../context/AdminContext';
 function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate(); 
-  const { adminData } = useAdmin();
+  const { adminData, isMobileMenuOpen, setIsMobileMenuOpen } = useAdmin();
 
   const adminNavItems = [
     { title: 'Dashboard', path: '/admin', icon: '📊' },
@@ -34,11 +34,15 @@ function AdminSidebar() {
   };
 
   return (
-    <aside className="admin-sidebar">
-      <div className="admin-logo">
-        <span className="logo-icon">🏛️</span>
-        <h2>CampusMatrix</h2>
-      </div>
+    <>
+      {isMobileMenuOpen && (
+        <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+      )}
+      <aside className={`admin-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+        <div className="admin-logo">
+          <span className="logo-icon">🏛️</span>
+          <h2>CampusMatrix</h2>
+        </div>
 
       <nav className="admin-nav">
         {adminNavItems.map((item) => (
@@ -46,6 +50,7 @@ function AdminSidebar() {
             key={item.path} 
             to={item.path} 
             className={`admin-nav-item ${location.pathname === item.path ? 'active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             <span className="nav-icon">{item.icon}</span>
             {item.title}
@@ -82,6 +87,7 @@ function AdminSidebar() {
         </div>
       </div>
     </aside>
+    </>
   );
 };
 

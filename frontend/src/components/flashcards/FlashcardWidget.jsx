@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
 import './SmartFlashcards.css';
 
-const initialCards = [
+const hardcodedCards = [
   { id: 1, deck: "Algorithms", question: "What is a Hash Collision?", answer: "A Hash Collision occurs when a hash function maps two distinct keys and calculates the exact same index for both of them in a hash table." },
   { id: 2, deck: "Algorithms", question: "Time complexity of Binary Search?", answer: "The time complexity is O(log n). This is because with each comparison, the search space is effectively halved." },
   { id: 3, deck: "Database Systems", question: "What is ACID property?", answer: "ACID stands for Atomicity, Consistency, Isolation, and Durability. It ensures reliable processing of database transactions." }
@@ -11,10 +11,35 @@ const initialCards = [
 function FlashcardWidget({ onEditClick }) {
   const [activeTab, setActiveTab] = useState('study'); 
   
+  // Load from localStorage + hardcoded on mount
+  const getInitialCards = () => {
+    const saved = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
+    // Merge: avoid duplicate IDs
+    const savedIds = new Set(saved.map(c => c.id));
+    const unique = hardcodedCards.filter(c => !savedIds.has(c.id));
+    return [...unique, ...saved];
+  };
+
   // App State
-  const [cards, setCards] = useState(initialCards);
+  const [cards, setCards] = useState(getInitialCards);
   const [selectedDeck, setSelectedDeck] = useState('All');
-  const [cardToDelete, setCardToDelete] = useState(null); 
+  const [cardToDelete, setCardToDelete] = useState(null);
+  const [newAiCount, setNewAiCount] = useState(0);
+
+  // Watch localStorage for new AI cards being added
+  useEffect(() => {
+    const handleStorage = () => {
+      const saved = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
+      const savedIds = new Set(saved.map(c => c.id));
+      const existing = hardcodedCards.filter(c => !savedIds.has(c.id));
+      const merged = [...existing, ...saved];
+      setCards(merged);
+      const aiCards = saved.filter(c => c.deck === 'AI Generated');
+      setNewAiCount(aiCards.length);
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
   
   // Study Session State
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -77,7 +102,8 @@ function FlashcardWidget({ onEditClick }) {
   };
 
   return (
-    <div className="widget-card flex-col" style={{ height: 'calc(100vh - 120px)', position: 'relative' }}>
+    <div className="flashcard-widget-wrapper" style={{ position: 'relative' }}>
+      <div className="fc-workspace">
       
       <div className="flashcard-header">
         <div className="study-breadcrumb">
@@ -87,7 +113,10 @@ function FlashcardWidget({ onEditClick }) {
 
       <div className="flashcard-tabs">
         <button className={`tab-btn ${activeTab === 'study' ? 'active' : ''}`} onClick={() => setActiveTab('study')}>Study Session</button>
-        <button className={`tab-btn ${activeTab === 'manage' ? 'active' : ''}`} onClick={() => setActiveTab('manage')}>Manage Cards</button>
+        <button className={`tab-btn ${activeTab === 'manage' ? 'active' : ''}`} onClick={() => setActiveTab('manage')}>
+          Manage Cards
+          {newAiCount > 0 && <span className="ai-badge-count">{newAiCount} AI</span>}
+        </button>
       </div>
 
       {/* --- View 1: STUDY SESSION MODE --- */}
@@ -147,8 +176,11 @@ function FlashcardWidget({ onEditClick }) {
       {activeTab === 'manage' && (
         <div className="cards-grid">
           {cards.map((card) => (
-            <div className="mini-card" key={card.id}>
-              <div className="mini-card-deck">{card.deck}</div>
+            <div className={`mini-card ${card.deck === 'AI Generated' ? 'ai-generated-card' : ''}`} key={card.id}>
+              <div className="mini-card-deck">
+                {card.deck}
+                {card.deck === 'AI Generated' && <span className="ai-chip">✨ AI</span>}
+              </div>
               <div className="mini-card-q">{card.question}</div>
               <div className="mini-card-a">{card.answer}</div>
               <div className="mini-card-actions">
@@ -174,6 +206,7 @@ function FlashcardWidget({ onEditClick }) {
         </div>
       )}
 
+      </div>{/* end fc-workspace */}
     </div>
   );
 }

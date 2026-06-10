@@ -146,6 +146,25 @@
   background: #FFF0EB;
 }
 
+.ai-save-btn {
+  background: linear-gradient(135deg, #FF7043, #FF5722);
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(255, 112, 67, 0.3);
+  margin-top: 4px;
+}
+.ai-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 112, 67, 0.4);
+}
+
 .ai-icon-btn {
   background: none;
   border: none;
@@ -270,3 +289,46 @@
 .copy-btn:hover { background: #E65C2F; }
 
 .secure-badge { text-align: center; font-size: 0.7rem; font-weight: 700; color: #A0A0A0; margin-top: 25px; letter-spacing: 1px; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .ai-workspace {
+    height: auto !important;
+    min-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .ai-split-panels {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    flex: none !important;
+  }
+  .ai-panel {
+    flex: none !important;
+    height: auto !important;
+    padding: 20px !important;
+  }
+  .ai-textarea {
+    min-height: 150px !important;
+    flex: none !important;
+  }
+  .ai-cards-container {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+  }
+  .ai-chat-bar {
+    border-radius: 20px !important;
+    flex-wrap: wrap !important;
+    padding: 10px 15px !important;
+    gap: 10px !important;
+  }
+  .ai-chat-input {
+    width: 100% !important;
+    flex: none !important;
+  }
+  .ai-chat-actions {
+    width: 100% !important;
+    justify-content: flex-end !important;
+  }
+}

@@ -1,5 +1,10 @@
 /* Global Responsive Styles for CampusMatrix */
 
+.hamburger-btn {
+  display: none;
+}
+
+
 /* --- Layout & Sidebar --- */
 @media (max-width: 1024px) {
   .sidebar {
@@ -15,45 +20,101 @@
   .dashboard-layout {
     flex-direction: column !important;
     overflow-y: auto !important;
+    overflow-x: hidden !important;
   }
   
-  /* Make sidebar a horizontal scrollable row on mobile */
-  .sidebar {
-    width: 100% !important;
-    height: auto !important;
-    border-right: none !important;
-    border-bottom: 1px solid #F0F0F0 !important;
-    flex-direction: row !important;
-    padding: 10px !important;
-    overflow-x: auto !important;
-    white-space: nowrap !important;
+  /* Hamburger Button */
+  .hamburger-btn {
+    display: block !important;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #1A1A1A;
+    padding: 5px 10px 5px 0;
   }
-  .sidebar-logo {
-    display: none !important; /* Hide logo to save space */
+  body.dark-mode .hamburger-btn, body.dark-theme .hamburger-btn {
+    color: #E0E0E0 !important;
   }
-  .sidebar-nav {
-    flex-direction: row !important;
-    gap: 10px !important;
-    padding: 0 !important;
+
+  /* Slide-in Sidebar for mobile */
+  .sidebar, .admin-sidebar {
+    position: fixed !important;
+    top: 0;
+    left: -100% !important;
+    width: 260px !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    transition: left 0.3s ease !important;
+    flex-direction: column !important;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+    background: white !important;
   }
-  .nav-item {
-    padding: 8px 12px !important;
-    border-radius: 8px !important;
+  body.dark-mode .sidebar, body.dark-theme .admin-sidebar {
+    background: #1E1E1E !important;
+    box-shadow: 2px 0 15px rgba(0,0,0,0.5);
   }
-  .sidebar-bottom {
-    display: none !important;
+
+  .sidebar.mobile-open, .admin-sidebar.mobile-open {
+    left: 0 !important;
+  }
+
+  .mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
   }
 
   /* Header adjustments */
   .header {
-    padding: 10px 15px !important;
-    flex-wrap: wrap !important;
+    padding: 10px !important;
+    flex-wrap: nowrap !important;
     height: auto !important;
-    gap: 10px !important;
+    gap: 8px !important;
+    overflow: visible !important; /* Allow dropdowns to overflow */
+  }
+  .hamburger-btn {
+    order: 0 !important;
+    font-size: 1.5rem !important;
+    padding: 0 !important;
+  }
+  .search-container {
+    width: auto !important;
+    flex: 1 !important;
+    order: 1 !important;
+    margin-top: 0 !important;
+    min-width: 0 !important; /* Allow shrinking without overflowing parent */
   }
   .search-bar {
     width: 100% !important;
-    order: 3 !important; /* Move search below header content */
+    padding: 6px 10px !important;
+    min-width: 0 !important;
+  }
+  .search-bar input {
+    font-size: 13px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .header-right {
+    order: 2 !important;
+    margin-left: 0 !important;
+    gap: 8px !important;
+  }
+  .notification-btn {
+    font-size: 1.2rem !important;
+    padding: 0 !important;
+  }
+  .profile-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+  .profile-name, .profile-degree {
+    display: none !important;
   }
   
   .page-content {
@@ -85,12 +146,20 @@
   /* Dashboard Grid */
   .dashboard-grid {
     grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
     gap: 15px !important;
   }
   
   /* Welcome Banner */
   .welcome-banner {
     padding: 20px !important;
+  }
+  .welcome-banner h2 {
+    font-size: 1.5rem !important;
+  }
+  .welcome-banner p {
+    font-size: 0.95rem !important;
   }
   .banner-buttons {
     flex-direction: column !important;
@@ -101,9 +170,16 @@
     text-align: center !important;
   }
 
+  /* Stat boxes */
+  .stat-box h2 {
+    font-size: 1.5rem !important;
+  }
+
   /* Task Management Kanban */
   .board-grid {
     grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
     height: auto !important;
     gap: 20px !important;
   }
@@ -124,6 +200,9 @@
     padding: 10px !important;
     overflow-x: auto !important;
   }
+  body.dark-mode .settings-sidebar {
+    border-bottom: 1px solid #333 !important;
+  }
   .settings-tab {
     padding: 10px 15px !important;
     white-space: nowrap !important;
@@ -140,14 +219,120 @@
   /* Study Tools & AI Assistant */
   .tools-grid {
     grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
   }
   .ai-split-panels {
     flex-direction: column !important;
   }
 
+  /* Profile Page */
+  .profile-photo-section {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 15px !important;
+  }
+  .photo-btn-group {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+  .form-row {
+    flex-direction: column !important;
+    gap: 0 !important;
+  }
+  .profile-footer {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .footer-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  .footer-actions button {
+    width: 100% !important;
+  }
+
   /* General Cards */
-  .widget-card, .study-card, .tool-card {
+  .widget-card {
+    height: 400px !important;
+    min-height: 400px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .study-card, .tool-card {
     height: auto !important;
+  }
+  .widget-scroll-area {
+    flex: 1 1 0 !important;
+    min-height: 150px !important;
+    overflow-y: auto !important;
+  }
+  /* Admin Student Management */
+  .student-page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+  .student-page-header button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .table-top-bar {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: stretch !important;
+  }
+  .table-top-bar .search-box {
+    width: 100% !important;
+  }
+  .table-actions {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  .table-actions button {
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+
+  /* Admin Resource Moderation */
+  .res-header-row {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: stretch !important;
+  }
+  .res-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  .res-actions .search-box {
+    width: 100% !important;
+  }
+  .res-actions button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .res-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    padding-bottom: 5px !important;
+  }
+  .res-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Admin System Settings */
+  .settings-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px !important;
+  }
+  .settings-header button {
+    width: 100% !important;
+  }
+  .api-input-group {
+    flex-direction: column !important;
   }
 }
 
@@ -155,12 +340,6 @@
 @media (max-width: 480px) {
   .header-right {
     gap: 10px !important;
-  }
-  .profile-name {
-    display: none !important;
-  }
-  .profile-degree {
-    display: none !important;
   }
   .auth-form-title {
     font-size: 1.5rem !important;

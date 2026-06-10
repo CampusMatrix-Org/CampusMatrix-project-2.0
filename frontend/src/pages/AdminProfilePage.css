@@ -225,3 +225,15 @@
 .sec-icon {
   font-size: 14px;
 }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .admin-profile-bg { padding: 15px !important; }
+  .profile-card { padding: 20px !important; }
+  .profile-photo-section { flex-direction: column !important; text-align: center !important; }
+  .photo-btn-group { justify-content: center !important; flex-wrap: wrap !important; }
+  .profile-form-grid { grid-template-columns: 1fr !important; }
+  .profile-update-actions { flex-direction: column !important; gap: 15px !important; align-items: flex-start !important; }
+  .profile-security-actions { flex-direction: column !important; width: 100% !important; }
+  .btn-security, .btn-signout { width: 100% !important; justify-content: center !important; }
+}

@@ -5,7 +5,7 @@ import { useSettings } from '../../context/SettingsContext';
 
 function Sidebar() {
   const location = useLocation();
-  const { t } = useSettings();
+  const { t, isMobileMenuOpen, setIsMobileMenuOpen } = useSettings();
 
   // මෙතන name වෙනුවට tKey කියලා දාලා translation dictionary එකට connect කරා
   const navItems = [
@@ -22,7 +22,11 @@ function Sidebar() {
   const storagePercentage = (usedStorageGB / totalStorageGB) * 100;
 
   return (
-    <div className="sidebar">
+    <>
+      {isMobileMenuOpen && (
+        <div className="mobile-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+      )}
+      <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-logo">
         <span className="icon">🏛️</span> CampusMatrix
       </div>
@@ -33,6 +37,7 @@ function Sidebar() {
             key={item.tKey} 
             to={item.path} 
             className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             <span className="nav-icon">{item.icon}</span>
             {t(item.tKey)}
@@ -52,7 +57,8 @@ function Sidebar() {
           <p className="storage-value">{usedStorageGB}GB of {totalStorageGB}GB used</p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

@@ -75,3 +75,11 @@ input:checked + .slider:before { -webkit-transform: translateX(20px); -ms-transf
 .slider.round:before { border-radius: 50%; }
 
 .sys-footer-text { text-align: center; font-size: 11px; color: #999; margin-top: 40px; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .sys-bg { padding: 15px !important; }
+  .api-stats-row { flex-direction: column !important; gap: 15px !important; }
+  .api-input-group { flex-direction: column !important; }
+  .api-input-group .btn-orange-solid { width: 100% !important; padding: 14px !important; }
+}

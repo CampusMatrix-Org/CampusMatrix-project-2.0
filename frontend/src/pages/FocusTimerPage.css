@@ -293,3 +293,33 @@ body.dark-mode .settings-modal-header { border-color: #333; }
 body.dark-mode .settings-modal-header h3, body.dark-mode .toggle-row h4 { color: #FFF; }
 body.dark-mode .d-input input { background: #121212; border-color: #333; color: #FFF; }
 body.dark-mode .settings-modal-footer { background: #121212; border-color: #333; }
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .timer-workspace {
+    padding: 15px !important;
+  }
+  .timer-tabs {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+  .timer-tab {
+    padding: 8px 15px !important;
+    font-size: 0.85rem !important;
+  }
+  .timer-main-card {
+    padding: 20px !important;
+  }
+  .timer-circle {
+    width: 220px !important;
+    height: 220px !important;
+  }
+  .time-display {
+    font-size: 3.5rem !important;
+  }
+  .timer-stats-footer {
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 20px !important;
+  }
+}

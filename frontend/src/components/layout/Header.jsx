@@ -5,7 +5,7 @@ import { useSettings } from '../../context/SettingsContext';
 import { useTasks } from '../../context/TaskContext';
 
 function Header() {
-  const { t } = useSettings();
+  const { t, isMobileMenuOpen, setIsMobileMenuOpen } = useSettings();
   const navigate = useNavigate();
   const { tasks } = useTasks();
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,6 +49,12 @@ function Header() {
 
   return (
     <header className="header">
+      <button 
+        className="hamburger-btn" 
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        ☰
+      </button>
       <div className="search-container" ref={searchRef}>
         <div className="search-bar">
           <span className="search-icon">🔍</span>

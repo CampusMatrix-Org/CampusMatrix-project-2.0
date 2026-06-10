@@ -12,6 +12,16 @@ const initialFolders = [
   { id: 4, name: 'Computer Science', files: 31, size: '6.7 MB' }
 ];
 
+const initialAllFolders = [
+  ...initialFolders,
+  { id: 5, name: 'Semester 2', files: 38, size: '12.1 MB' },
+  { id: 6, name: 'Web Development', files: 12, size: '4.3 MB' },
+  { id: 7, name: 'Database Systems', files: 56, size: '24.8 MB' },
+  { id: 8, name: 'Final Project', files: 104, size: '450.2 MB' },
+  { id: 9, name: 'UI/UX Design', files: 22, size: '15.6 MB' },
+  { id: 10, name: 'AI Research', files: 8, size: '2.1 MB' }
+];
+
 const initialDocuments = [
   { id: 1, name: 'Calculus_Cheat_Sheet.pdf', size: '2.4 MB', modified: '2 hours ago', owner: 'Me', type: 'pdf' },
   { id: 2, name: 'Assignment_Draft_v2.docx', size: '842 KB', modified: 'Yesterday, 4:12 PM', owner: 'Me', type: 'word' },
@@ -22,13 +32,23 @@ const initialDocuments = [
 function PersonalLibraryPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const createFolderFileRef = useRef(null);
 
   // States
   const [viewMode, setViewMode] = useState('list'); 
   const [documents, setDocuments] = useState(initialDocuments);
+  const [foldersList, setFoldersList] = useState(initialAllFolders);
+  const [activeFolder, setActiveFolder] = useState(null);
+  
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteFolderModalOpen, setIsDeleteFolderModalOpen] = useState(false);
+  const [isAllFoldersModalOpen, setIsAllFoldersModalOpen] = useState(false);
+  const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
+  
+  const [newFolderName, setNewFolderName] = useState('');
   const [docToDelete, setDocToDelete] = useState(null);
+  const [folderToDelete, setFolderToDelete] = useState(null);
   const [menuOpenId, setMenuOpenId] = useState(null);
   
   // Upload Files State (Dummy initial files to show UI)
@@ -62,6 +82,31 @@ function PersonalLibraryPage() {
     closeDeleteModal();
   };
 
+  const openDeleteFolderModal = (folder, e) => {
+    e.stopPropagation();
+    setFolderToDelete(folder);
+    setIsDeleteFolderModalOpen(true);
+  };
+
+  const closeDeleteFolderModal = () => {
+    setIsDeleteFolderModalOpen(false);
+    setFolderToDelete(null);
+  };
+
+  const confirmFolderDelete = () => {
+    setFoldersList(foldersList.filter(f => f.id !== folderToDelete.id));
+    // If we deleted the currently open folder, go back to root
+    if (activeFolder && activeFolder.id === folderToDelete.id) {
+      setActiveFolder(null);
+    }
+    closeDeleteFolderModal();
+  };
+
+  const handleFolderClick = (folder) => {
+    setActiveFolder(folder);
+    setIsAllFoldersModalOpen(false); // Close modal if opened from there
+  };
+
   // --- File Upload Handlers ---
   const handleBrowseClick = () => {
     if (fileInputRef.current) {
@@ -91,6 +136,19 @@ function PersonalLibraryPage() {
     closeUploadModal();
   };
 
+  const handleCreateFolder = () => {
+    if (newFolderName.trim() === '') return;
+    const newFolder = {
+      id: Date.now(),
+      name: newFolderName,
+      files: 0,
+      size: '0 KB'
+    };
+    setFoldersList([...foldersList, newFolder]);
+    setNewFolderName('');
+    setIsCreateFolderModalOpen(false);
+  };
+
   // Helper for icons
   const getFileIcon = (type) => {
     switch (type) {
@@ -115,35 +173,64 @@ function PersonalLibraryPage() {
             <div className="study-breadcrumb">
               <span className="sb-link" onClick={() => navigate('/study-tools')}>Study Tools</span>
               <span className="sb-separator"> &gt; </span>
-              <span className="sb-current">Personal Library</span>
+              {activeFolder ? (
+                <span className="sb-link" onClick={() => setActiveFolder(null)} style={{ cursor: 'pointer' }}>Personal Library</span>
+              ) : (
+                <span className="sb-current">Personal Library</span>
+              )}
+              {activeFolder && (
+                <>
+                  <span className="sb-separator"> &gt; </span>
+                  <span className="sb-current">{activeFolder.name}</span>
+                </>
+              )}
             </div>
 
             <div className="library-content-area">
               {/* Left Column: Folders & Documents */}
               <div className="library-main-section">
                 
-                <div className="section-header">
-                  <h3>Folders</h3>
-                  <button className="view-all-btn">View all</button>
-                </div>
-                <div className="folders-grid">
-                  {initialFolders.map(folder => (
-                    <div className="folder-card" key={folder.id}>
-                      <div className="folder-icon">📁</div>
-                      <div className="folder-info">
-                        <h4>{folder.name}</h4>
-                        <p>{folder.files} files • {folder.size}</p>
+                {!activeFolder ? (
+                  <>
+                    <div className="section-header">
+                      <h3>Folders</h3>
+                      <button className="view-all-btn" onClick={() => setIsAllFoldersModalOpen(true)}>View all</button>
+                    </div>
+                    <div className="folders-grid">
+                      {foldersList.slice(0, 4).map(folder => (
+                        <div className="folder-card" key={folder.id} onClick={() => handleFolderClick(folder)}>
+                          <button className="folder-delete-icon" onClick={(e) => openDeleteFolderModal(folder, e)} title="Delete Folder">🗑️</button>
+                          <div className="folder-icon">📁</div>
+                          <div className="folder-info">
+                            <h4>{folder.name}</h4>
+                            <p>{folder.files} files • {folder.size}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="section-header doc-header">
+                      <h3>Recent Documents</h3>
+                      <div className="doc-controls">
+                        <span className="sort-label">Sort by: <select><option>Last Modified</option></select></span>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                <div className="section-header doc-header">
-                  <h3>Recent Documents</h3>
-                  <div className="doc-controls">
-                    <span className="sort-label">Sort by: <select><option>Last Modified</option></select></span>
-                  </div>
-                </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="folder-view-header">
+                      <button className="back-to-lib-btn" onClick={() => setActiveFolder(null)}>
+                        &larr; Back to Library
+                      </button>
+                      <div className="section-header doc-header">
+                        <h3>{activeFolder.name} Contents</h3>
+                        <div className="doc-controls">
+                          <span className="sort-label">Sort by: <select><option>Name</option><option>Last Modified</option></select></span>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="view-toggle-container">
                     <div className="view-toggles">
@@ -295,6 +382,20 @@ function PersonalLibraryPage() {
         </div>
       )}
 
+      {/* Delete Folder Confirmation Modal */}
+      {isDeleteFolderModalOpen && (
+        <div className="modal-overlay" style={{ zIndex: 1200 }}>
+          <div className="delete-modal">
+            <h3>Delete Folder?</h3>
+            <p>Are you sure you want to delete <strong>{folderToDelete?.name}</strong> and all its contents? This action cannot be undone.</p>
+            <div className="delete-actions">
+              <button className="del-btn del-cancel" onClick={closeDeleteFolderModal}>Cancel</button>
+              <button className="del-btn del-confirm" onClick={confirmFolderDelete}>Yes, Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="modal-overlay">
@@ -304,6 +405,98 @@ function PersonalLibraryPage() {
             <div className="delete-actions">
               <button className="del-btn del-cancel" onClick={closeDeleteModal}>Cancel</button>
               <button className="del-btn del-confirm" onClick={confirmDelete}>Yes, Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* View All Folders Modal */}
+      {isAllFoldersModalOpen && (
+        <div className="modal-overlay">
+          <div className="all-folders-modal">
+            <div className="all-folders-header">
+              <div className="all-folders-title">
+                <h3>All Folders</h3>
+                <span className="folder-count">{foldersList.length} Folders</span>
+              </div>
+              <button className="close-btn" onClick={() => setIsAllFoldersModalOpen(false)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            
+            <div className="all-folders-toolbar">
+              <div className="folder-search-container">
+                <span className="folder-search-icon">🔍</span>
+                <input 
+                  type="text" 
+                  placeholder="Search folders..." 
+                  className="folder-search-input" 
+                  style={{ border: 'none', outline: 'none', background: 'transparent', boxShadow: 'none', WebkitAppearance: 'none' }}
+                />
+              </div>
+              <button className="new-folder-btn" onClick={() => setIsCreateFolderModalOpen(true)}>
+                + New Folder
+              </button>
+              {/* Create New Folder Modal */}
+      {isCreateFolderModalOpen && (
+        <div className="modal-overlay" style={{ zIndex: 1100 }}>
+          <div className="create-folder-modal">
+            <h3>Create New Folder</h3>
+            <p className="modal-subtext">Organize your materials by creating a new categorized folder.</p>
+            
+            <div className="form-group">
+              <label>Folder Name</label>
+              <input 
+                type="text" 
+                placeholder="e.g. Artificial Intelligence" 
+                className="form-input" 
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Add Initial Files (Optional)</label>
+              <input type="file" ref={createFolderFileRef} style={{ display: 'none' }} multiple />
+              <div className="folder-file-upload" onClick={() => createFolderFileRef.current?.click()}>
+                <div className="upload-icon-small">📄</div>
+                <span>Click to browse or drag files here</span>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button 
+                className="btn-lib-cancel" 
+                onClick={() => setIsCreateFolderModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-lib-save" 
+                onClick={handleCreateFolder}
+              >
+                Create Folder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
+
+            <div className="all-folders-body">
+              <div className="all-folders-grid">
+                {foldersList.map(folder => (
+                  <div className="folder-card" key={folder.id} onClick={() => handleFolderClick(folder)}>
+                    <button className="folder-delete-icon" onClick={(e) => openDeleteFolderModal(folder, e)} title="Delete Folder">🗑️</button>
+                    <div className="folder-icon">📁</div>
+                    <div className="folder-info">
+                      <h4>{folder.name}</h4>
+                      <p>{folder.files} files • {folder.size}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

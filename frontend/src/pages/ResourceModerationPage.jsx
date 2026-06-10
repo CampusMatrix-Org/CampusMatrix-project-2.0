@@ -19,6 +19,10 @@ const ResourceModerationPage = () => {
   const [modalType, setModalType] = useState(null); // 'view', 'delete', 'filter'
   const [selectedRes, setSelectedRes] = useState(null);
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
   // Logical Filtering
   const displayedResources = useMemo(() => {
     return resources.filter(res => {
@@ -27,6 +31,19 @@ const ResourceModerationPage = () => {
       return matchesSearch && matchesTab;
     });
   }, [resources, activeTab, searchQuery]);
+
+  // Pagination Calculations
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentResources = displayedResources.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(displayedResources.length / itemsPerPage);
+
+  const handleNextPage = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
+  const handlePrevPage = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
+  const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Reset to page 1 when filters or tabs change
+  useMemo(() => { setCurrentPage(1); }, [searchQuery, activeTab]);
 
   // Actions
   const handleApprove = (id) => {
@@ -87,7 +104,7 @@ const ResourceModerationPage = () => {
 
             {/* Resources Grid */}
             <div className="res-grid">
-              {displayedResources.map(res => (
+              {currentResources.map(res => (
                 <div className="res-card" key={res.id}>
                   {/* Card Preview Area (Clickable to view) */}
                   <div className="res-preview" onClick={() => openModal('view', res)}>
@@ -143,16 +160,36 @@ const ResourceModerationPage = () => {
             </div>
 
             {/* Pagination */}
-            <div className="pagination-bar" style={{marginTop: '30px', background: 'transparent', padding: '0'}}>
-              <div className="page-info">Showing <strong>{displayedResources.length > 0 ? 1 : 0}</strong> to <strong>{displayedResources.length}</strong> of <strong>12</strong> flagged resources</div>
-              <div className="page-controls">
-                <button className="page-nav disabled">&lt;</button>
-                <button className="page-num active">1</button>
-                <button className="page-num">2</button>
-                <button className="page-num">3</button>
-                <button className="page-nav">&gt;</button>
+            {totalPages > 0 && (
+              <div className="pagination-bar" style={{marginTop: '30px', background: 'transparent', padding: '0'}}>
+                <div className="page-info">
+                  Showing <strong>{indexOfFirstItem + 1}</strong> to <strong>{Math.min(indexOfLastItem, displayedResources.length)}</strong> of <strong>{displayedResources.length}</strong> total resources
+                </div>
+                <div className="page-controls">
+                  <button 
+                    className={`page-nav ${currentPage === 1 ? 'disabled' : ''}`} 
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                  >&lt;</button>
+                  
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button 
+                      key={i+1} 
+                      className={`page-num ${currentPage === i+1 ? 'active' : ''}`}
+                      onClick={() => handlePageClick(i+1)}
+                    >
+                      {i+1}
+                    </button>
+                  ))}
+
+                  <button 
+                    className={`page-nav ${currentPage === totalPages ? 'disabled' : ''}`} 
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                  >&gt;</button>
+                </div>
               </div>
-            </div>
+            )}
 
           </div>
         </div>

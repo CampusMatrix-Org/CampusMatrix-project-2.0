@@ -27,6 +27,10 @@ const StudentManagementPage = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [tempFilterStatus, setTempFilterStatus] = useState('all'); 
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
   // Calendar States
   const [calendarOpenFor, setCalendarOpenFor] = useState(null);
   const [startDate, setStartDate] = useState('mm/dd/yyyy');
@@ -49,6 +53,19 @@ const StudentManagementPage = () => {
       return matchesSearch && matchesStatus;
     });
   }, [studentsList, searchQuery, filterStatus]);
+
+  // Pagination Calculations
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentStudents = filteredStudents.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+
+  const handleNextPage = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
+  const handlePrevPage = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
+  const handlePageClick = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Reset to page 1 when filters or search change
+  useMemo(() => { setCurrentPage(1); }, [searchQuery, filterStatus]);
 
   // Modal Handlers
   const openModal = (type, student = null) => {
@@ -222,8 +239,8 @@ const StudentManagementPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStudents.length > 0 ? (
-                    filteredStudents.map(student => (
+                  {currentStudents.length > 0 ? (
+                    currentStudents.map(student => (
                       <tr key={student.id}>
                         <td>
                           <div className="student-name-col">
@@ -264,14 +281,36 @@ const StudentManagementPage = () => {
               </table>
 
               {/* Pagination */}
-              <div className="pagination-bar">
-                <div className="page-info">Showing <strong>{filteredStudents.length > 0 ? 1 : 0}</strong> to <strong>{filteredStudents.length}</strong> of <strong>{studentsList.length}</strong> total results</div>
-                <div className="page-controls">
-                  <button className="page-nav disabled">&lt;</button>
-                  <button className="page-num active">1</button>
-                  <button className="page-nav disabled">&gt;</button>
+              {totalPages > 0 && (
+                <div className="pagination-bar">
+                  <div className="page-info">
+                    Showing <strong>{indexOfFirstItem + 1}</strong> to <strong>{Math.min(indexOfLastItem, filteredStudents.length)}</strong> of <strong>{filteredStudents.length}</strong> total results
+                  </div>
+                  <div className="page-controls">
+                    <button 
+                      className={`page-nav ${currentPage === 1 ? 'disabled' : ''}`} 
+                      onClick={handlePrevPage}
+                      disabled={currentPage === 1}
+                    >&lt;</button>
+                    
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button 
+                        key={i+1} 
+                        className={`page-num ${currentPage === i+1 ? 'active' : ''}`}
+                        onClick={() => handlePageClick(i+1)}
+                      >
+                        {i+1}
+                      </button>
+                    ))}
+
+                    <button 
+                      className={`page-nav ${currentPage === totalPages ? 'disabled' : ''}`} 
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    >&gt;</button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
           </div>
