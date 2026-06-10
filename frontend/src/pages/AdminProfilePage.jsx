@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminProfilePage.css';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 import { useAdmin } from '../context/AdminContext';
 
 const AdminProfilePage = () => {
+  const navigate = useNavigate();
   const { adminData, updateAdminData } = useAdmin();
   
   const [formData, setFormData] = useState({
@@ -13,9 +15,15 @@ const AdminProfilePage = () => {
     role: adminData.role,
     bio: adminData.bio
   });
-
   
   const [profilePhoto, setProfilePhoto] = useState(adminData.profilePhoto);
+  
+  
+  const [isPwdModalOpen, setIsPwdModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false); 
+
+  const [alertModal, setAlertModal] = useState({ isOpen: false, type: '', message: '' });
+  
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -29,15 +37,22 @@ const AdminProfilePage = () => {
   }, [adminData]);
 
   
+  const showAlert = (type, message) => {
+    setAlertModal({ isOpen: true, type, message });
+  };
+
+  const closeAlert = () => {
+    setAlertModal({ isOpen: false, type: '', message: '' });
+  };
+
   const handleUpdateProfile = () => {
     if (!formData.fullName.trim() || !formData.email.trim()) {
-      alert("Name and Email cannot be empty!");
+      showAlert('error', 'Name and Email cannot be empty!');
       return;
     }
     
-    
     updateAdminData({ ...formData, profilePhoto });
-    alert("Profile information updated successfully!");
+    showAlert('success', 'Profile information updated successfully!');
   };
 
   const handleFileChange = (e) => {
@@ -68,6 +83,20 @@ const AdminProfilePage = () => {
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
     return name.substring(0, 2).toUpperCase();
+  };
+
+  const handleSignOutClick = () => {
+    setIsSignOutModalOpen(true); 
+  };
+
+  const confirmSignOut = () => {
+    setIsSignOutModalOpen(false);
+    navigate('/login');
+  };
+
+  const handlePasswordUpdate = () => {
+    setIsPwdModalOpen(false);
+    showAlert('success', 'Password updated successfully!');
   };
 
   return (
@@ -133,14 +162,88 @@ const AdminProfilePage = () => {
               </div>
 
               <div className="profile-security-actions">
-                <button className="btn-security"><span className="sec-icon">🔒</span> Change Password</button>
-                <button className="btn-signout"><span className="sec-icon">🚪</span> Sign Out</button>
+                <button className="btn-security" onClick={() => setIsPwdModalOpen(true)}>
+                  <span className="sec-icon">🔒</span> Change Password
+                </button>
+                <button className="btn-signout" onClick={handleSignOutClick}>
+                  <span className="sec-icon">🚪</span> Sign Out
+                </button>
               </div>
 
             </div>
           </div>
         </div>
       </div>
+
+      {/* 1. Password Reset Modal */}
+      {isPwdModalOpen && (
+        <div className="sm-modal-overlay">
+          <div className="sm-modal form-modal" style={{ backgroundColor: '#1E1E1E', border: '1px solid #333' }}>
+            <div className="sm-modal-header">
+              <h3 style={{ color: '#FFF' }}>Change Password</h3>
+              <button className="close-btn" onClick={() => setIsPwdModalOpen(false)}>✕</button>
+            </div>
+            <div className="sm-modal-body">
+              <div className="form-group">
+                <label style={{ color: '#A0A0A0' }}>Current Password</label>
+                <input type="password" placeholder="Enter current password" style={{ backgroundColor: '#121212', color: '#FFF', border: '1px solid #333' }} />
+              </div>
+              <div className="form-group">
+                <label style={{ color: '#A0A0A0' }}>New Password</label>
+                <input type="password" placeholder="Enter new password" style={{ backgroundColor: '#121212', color: '#FFF', border: '1px solid #333' }} />
+              </div>
+              <div className="form-group">
+                <label style={{ color: '#A0A0A0' }}>Confirm New Password</label>
+                <input type="password" placeholder="Confirm new password" style={{ backgroundColor: '#121212', color: '#FFF', border: '1px solid #333' }} />
+              </div>
+              <button className="btn-orange-solid mt-4" style={{ width: '100%' }} onClick={handlePasswordUpdate}>
+                Update Password
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Custom Sign Out Modal */}
+      {isSignOutModalOpen && (
+        <div className="sm-modal-overlay">
+          <div className="sm-modal" style={{ backgroundColor: '#1E1E1E', border: '1px solid #333', padding: '30px', textAlign: 'center', borderRadius: '12px', maxWidth: '400px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '15px' }}>🚪</div>
+            <h3 style={{ color: '#FFF', marginBottom: '10px', fontSize: '22px' }}>Sign Out</h3>
+            <p style={{ color: '#A0A0A0', marginBottom: '30px', fontSize: '15px' }}>
+              Are you sure you want to sign out from the Admin Panel?
+            </p>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+              <button className="btn-cancel" onClick={() => setIsSignOutModalOpen(false)} style={{ flex: 1, padding: '12px' }}>
+                Cancel
+              </button>
+              <button className="btn-orange-solid" onClick={confirmSignOut} style={{ flex: 1, padding: '12px' }}>
+                Yes, Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {alertModal.isOpen && (
+        <div className="sm-modal-overlay">
+          <div className="sm-modal" style={{ backgroundColor: '#1E1E1E', border: '1px solid #333', padding: '30px', textAlign: 'center', borderRadius: '12px', maxWidth: '400px' }}>
+            <div style={{ fontSize: '48px', marginBottom: '15px' }}>
+              {alertModal.type === 'success' ? '✅' : '⚠️'}
+            </div>
+            <h3 style={{ color: '#FFF', marginBottom: '10px', fontSize: '22px' }}>
+              {alertModal.type === 'success' ? 'Success!' : 'Oops!'}
+            </h3>
+            <p style={{ color: '#A0A0A0', marginBottom: '30px', fontSize: '15px' }}>
+              {alertModal.message}
+            </p>
+            <button className="btn-orange-solid" onClick={closeAlert} style={{ width: '100%', padding: '12px' }}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

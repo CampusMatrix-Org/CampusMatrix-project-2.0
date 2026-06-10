@@ -207,7 +207,7 @@ body.dark-theme .notif-card {
   border-color: #333;
 }
 body.dark-theme .notif-card.unread {
-  background-color: #261A15; /* Subtle orange tint */
+  background-color: #261A15;
   border-color: #592E1C;
 }
 
