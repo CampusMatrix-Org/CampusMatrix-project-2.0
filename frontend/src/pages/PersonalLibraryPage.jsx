@@ -1,19 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
+import api from '../services/api';
 import './PersonalLibraryPage.css';
 
-// --- Dummy Data ---
-const initialFolders = [
+// --- Dummy Data Fallbacks ---
+const fallbackFolders = [
   { id: 1, name: 'Semester 1', files: 42, size: '5.4 MB' },
   { id: 2, name: 'Mathematics', files: 16, size: '5.1 MB' },
   { id: 3, name: 'Physics', files: 28, size: '18.2 MB' },
-  { id: 4, name: 'Computer Science', files: 31, size: '6.7 MB' }
-];
-
-const initialAllFolders = [
-  ...initialFolders,
+  { id: 4, name: 'Computer Science', files: 31, size: '6.7 MB' },
   { id: 5, name: 'Semester 2', files: 38, size: '12.1 MB' },
   { id: 6, name: 'Web Development', files: 12, size: '4.3 MB' },
   { id: 7, name: 'Database Systems', files: 56, size: '24.8 MB' },
@@ -22,7 +19,7 @@ const initialAllFolders = [
   { id: 10, name: 'AI Research', files: 8, size: '2.1 MB' }
 ];
 
-const initialDocuments = [
+const fallbackDocuments = [
   { id: 1, name: 'Calculus_Cheat_Sheet.pdf', size: '2.4 MB', modified: '2 hours ago', owner: 'Me', type: 'pdf' },
   { id: 2, name: 'Assignment_Draft_v2.docx', size: '842 KB', modified: 'Yesterday, 4:12 PM', owner: 'Me', type: 'word' },
   { id: 3, name: 'Lab_Experiment_Photo.png', size: '4.1 MB', modified: 'Oct 24, 2023', owner: 'Prof. Miller', type: 'image' },
@@ -36,9 +33,27 @@ function PersonalLibraryPage() {
 
   // States
   const [viewMode, setViewMode] = useState('list'); 
-  const [documents, setDocuments] = useState(initialDocuments);
-  const [foldersList, setFoldersList] = useState(initialAllFolders);
+  const [documents, setDocuments] = useState([]);
+  const [foldersList, setFoldersList] = useState([]);
   const [activeFolder, setActiveFolder] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [docsRes, foldersRes] = await Promise.all([
+          api.get('/library/documents'),
+          api.get('/library/folders')
+        ]);
+        setDocuments(docsRes.data || []);
+        setFoldersList(foldersRes.data || []);
+      } catch (err) {
+        console.warn('Failed to fetch library data. Using fallback.', err);
+        setDocuments(fallbackDocuments);
+        setFoldersList(fallbackFolders);
+      }
+    };
+    fetchData();
+  }, []);
   
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -50,12 +65,10 @@ function PersonalLibraryPage() {
   const [docToDelete, setDocToDelete] = useState(null);
   const [folderToDelete, setFolderToDelete] = useState(null);
   const [menuOpenId, setMenuOpenId] = useState(null);
+  const [folderSearchQuery, setFolderSearchQuery] = useState('');
   
-  // Upload Files State (Dummy initial files to show UI)
-  const [uploadFiles, setUploadFiles] = useState([
-    { name: 'Chemistry_Notes.pdf', size: '2.4 MB' },
-    { name: 'Lab_Report_v1.pdf', size: '1.1 MB' }
-  ]);
+  // Upload Files State
+  const [uploadFiles, setUploadFiles] = useState([]);
 
   // --- Handlers ---
   const handleUploadClick = () => setIsUploadModalOpen(true);
@@ -77,8 +90,14 @@ function PersonalLibraryPage() {
     setDocToDelete(null);
   };
 
-  const confirmDelete = () => {
-    setDocuments(documents.filter(doc => doc.id !== docToDelete.id));
+  const confirmDelete = async () => {
+    try {
+      await api.delete(`/library/documents/${docToDelete.id}`);
+      setDocuments(documents.filter(doc => doc.id !== docToDelete.id));
+    } catch (err) {
+      console.warn('Failed to delete doc in API. Deleting locally.', err);
+      setDocuments(documents.filter(doc => doc.id !== docToDelete.id));
+    }
     closeDeleteModal();
   };
 
@@ -93,11 +112,19 @@ function PersonalLibraryPage() {
     setFolderToDelete(null);
   };
 
-  const confirmFolderDelete = () => {
-    setFoldersList(foldersList.filter(f => f.id !== folderToDelete.id));
-    // If we deleted the currently open folder, go back to root
-    if (activeFolder && activeFolder.id === folderToDelete.id) {
-      setActiveFolder(null);
+  const confirmFolderDelete = async () => {
+    try {
+      await api.delete(`/library/folders/${folderToDelete.id}`);
+      setFoldersList(foldersList.filter(f => f.id !== folderToDelete.id));
+      if (activeFolder && activeFolder.id === folderToDelete.id) {
+        setActiveFolder(null);
+      }
+    } catch (err) {
+      console.warn('Failed to delete folder in API. Deleting locally.', err);
+      setFoldersList(foldersList.filter(f => f.id !== folderToDelete.id));
+      if (activeFolder && activeFolder.id === folderToDelete.id) {
+        setActiveFolder(null);
+      }
     }
     closeDeleteFolderModal();
   };
@@ -136,7 +163,7 @@ function PersonalLibraryPage() {
     closeUploadModal();
   };
 
-  const handleCreateFolder = () => {
+  const handleCreateFolder = async () => {
     if (newFolderName.trim() === '') return;
     const newFolder = {
       id: Date.now(),
@@ -144,7 +171,13 @@ function PersonalLibraryPage() {
       files: 0,
       size: '0 KB'
     };
-    setFoldersList([...foldersList, newFolder]);
+    try {
+      await api.post('/library/folders', newFolder);
+      setFoldersList([...foldersList, newFolder]);
+    } catch (err) {
+      console.warn('Failed to create folder in API. Creating locally.', err);
+      setFoldersList([...foldersList, newFolder]);
+    }
     setNewFolderName('');
     setIsCreateFolderModalOpen(false);
   };
@@ -431,6 +464,8 @@ function PersonalLibraryPage() {
                   type="text" 
                   placeholder="Search folders..." 
                   className="folder-search-input" 
+                  value={folderSearchQuery}
+                  onChange={(e) => setFolderSearchQuery(e.target.value)}
                   style={{ border: 'none', outline: 'none', background: 'transparent', boxShadow: 'none', WebkitAppearance: 'none' }}
                 />
               </div>
@@ -486,7 +521,9 @@ function PersonalLibraryPage() {
 
             <div className="all-folders-body">
               <div className="all-folders-grid">
-                {foldersList.map(folder => (
+                {foldersList
+                  .filter(folder => folder.name.toLowerCase().includes(folderSearchQuery.toLowerCase()))
+                  .map(folder => (
                   <div className="folder-card" key={folder.id} onClick={() => handleFolderClick(folder)}>
                     <button className="folder-delete-icon" onClick={(e) => openDeleteFolderModal(folder, e)} title="Delete Folder">🗑️</button>
                     <div className="folder-icon">📁</div>

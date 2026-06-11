@@ -2,14 +2,14 @@
 
 /* The Main White Container */
 .library-workspace {
-  background: #FFFFFF;
-  border: 1.5px solid #F0F0F0;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   width: 100%;
   height: 100%; 
-  padding: 30px; 
+  padding: 35px; 
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
   position: relative;
 }
 
@@ -54,17 +54,22 @@
   gap: 20px;
 }
 .folder-card {
-  border: 1.5px solid #F0F0F0;
-  border-radius: 16px;
-  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 25px;
   display: flex;
   gap: 15px;
   cursor: pointer;
-  transition: all 0.2s;
-  background: #FFF;
+  transition: var(--transition-bounce);
+  background: var(--surface-color);
   position: relative;
+  box-shadow: var(--shadow-sm);
 }
-.folder-card:hover { border-color: #FF7043; box-shadow: 0 5px 15px rgba(255,112,67,0.05); transform: translateY(-2px); }
+.folder-card:hover { 
+  border-color: rgba(255, 87, 34, 0.3); 
+  box-shadow: var(--shadow-hover); 
+  transform: translateY(-5px); 
+}
 
 .folder-delete-icon {
   position: absolute;

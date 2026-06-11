@@ -80,14 +80,6 @@ export const SettingsProvider = ({ children }) => {
   const [desktopAlerts, setDesktopAlerts] = useState(() => JSON.parse(localStorage.getItem('cm_desktopAlerts')) || false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Apply Dark Mode Class to the entire <body>
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-  }, [isDarkMode]);
 
   // Function to get translated text
   const t = (key) => translations[language][key] || translations['en'][key];

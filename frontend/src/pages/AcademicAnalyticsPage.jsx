@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import api from '../services/api';
 import './AcademicAnalyticsPage.css';
 
-// Dummy Data
-const gpaData = [
+// Dummy Data Fallbacks
+const fallbackGpaData = [
   { name: 'SEM 1', gpa: 3.2 },
   { name: 'SEM 2', gpa: 3.4 },
   { name: 'SEM 3', gpa: 3.5 },
@@ -15,7 +16,7 @@ const gpaData = [
   { name: 'SEM 6', gpa: 3.85 },
 ];
 
-const studyData = [
+const fallbackStudyData = [
   { name: 'Math', hours: 45 },
   { name: 'Physics', hours: 30 },
   { name: 'CS', hours: 60 },
@@ -24,8 +25,39 @@ const studyData = [
   { name: 'Art', hours: 15 },
 ];
 
+const fallbackStrengths = [
+  { title: "Mathematics", desc: "Strong Proficiency", val: 90, color: "#2E86AB" },
+  { title: "Writing & Composition", desc: "Needs Improvement", val: 70, color: "#F4A261" },
+  { title: "Scientific Research", desc: "Solid Baseline", val: 85, color: "#2A9D8F" },
+  { title: "Public Speaking", desc: "Development Area", val: 40, color: "#E76F51" }
+];
+
+const fallbackWorkload = { deadlines: 6, intensity: 'Heavy', difficulty: 'Moderate' };
+
 function AcademicAnalyticsPage() {
   const navigate = useNavigate();
+
+  const [analytics, setAnalytics] = useState({
+    overallGpa: 3.85,
+    gpaTrend: fallbackGpaData,
+    studyDistribution: fallbackStudyData,
+    strengthsWeaknesses: fallbackStrengths,
+    workload: fallbackWorkload
+  });
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await api.get('/analytics/me');
+        if (response.data) {
+          setAnalytics(response.data);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch analytics from API. Using fallback data.', err);
+      }
+    };
+    fetchAnalytics();
+  }, []);
 
   return (
     <div className="dashboard-layout">
@@ -52,7 +84,7 @@ function AcademicAnalyticsPage() {
                   <span className="metric-title">Overall GPA</span>
                   <span className="metric-trend positive">+0.05</span>
                 </div>
-                <h2 className="metric-value">3.85</h2>
+                <h2 className="metric-value">{analytics.overallGpa}</h2>
               </div>
               
               <div className="metric-card">
@@ -85,7 +117,7 @@ function AcademicAnalyticsPage() {
                 </div>
                 <div className="chart-container">
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={gpaData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                    <AreaChart data={analytics.gpaTrend} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                       <defs>
                         <linearGradient id="colorGpa" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#FF7043" stopOpacity={0.3}/>
@@ -112,13 +144,13 @@ function AcademicAnalyticsPage() {
                 </div>
                 <div className="chart-container">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={studyData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }} barSize={30}>
+                    <BarChart data={analytics.studyDistribution} margin={{ top: 10, right: 0, left: -20, bottom: 0 }} barSize={30}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F0F0F0" />
                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} dy={10} />
                       <YAxis axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} />
                       <Tooltip cursor={{fill: '#FFF0EB'}} contentStyle={{borderRadius: '10px', border: 'none', boxShadow: '0 4px 15px rgba(0,0,0,0.1)'}} />
                       <Bar dataKey="hours" fill="#FF7043" radius={[4, 4, 0, 0]}>
-                        {studyData.map((entry, index) => (
+                        {analytics.studyDistribution.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={index === 2 ? '#FF7043' : '#FFDDCB'} />
                         ))}
                       </Bar>
@@ -135,12 +167,7 @@ function AcademicAnalyticsPage() {
                 <p>A breakdown of proficiency across core academic skills.</p>
               </div>
               <div className="circular-skills-grid">
-                {[
-                  { title: "Mathematics", desc: "Strong Proficiency", val: 90, color: "#2E86AB" },
-                  { title: "Writing & Composition", desc: "Needs Improvement", val: 70, color: "#F4A261" },
-                  { title: "Scientific Research", desc: "Solid Baseline", val: 85, color: "#2A9D8F" },
-                  { title: "Public Speaking", desc: "Development Area", val: 40, color: "#E76F51" }
-                ].map((skill, idx) => (
+                {analytics.strengthsWeaknesses.map((skill, idx) => (
                   <div className="circular-skill-card" key={idx}>
                     <div className="circular-progress" style={{background: `conic-gradient(${skill.color} ${skill.val * 3.6}deg, #F0F0F0 0deg)`}}>
                       <div className="inner-circle"><span>{skill.val}%</span></div>
@@ -175,14 +202,14 @@ function AcademicAnalyticsPage() {
 
               <div className="workload-bars">
                 <div className="w-bar-row">
-                  <div className="w-label"><span>UPCOMING DEADLINES</span> <span className="badge">6 Tasks</span></div>
+                  <div className="w-label"><span>UPCOMING DEADLINES</span> <span className="badge">{analytics.workload.deadlines} Tasks</span></div>
                 </div>
                 <div className="w-bar-row">
-                  <div className="w-label"><span>STUDY INTENSITY</span> <span>Heavy</span></div>
+                  <div className="w-label"><span>STUDY INTENSITY</span> <span>{analytics.workload.intensity}</span></div>
                   <div className="w-bg"><div className="w-fill" style={{width: '85%', background: '#FF7043'}}></div></div>
                 </div>
                 <div className="w-bar-row">
-                  <div className="w-label"><span>COURSE DIFFICULTY</span> <span>Moderate</span></div>
+                  <div className="w-label"><span>COURSE DIFFICULTY</span> <span>{analytics.workload.difficulty}</span></div>
                   <div className="w-bg"><div className="w-fill" style={{width: '60%', background: '#FDCB6E'}}></div></div>
                 </div>
               </div>

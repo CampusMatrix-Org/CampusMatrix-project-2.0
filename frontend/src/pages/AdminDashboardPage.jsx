@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AdminDashboardPage.css';
+import api from '../services/api';
 
 // Admin Components Import
 import AdminSidebar from '../components/admin/AdminSidebar';
@@ -38,7 +39,7 @@ const AdminDashboardPage = () => {
   const [anonymizeData, setAnonymizeData] = useState(true);
 
   // Dummy logs data
-  const systemLogs = [
+  const fallbackLogs = [
     { id: 1, type: 'user', icon: '👤', title: 'New user registered', desc: 'Student ID: #ST-9902', time: '2m ago', color: '#52C41A', bg: '#F6FFED' },
     { id: 2, type: 'backup', icon: '☁️', title: 'Server backup completed', desc: 'Weekly routine backup', time: '45m ago', color: '#1890FF', bg: '#E6F7FF' },
     { id: 3, type: 'policy', icon: '🛡️', title: 'Policy updated', desc: 'Revised student handbook v2.4', time: '2h ago', color: '#FAAD14', bg: '#FFFBE6' },
@@ -48,6 +49,30 @@ const AdminDashboardPage = () => {
     { id: 7, type: 'resource', icon: '🗂️', title: 'Resource flagged', desc: 'CS101 Midterm Masterclass', time: '12h ago', color: '#FAAD14', bg: '#FFFBE6' },
     { id: 8, type: 'alert', icon: '⚠️', title: 'High CPU usage', desc: 'Server reached 95% CPU load', time: '1d ago', color: '#FF4D4F', bg: '#FFF1F0' },
   ];
+
+  const [stats, setStats] = useState({ totalStudents: '12,450', activeTasks: 856, resourceUploads: '3,210', systemAlerts: 5 });
+  const [systemLogs, setSystemLogs] = useState([]);
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const response = await api.get('/admin/dashboard');
+        if (response.data) {
+          setStats({
+            totalStudents: response.data.totalStudents || '12,450',
+            activeTasks: response.data.activeTasks || 856,
+            resourceUploads: response.data.resourceUploads || '3,210',
+            systemAlerts: response.data.systemAlerts || 5
+          });
+          setSystemLogs(response.data.recentActivity || fallbackLogs);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch admin stats. Using fallback.', err);
+        setSystemLogs(fallbackLogs);
+      }
+    };
+    fetchAdminData();
+  }, []);
 
   const renderCalendarDays = () => {
     let days = [];
@@ -122,7 +147,7 @@ const AdminDashboardPage = () => {
                 <div className="admin-stat-top">
                   <div>
                     <h3 className="stat-title">TOTAL STUDENTS</h3>
-                    <h2 className="stat-value">12,450</h2>
+                    <h2 className="stat-value">{stats.totalStudents}</h2>
                   </div>
                   <div className="stat-icon" style={{ color: '#E64A19', background: '#FFF0EB' }}>👤</div>
                 </div>
@@ -133,7 +158,7 @@ const AdminDashboardPage = () => {
                 <div className="admin-stat-top">
                   <div>
                     <h3 className="stat-title">ACTIVE TASKS</h3>
-                    <h2 className="stat-value">856</h2>
+                    <h2 className="stat-value">{stats.activeTasks}</h2>
                   </div>
                   <div className="stat-icon" style={{ color: '#1890FF', background: '#E6F7FF' }}>📋</div>
                 </div>
@@ -144,7 +169,7 @@ const AdminDashboardPage = () => {
                 <div className="admin-stat-top">
                   <div>
                     <h3 className="stat-title">RESOURCE UPLOADS</h3>
-                    <h2 className="stat-value">3,210</h2>
+                    <h2 className="stat-value">{stats.resourceUploads}</h2>
                   </div>
                   <div className="stat-icon" style={{ color: '#722ED1', background: '#F9F0FF' }}>📄</div>
                 </div>
@@ -155,7 +180,7 @@ const AdminDashboardPage = () => {
                 <div className="admin-stat-top">
                   <div>
                     <h3 className="stat-title">SYSTEM ALERTS</h3>
-                    <h2 className="stat-value text-red">5</h2>
+                    <h2 className="stat-value text-red">{stats.systemAlerts}</h2>
                   </div>
                   <div className="stat-icon" style={{ color: '#FF4D4F', background: '#FFF1F0' }}>⚠️</div>
                 </div>

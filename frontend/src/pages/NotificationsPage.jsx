@@ -1,54 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
+import api from '../services/api';
 import './NotificationsPage.css';
 import './DashboardPage.css';
 
 function NotificationsPage() {
   const [activeTab, setActiveTab] = useState('All');
   
-  // Dummy Data
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1, group: 'New', title: 'System Performance Alert',
-      desc: 'Server latency detected in Western Hub. Automatic load balancing has been initiated to maintain stability.',
-      time: '5 mins ago', type: 'System', tags: ['SYSTEM', 'HIGH LOAD'], isRead: false,
-      icon: '⚙️'
-    },
-    {
-      id: 2, group: 'New', title: 'New Student Registration',
-      desc: 'Elena Rodriguez has completed the enrollment process for "Advanced Neural Computing".',
-      time: '12 mins ago', type: 'User Activity', tags: ['USER ACTIVITY'], isRead: false,
-      icon: '👤'
-    },
-    {
-      id: 3, group: 'Earlier Today', title: 'Curriculum Update Uploaded',
-      desc: 'Prof. Aria Thorne uploaded 4 new resources to "Foundations of Modern Ethics".',
-      time: '4 hours ago', type: 'System', tags: ['RESOURCE'], isRead: true,
-      icon: '📚'
-    },
-    {
-      id: 4, group: 'Earlier Today', title: 'Database Backup Successful',
-      desc: 'Daily snapshot completed successfully. Integrity check passed for all 2.4M student records.',
-      time: '5 hours ago', type: 'System', tags: ['SYSTEM'], isRead: true,
-      icon: '💾'
-    },
-    {
-      id: 5, group: 'Yesterday', title: 'Scheduled Maintenance Reminder',
-      desc: 'Portal will be offline for 15 minutes starting Sunday at 2:00 AM UTC.',
-      time: 'Yesterday, 11:45 PM', type: 'System', tags: ['ANNOUNCEMENT'], isRead: true,
-      icon: '🔧'
-    }
-  ]);
+// Dummy Data Fallback
+const fallbackNotifications = [
+  {
+    id: 1, group: 'New', title: 'System Performance Alert',
+    desc: 'Server latency detected in Western Hub. Automatic load balancing has been initiated to maintain stability.',
+    time: '5 mins ago', type: 'System', tags: ['SYSTEM', 'HIGH LOAD'], isRead: false,
+    icon: '⚙️'
+  },
+  {
+    id: 2, group: 'New', title: 'New Student Registration',
+    desc: 'Elena Rodriguez has completed the enrollment process for "Advanced Neural Computing".',
+    time: '12 mins ago', type: 'User Activity', tags: ['USER ACTIVITY'], isRead: false,
+    icon: '👤'
+  },
+  {
+    id: 3, group: 'Earlier Today', title: 'Curriculum Update Uploaded',
+    desc: 'Prof. Aria Thorne uploaded 4 new resources to "Foundations of Modern Ethics".',
+    time: '4 hours ago', type: 'System', tags: ['RESOURCE'], isRead: true,
+    icon: '📚'
+  },
+  {
+    id: 4, group: 'Earlier Today', title: 'Database Backup Successful',
+    desc: 'Daily snapshot completed successfully. Integrity check passed for all 2.4M student records.',
+    time: '5 hours ago', type: 'System', tags: ['SYSTEM'], isRead: true,
+    icon: '💾'
+  },
+  {
+    id: 5, group: 'Yesterday', title: 'Scheduled Maintenance Reminder',
+    desc: 'Portal will be offline for 15 minutes starting Sunday at 2:00 AM UTC.',
+    time: 'Yesterday, 11:45 PM', type: 'System', tags: ['ANNOUNCEMENT'], isRead: true,
+    icon: '🔧'
+  }
+];
+
+function NotificationsPage() {
+  const [activeTab, setActiveTab] = useState('All');
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await api.get('/notifications');
+        setNotifications(response.data || []);
+      } catch (err) {
+        console.warn('Failed to fetch notifications from API. Using fallback.', err);
+        setNotifications(fallbackNotifications);
+      }
+    };
+    fetchNotifications();
+  }, []);
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
-  const handleMarkAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+  const handleMarkAllRead = async () => {
+    try {
+      // Assuming PUT /notifications marks all as read if no ID is passed, or you loop through them
+      await Promise.all(notifications.map(n => api.put(`/notifications/${n.id}`, { read: true })));
+      setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.warn('Failed to mark all as read in API. Doing locally.', err);
+      setNotifications(notifications.map(n => ({ ...n, isRead: true })));
+    }
   };
 
-  const handleNotificationClick = (id) => {
-    setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+  const handleNotificationClick = async (id) => {
+    try {
+      await api.put(`/notifications/${id}`, { read: true });
+      setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+    } catch (err) {
+      console.warn('Failed to mark notification as read in API. Doing locally.', err);
+      setNotifications(notifications.map(n => n.id === id ? { ...n, isRead: true } : n));
+    }
   };
 
   // Filter Logic

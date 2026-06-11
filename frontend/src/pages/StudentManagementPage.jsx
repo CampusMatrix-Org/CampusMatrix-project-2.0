@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './StudentManagementPage.css';
+import api from '../services/api';
 
 // Admin Components Import
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 
-const initialStudents = [
+const fallbackStudents = [
   { id: 1, name: 'Alice Johnson', initials: 'AJ', email: 'alice.j@example.com', studentId: 'STU001', joinDate: 'Aug 12, 2023', status: 'Active' },
   { id: 2, name: 'Bob Smith', initials: 'BS', email: 'bob.smith@example.com', studentId: 'STU002', joinDate: 'Sep 05, 2023', status: 'Active' },
   { id: 3, name: 'Charlie Davis', initials: 'CD', email: 'c.davis@example.com', studentId: 'STU003', joinDate: 'Jan 15, 2024', status: 'Inactive' },
@@ -15,7 +16,7 @@ const initialStudents = [
 
 const StudentManagementPage = () => {
   // Application States
-  const [studentsList, setStudentsList] = useState(initialStudents);
+  const [studentsList, setStudentsList] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   
   // Modal States
@@ -36,6 +37,19 @@ const StudentManagementPage = () => {
   const [startDate, setStartDate] = useState('mm/dd/yyyy');
   const [endDate, setEndDate] = useState('mm/dd/yyyy');
   const [tempSelectedDay, setTempSelectedDay] = useState(5);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await api.get('/admin/students');
+        setStudentsList(response.data || []);
+      } catch (error) {
+        console.warn('Failed to fetch students. Using fallback.', error);
+        setStudentsList(fallbackStudents);
+      }
+    };
+    fetchStudents();
+  }, []);
 
 
   // Handle Search and Filtering
@@ -90,7 +104,7 @@ const StudentManagementPage = () => {
   };
 
   // Add / Edit Student Logic
-  const handleSaveStudent = () => {
+  const handleSaveStudent = async () => {
     if (!formData.name || !formData.email) {
       alert('Please fill in all fields');
       return;
@@ -114,20 +128,35 @@ const StudentManagementPage = () => {
         status: 'Active'
       };
 
-      setStudentsList([newStudent, ...studentsList]);
+      try {
+        await api.post('/admin/students', newStudent);
+        setStudentsList([newStudent, ...studentsList]);
+      } catch (err) {
+        console.warn('Failed to add student to API. Saving locally.', err);
+        setStudentsList([newStudent, ...studentsList]);
+      }
     } else if (modalType === 'edit') {
-      setStudentsList(studentsList.map(s => 
-        s.id === selectedStudent.id 
-          ? { ...s, name: formData.name, email: formData.email, initials: initials || 'ST' } 
-          : s
-      ));
+      const updatedStudent = { ...selectedStudent, name: formData.name, email: formData.email, initials: initials || 'ST' };
+      try {
+        await api.put(`/admin/students/${selectedStudent.id}`, updatedStudent);
+        setStudentsList(studentsList.map(s => s.id === selectedStudent.id ? updatedStudent : s));
+      } catch (err) {
+        console.warn('Failed to update student in API. Saving locally.', err);
+        setStudentsList(studentsList.map(s => s.id === selectedStudent.id ? updatedStudent : s));
+      }
     }
     closeModal();
   };
 
   // Delete Student Logic
-  const handleDeleteConfirm = () => {
-    setStudentsList(studentsList.filter(s => s.id !== selectedStudent.id));
+  const handleDeleteConfirm = async () => {
+    try {
+      await api.delete(`/admin/students/${selectedStudent.id}`);
+      setStudentsList(studentsList.filter(s => s.id !== selectedStudent.id));
+    } catch (err) {
+      console.warn('Failed to delete student in API. Deleting locally.', err);
+      setStudentsList(studentsList.filter(s => s.id !== selectedStudent.id));
+    }
     closeModal();
   };
 

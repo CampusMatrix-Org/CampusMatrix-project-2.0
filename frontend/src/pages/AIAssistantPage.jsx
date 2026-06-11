@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
 import ShareModal from '../components/ai-assistant/ShareModal';
+import api from '../services/api';
 import '../components/ai-assistant/AIAssistant.css';
 import './DashboardPage.css'; // Global layout styles
 
@@ -14,8 +15,8 @@ function AIAssistantPage() {
 
   const [savedSuccess, setSavedSuccess] = useState(false);
 
-  // Simulated AI Generation Logic
-  const handleGenerate = () => {
+  // Simulated AI Generation Logic -> Refactored to API
+  const handleGenerate = async () => {
     if (!notes.trim()) {
       alert("Please paste some notes first!");
       return;
@@ -24,25 +25,38 @@ function AIAssistantPage() {
     setIsGenerating(true);
     setSavedSuccess(false);
     
-    // Simulate API Delay
-    setTimeout(() => {
-      const newCards = [
-        { id: Date.now(), q: "What are the three main components of a neural network?", a: "Input layer, Hidden layers, and Output layer." },
-        { id: Date.now() + 1, q: "Explain 'Backpropagation' in simple terms.", a: "It is the process of moving backward through the network to calculate errors and update weights." }
-      ];
-      setGeneratedCards(newCards);
+    try {
+      const response = await api.post('/ai/flashcards/generate', { notes });
+      setGeneratedCards(response.data || []);
       setIsGenerating(false);
-    }, 1500);
+    } catch (err) {
+      console.warn('Failed to generate flashcards from API. Using fallback simulation.', err);
+      setTimeout(() => {
+        const newCards = [
+          { id: Date.now(), q: "What are the three main components of a neural network?", a: "Input layer, Hidden layers, and Output layer." },
+          { id: Date.now() + 1, q: "Explain 'Backpropagation' in simple terms.", a: "It is the process of moving backward through the network to calculate errors and update weights." }
+        ];
+        setGeneratedCards(newCards);
+        setIsGenerating(false);
+      }, 1500);
+    }
   };
 
-  const handleSaveToFlashcards = () => {
+  const handleSaveToFlashcards = async () => {
     if (generatedCards.length === 0) return;
-    const existingCards = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
     const formattedForDB = generatedCards.map(c => ({
       id: c.id, deck: "AI Generated", question: c.q, answer: c.a 
     }));
-    const merged = [...existingCards, ...formattedForDB];
-    localStorage.setItem('campusMatrixFlashcards', JSON.stringify(merged));
+
+    try {
+      await api.post('/flashcards', formattedForDB);
+    } catch (err) {
+      console.warn('Failed to save flashcards via API. Saving to localStorage as fallback.', err);
+      const existingCards = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
+      const merged = [...existingCards, ...formattedForDB];
+      localStorage.setItem('campusMatrixFlashcards', JSON.stringify(merged));
+    }
+
     // Fire storage event so FlashcardWidget updates in real-time
     window.dispatchEvent(new Event('storage'));
     setSavedSuccess(true);

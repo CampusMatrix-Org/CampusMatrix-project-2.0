@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import './ResourceModerationPage.css';
+import api from '../services/api';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
 
-const initialResources = [
+const fallbackResources = [
   { id: 1, title: 'CS101 Midterm Masterclass', type: 'PDF', uploader: 'Alex Rivera', initials: 'AR', color: '#E6B89C', time: '2 hours ago', status: 'pending', size: '2.4 MB', date: 'Oct 12, 2023', icon: '📄' },
   { id: 2, title: 'Organic Chemistry Reactions', type: 'FLASHCARDS', uploader: 'Sarah Chen', initials: 'SC', color: '#E6D7C3', time: '5 hours ago', status: 'pending', size: '1.1 MB', date: 'Oct 12, 2023', icon: '📇' },
   { id: 3, title: 'Macroeconomics Summary', type: 'DOC', uploader: 'Mike Johnson', initials: 'MJ', color: '#4A6C6F', time: 'Yesterday', status: 'flagged', size: '500 KB', date: 'Oct 11, 2023', icon: '📝' },
@@ -11,7 +12,7 @@ const initialResources = [
 ];
 
 const ResourceModerationPage = () => {
-  const [resources, setResources] = useState(initialResources);
+  const [resources, setResources] = useState([]);
   const [activeTab, setActiveTab] = useState('all'); // 'all' or 'pending'
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -32,6 +33,19 @@ const ResourceModerationPage = () => {
     });
   }, [resources, activeTab, searchQuery]);
 
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const response = await api.get('/admin/resources');
+        setResources(response.data || []);
+      } catch (err) {
+        console.warn('Failed to fetch resources. Using fallback.', err);
+        setResources(fallbackResources);
+      }
+    };
+    fetchResources();
+  }, []);
+
   // Pagination Calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -46,15 +60,26 @@ const ResourceModerationPage = () => {
   useMemo(() => { setCurrentPage(1); }, [searchQuery, activeTab]);
 
   // Actions
-  const handleApprove = (id) => {
-    // Changes status to 'approved' (removes from pending view, conceptually adds to library)
-    setResources(resources.map(r => r.id === id ? { ...r, status: 'approved' } : r));
+  const handleApprove = async (id) => {
+    try {
+      await api.put(`/admin/resources/${id}/status`, { status: 'approved' });
+      setResources(resources.map(r => r.id === id ? { ...r, status: 'approved' } : r));
+    } catch (err) {
+      console.warn('Failed to approve resource in API. Approving locally.', err);
+      setResources(resources.map(r => r.id === id ? { ...r, status: 'approved' } : r));
+    }
     if (modalType === 'view') setModalType(null);
   };
 
-  const handleDeleteConfirm = () => {
-    // Completely deletes the resource
-    setResources(resources.filter(r => r.id !== selectedRes.id));
+  const handleDeleteConfirm = async () => {
+    try {
+      // Deleting works similarly to rejecting in this context
+      await api.put(`/admin/resources/${selectedRes.id}/status`, { status: 'rejected' });
+      setResources(resources.filter(r => r.id !== selectedRes.id));
+    } catch (err) {
+      console.warn('Failed to delete resource in API. Deleting locally.', err);
+      setResources(resources.filter(r => r.id !== selectedRes.id));
+    }
     setModalType(null);
     setSelectedRes(null);
   };

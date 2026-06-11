@@ -2,29 +2,66 @@
 .dashboard-layout { 
   display: flex; 
   height: 100vh; 
-  background-color: #FFF9F6;
+  background-color: var(--bg-color);
   overflow: hidden; 
 }
 
 .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .page-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 25px 30px; }
 
-/* Sidebar */
-.sidebar { width: 260px; background: white; display: flex; flex-direction: column; border-right: 1px solid #F0F0F0; padding: 20px 0; }
-.sidebar-logo { font-size: 1.4rem; font-weight: 800; padding: 0 25px 30px; color: #1A1A1A; }
-.sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 5px; padding: 0 15px; }
-.nav-item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; text-decoration: none; color: #636E72; font-weight: 600; border-radius: 12px; transition: all 0.2s; border-right: 4px solid transparent; }
-.nav-item:hover { background: #FFF9F6; color: #FF7043; }
-.nav-item.active { background: #FFF0EB; color: #FF7043; border-right: 4px solid #FF7043; }
+/* Sidebar - Premium Glassmorphism */
+.sidebar { 
+  width: 280px; 
+  background: rgba(255, 255, 255, 0.85); 
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex; 
+  flex-direction: column; 
+  border-right: 1px solid rgba(255, 255, 255, 0.5); 
+  padding: 24px 0; 
+  box-shadow: 1px 0 15px rgba(0, 0, 0, 0.02);
+  z-index: 10;
+}
+.sidebar-logo { font-size: 1.6rem; font-weight: 800; padding: 0 25px 30px; color: var(--text-main); letter-spacing: -0.5px; }
+.sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 0 15px; }
+.nav-item { 
+  display: flex; align-items: center; gap: 15px; padding: 14px 20px; 
+  text-decoration: none; color: var(--text-muted); font-weight: 600; 
+  border-radius: 12px; transition: var(--transition-normal); 
+  border-right: 4px solid transparent; 
+}
+.nav-item:hover { background: var(--primary-light); color: var(--primary); transform: translateX(4px); }
+.nav-item.active { background: var(--primary-light); color: var(--primary); border-right: 4px solid var(--primary); }
 .sidebar-bottom { padding: 20px; }
-.storage-widget { background: #FFF9F6; padding: 15px; border-radius: 12px; border: 1px solid #FFDBCF; }
-.storage-title { font-size: 0.8rem; font-weight: 700; color: #E64A19; margin-bottom: 8px; }
-.storage-bar-bg { height: 6px; background: #FFE8E0; border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
-.storage-bar-fill { height: 100%; background: #FF7043; border-radius: 3px; }
-.storage-value { font-size: 0.75rem; color: #E64A19; font-weight: 600; }
+.storage-widget { 
+  background: var(--surface-color); 
+  padding: 18px; 
+  border-radius: 16px; 
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+}
+.storage-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+}
+.storage-title { font-size: 0.85rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.storage-bar-bg { height: 8px; background: var(--border-color); border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+.storage-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%); border-radius: 4px; transition: width 1s ease-out; }
+.storage-value { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
-/* Header */
-.header { height: 80px; background: white; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; }
+/* Header - Glassmorphism */
+.header { 
+  height: 85px; 
+  background: rgba(255, 255, 255, 0.7); 
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
+  display: flex; align-items: center; justify-content: space-between; 
+  padding: 0 40px; 
+  z-index: 5;
+}
 .search-bar { display: flex; align-items: center; background: #F8F9FA; padding: 10px 20px; border-radius: 20px; width: 400px; border: 1px solid #EAEAEA; }
 .search-bar input { border: none; background: transparent; outline: none; width: 100%; margin-left: 10px; font-size: 0.9rem; }
 .search-container { position: relative; }

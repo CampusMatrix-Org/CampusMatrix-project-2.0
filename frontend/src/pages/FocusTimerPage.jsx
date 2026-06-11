@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
+import api from '../services/api';
 import './FocusTimerPage.css';
 import './DashboardPage.css';
 
@@ -24,6 +25,21 @@ function FocusTimerPage() {
   const [isActive, setIsActive] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [tempSettings, setTempSettings] = useState({ ...settings });
+  
+  // Stats State
+  const [stats, setStats] = useState({ totalFocused: '12h 45m', sessionsToday: 8, streakDays: 5 });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await api.get('/focus/stats');
+        setStats(response.data || { totalFocused: '12h 45m', sessionsToday: 8, streakDays: 5 });
+      } catch (err) {
+        console.warn('Failed to fetch focus stats. Using fallback.', err);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const handleModeSwitch = useCallback((newMode) => {
     setMode(newMode);
@@ -155,15 +171,15 @@ function FocusTimerPage() {
             <div className="timer-stats-footer">
               <div className="stat-box">
                 <span className="stat-title">TOTAL FOCUSED</span>
-                <span className="stat-value">12h 45m</span>
+                <span className="stat-value">{stats.totalFocused}</span>
               </div>
               <div className="stat-box">
                 <span className="stat-title">SESSIONS</span>
-                <span className="stat-value">8 today</span>
+                <span className="stat-value">{stats.sessionsToday} today</span>
               </div>
               <div className="stat-box">
                 <span className="stat-title">STREAK</span>
-                <span className="stat-value">5 Days</span>
+                <span className="stat-value">{stats.streakDays} Days</span>
               </div>
             </div>
 

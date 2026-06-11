@@ -1,14 +1,15 @@
 /* --- CONTAINER --- */
 .spg-workspace {
-  background: #FFFFFF;
-  border: 1.5px solid #F0F0F0;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
   border-radius: 24px;
   width: 100%;
   height: 100%; 
-  padding: 30px; 
+  padding: 35px; 
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  position: relative;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
 }
 
 .spg-workspace::-webkit-scrollbar { width: 6px; }

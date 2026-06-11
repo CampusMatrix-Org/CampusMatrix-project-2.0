@@ -39,6 +39,8 @@ import SystemSettingsPage from './pages/SystemSettingsPage';
 import AdminProfilePage from './pages/AdminProfilePage';
 import AdminNotificationsPage from './pages/AdminNotificationsPage';
 
+import ThemeController from './components/ThemeController';
+
 import './App.css';
 import './responsive.css';
 
@@ -49,6 +51,7 @@ function App() {
         <MaintenanceProvider> 
           <AdminProvider>
             <Router>
+              <ThemeController />
               <TaskProvider> 
                 <Routes>
                   {/* Public Auth Routes */}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; 
+import api from '../../services/api';
 import './SmartFlashcards.css';
 
 const hardcodedCards = [
@@ -11,20 +12,29 @@ const hardcodedCards = [
 function FlashcardWidget({ onEditClick }) {
   const [activeTab, setActiveTab] = useState('study'); 
   
-  // Load from localStorage + hardcoded on mount
-  const getInitialCards = () => {
-    const saved = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
-    // Merge: avoid duplicate IDs
-    const savedIds = new Set(saved.map(c => c.id));
-    const unique = hardcodedCards.filter(c => !savedIds.has(c.id));
-    return [...unique, ...saved];
-  };
-
   // App State
-  const [cards, setCards] = useState(getInitialCards);
+  const [cards, setCards] = useState([]);
   const [selectedDeck, setSelectedDeck] = useState('All');
   const [cardToDelete, setCardToDelete] = useState(null);
   const [newAiCount, setNewAiCount] = useState(0);
+
+  // Initial Fetch
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const response = await api.get('/flashcards');
+        const apiCards = response.data || [];
+        setCards([...hardcodedCards, ...apiCards]);
+      } catch (err) {
+        console.warn('Failed to fetch flashcards from API. Using localStorage fallback.', err);
+        const saved = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
+        const savedIds = new Set(saved.map(c => c.id));
+        const unique = hardcodedCards.filter(c => !savedIds.has(c.id));
+        setCards([...unique, ...saved]);
+      }
+    };
+    fetchCards();
+  }, []);
 
   // Watch localStorage for new AI cards being added
   useEffect(() => {
@@ -95,8 +105,17 @@ function FlashcardWidget({ onEditClick }) {
     setShowSRS(false);
   };
 
-  const confirmDelete = () => {
-    setCards(cards.filter(c => c.id !== cardToDelete.id)); 
+  const confirmDelete = async () => {
+    try {
+      await api.delete(`/flashcards/${cardToDelete.id}`);
+      setCards(cards.filter(c => c.id !== cardToDelete.id)); 
+    } catch (err) {
+      console.warn('Failed to delete flashcard via API. Trying localStorage fallback.', err);
+      const saved = JSON.parse(localStorage.getItem('campusMatrixFlashcards')) || [];
+      const updated = saved.filter(c => c.id !== cardToDelete.id);
+      localStorage.setItem('campusMatrixFlashcards', JSON.stringify(updated));
+      setCards(cards.filter(c => c.id !== cardToDelete.id)); 
+    }
     setCardToDelete(null); 
     setCurrentCardIndex(0); 
   };

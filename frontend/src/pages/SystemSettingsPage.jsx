@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SystemSettingsPage.css';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
-import { useMaintenance } from '../context/MaintenanceContext'; // Import context
+import { useMaintenance } from '../context/MaintenanceContext'; 
+import api from '../services/api';
 
 const SystemSettingsPage = () => {
   const { isMaintenanceMode, setIsMaintenanceMode } = useMaintenance();
   
-  // API Key State
+  // API Key & Stats State
   const [apiKey, setApiKey] = useState('AlzaSyB_REDACTED_KEY_4X9Z');
   const [showKey, setShowKey] = useState(false);
+  const [apiUsage, setApiUsage] = useState({ limit: 1000000, used: 450230 });
+
+  useEffect(() => {
+    const fetchApiStats = async () => {
+      try {
+        const response = await api.get('/admin/dashboard');
+        if (response.data && response.data.apiUsage) {
+          setApiUsage(response.data.apiUsage);
+        }
+      } catch (err) {
+        console.warn('Failed to fetch api usage stats. Using fallback.', err);
+      }
+    };
+    fetchApiStats();
+  }, []);
   
   // Fake update trigger
   const handleUpdateKey = () => {
@@ -43,11 +59,11 @@ const SystemSettingsPage = () => {
                 <div className="api-stats-row">
                   <div className="api-stat-box">
                     <span className="stat-label">Daily Limit</span>
-                    <div className="stat-val">1,000,000 <span className="stat-unit">tokens</span></div>
+                    <div className="stat-val">{apiUsage.limit.toLocaleString()} <span className="stat-unit">tokens</span></div>
                   </div>
                   <div className="api-stat-box">
                     <span className="stat-label">Tokens Used</span>
-                    <div className="stat-val">450,230 <span className="stat-unit">tokens</span></div>
+                    <div className="stat-val">{apiUsage.used.toLocaleString()} <span className="stat-unit">tokens</span></div>
                   </div>
                 </div>
 
@@ -58,12 +74,12 @@ const SystemSettingsPage = () => {
                       <strong>Gemini AI Token Usage</strong>
                       <div className="progress-sub">Based on current billing cycle</div>
                     </div>
-                    <div className="progress-percent">45%</div>
+                    <div className="progress-percent">{Math.round((apiUsage.used / apiUsage.limit) * 100)}%</div>
                   </div>
                   <div className="progress-bar-bg">
-                    <div className="progress-bar-fill" style={{ width: '45%' }}></div>
+                    <div className="progress-bar-fill" style={{ width: `${Math.round((apiUsage.used / apiUsage.limit) * 100)}%` }}></div>
                   </div>
-                  <div className="progress-bottom">450,230 / 1,000,000 tokens used today</div>
+                  <div className="progress-bottom">{apiUsage.used.toLocaleString()} / {apiUsage.limit.toLocaleString()} tokens used today</div>
                 </div>
 
                 {/* API Key Input */}
@@ -76,8 +92,20 @@ const SystemSettingsPage = () => {
                         value={apiKey} 
                         onChange={(e) => setApiKey(e.target.value)} 
                       />
-                      <button className="eye-btn" onClick={() => setShowKey(!showKey)}>
-                        {showKey ? '👁️' : '👁️‍🗨️'} {/* Basic eye icon representation */}
+                      <button type="button" className="eye-btn" onClick={() => setShowKey(!showKey)}>
+                        {showKey ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                          </svg>
+                        )}
                       </button>
                     </div>
                     <button className="btn-orange-solid" onClick={handleUpdateKey}>

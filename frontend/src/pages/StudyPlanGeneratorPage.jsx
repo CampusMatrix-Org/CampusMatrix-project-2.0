@@ -8,6 +8,7 @@ import { FiLoader, FiCheckCircle } from "react-icons/fi";
 import Sidebar from '../components/layout/Sidebar';
 import Header from '../components/layout/Header';
 import { useTasks } from '../context/TaskContext';
+import api from '../services/api';
 
 const StudyPlanGeneratorPage = () => {
   const navigate = useNavigate();
@@ -48,8 +49,8 @@ const StudyPlanGeneratorPage = () => {
     }
   };
 
-  // AI Mock Generation
-  const generateStudyPlan = () => {
+  // AI Mock Generation -> Refactored to API
+  const generateStudyPlan = async () => {
     if (!date) {
       alert("Please select a target exam date.");
       return;
@@ -61,50 +62,68 @@ const StudyPlanGeneratorPage = () => {
 
     setIsGenerating(true);
 
-    // Simulate AI processing delay
-    setTimeout(() => {
-      // Create mock plan tasks
-      const mockTasks = [
-        {
-          title: `Study Session 1: ${documents[0]?.name.split('.')[0] || 'Core Concepts'}`,
-          description: `AI Generated task based on ${intensity} intensity plan.`,
-          priority: 'high',
-          type: 'task'
-        },
-        {
-          title: `Practice Questions for ${date}`,
-          description: `Daily ${commitment} commitment requirement.`,
-          priority: 'medium',
-          type: 'task'
-        },
-        {
-          title: 'Review Notes and Summary',
-          description: 'Spaced repetition block for uploaded materials.',
-          priority: 'medium',
-          type: 'lecture'
-        }
-      ];
-
-      // Automatically add to TaskContext (Calendar & Tasks)
-      const targetDateObj = new Date(date);
-      mockTasks.forEach((task, index) => {
-        // Distribute dates leading up to the exam
-        const taskDate = new Date(targetDateObj);
-        taskDate.setDate(taskDate.getDate() - (index + 1));
-        
-        addTask({
-          title: task.title,
-          description: task.description,
-          status: 'to-do',
-          priority: task.priority,
-          dueDate: taskDate.toISOString(),
-          type: task.type
-        });
+    try {
+      const response = await api.post('/ai/study-plan/generate', {
+        targetDate: date,
+        intensity,
+        commitment,
+        documentIds: documents.map(d => d.id)
       });
-
-      setGeneratedPlan(mockTasks);
+      
+      const generatedTasks = response.data || [];
+      // Add tasks to context
+      generatedTasks.forEach(task => addTask(task));
+      
+      setGeneratedPlan(generatedTasks);
       setIsGenerating(false);
-    }, 2500); // 2.5s generation time
+
+    } catch (err) {
+      console.warn('Failed to generate study plan via API. Using fallback simulation.', err);
+      // Simulate AI processing delay
+      setTimeout(() => {
+        // Create mock plan tasks
+        const mockTasks = [
+          {
+            title: `Study Session 1: ${documents[0]?.name.split('.')[0] || 'Core Concepts'}`,
+            description: `AI Generated task based on ${intensity} intensity plan.`,
+            priority: 'high',
+            type: 'task'
+          },
+          {
+            title: `Practice Questions for ${date}`,
+            description: `Daily ${commitment} commitment requirement.`,
+            priority: 'medium',
+            type: 'task'
+          },
+          {
+            title: 'Review Notes and Summary',
+            description: 'Spaced repetition block for uploaded materials.',
+            priority: 'medium',
+            type: 'lecture'
+          }
+        ];
+
+        // Automatically add to TaskContext (Calendar & Tasks)
+        const targetDateObj = new Date(date);
+        mockTasks.forEach((task, index) => {
+          // Distribute dates leading up to the exam
+          const taskDate = new Date(targetDateObj);
+          taskDate.setDate(taskDate.getDate() - (index + 1));
+          
+          addTask({
+            title: task.title,
+            description: task.description,
+            status: 'to-do',
+            priority: task.priority,
+            dueDate: taskDate.toISOString(),
+            type: task.type
+          });
+        });
+
+        setGeneratedPlan(mockTasks);
+        setIsGenerating(false);
+      }, 2500); // 2.5s generation time
+    }
   };
 
 

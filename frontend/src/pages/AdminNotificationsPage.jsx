@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AdminNotificationsPage.css';
 import AdminSidebar from '../components/admin/AdminSidebar';
 import AdminHeader from '../components/admin/AdminHeader';
+import api from '../services/api';
 
-// Mock Data for Notifications
+// Mock Data Fallback for Notifications
 const mockNotifications = [
   {
     id: 1,
@@ -63,13 +64,39 @@ const mockNotifications = [
 ];
 
 const AdminNotificationsPage = () => {
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState([]);
   const [activeFilter, setActiveFilter] = useState('All');
+
+  useEffect(() => {
+    const fetchAdminNotifications = async () => {
+      try {
+        const response = await api.get('/notifications');
+        // Map the API response fields to match the UI's expected fields for the admin page
+        const formatted = (response.data || []).map(n => ({
+          ...n,
+          isNew: !n.read,
+          description: n.desc || n.description,
+          tags: n.tags || [{ text: 'SYSTEM', color: 'blue' }]
+        }));
+        setNotifications(formatted.length ? formatted : mockNotifications);
+      } catch (err) {
+        console.warn('Failed to fetch admin notifications. Using fallback.', err);
+        setNotifications(mockNotifications);
+      }
+    };
+    fetchAdminNotifications();
+  }, []);
 
   const unreadCount = notifications.filter(n => n.isNew).length;
 
-  const handleMarkAllRead = () => {
-    setNotifications(notifications.map(n => ({ ...n, isNew: false })));
+  const handleMarkAllRead = async () => {
+    try {
+      await Promise.all(notifications.map(n => api.put(`/notifications/${n.id}`, { read: true })));
+      setNotifications(notifications.map(n => ({ ...n, isNew: false })));
+    } catch (err) {
+      console.warn('Failed to mark all as read. Doing locally.', err);
+      setNotifications(notifications.map(n => ({ ...n, isNew: false })));
+    }
   };
 
   // Filter Logic

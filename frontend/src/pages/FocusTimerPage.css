@@ -1,13 +1,14 @@
-
 .timer-workspace {
-  background: #FFFFFF;
-  border: 1.5px solid #F0F0F0;
-  border-radius: 24px;
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-2xl);
   width: 100%;
   height: 100%; 
-  padding: 30px; 
+  padding: 35px; 
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
 }
 
 
