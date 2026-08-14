@@ -1,0 +1,774 @@
+openapi: 3.0.3
+info:
+  title: CampusMatrix API v2
+  version: 2.0.0
+  description: Comprehensive backend contract aligning with frontend structures.
+servers:
+  - url: http://localhost:8080/api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Admin
+  - name: Tasks
+  - name: Library
+  - name: Resources
+  - name: Dashboard
+  - name: Analytics
+  - name: AI
+  - name: Notifications
+  - name: Settings
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [to-do, in-progress, completed]
+        priority:
+          type: string
+          enum: [low, medium, high]
+        dueDate:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum: [task, exam, lecture]
+        target:
+          type: string
+          description: Target grade (only for type='exam')
+
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        studentId:
+          type: string
+        joinDate:
+          type: string
+        status:
+          type: string
+          enum: [Active, Inactive]
+        initials:
+          type: string
+
+    Folder:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        files:
+          type: integer
+        size:
+          type: string
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        size:
+          type: string
+        modified:
+          type: string
+        owner:
+          type: string
+        type:
+          type: string
+          enum: [pdf, word, powerpoint, image, other]
+
+    Resource:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+        uploader:
+          type: string
+        date:
+          type: string
+        status:
+          type: string
+          enum: [Pending, Approved, Rejected]
+        size:
+          type: string
+
+    AdminProfile:
+      type: object
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+        bio:
+          type: string
+
+    DashboardStats:
+      type: object
+      properties:
+        gpa:
+          type: number
+        credits:
+          type: integer
+        pendingAssignments:
+          type: integer
+        goals:
+          type: array
+          items:
+            type: object
+            properties:
+              title: { type: string }
+              progress: { type: string }
+              color: { type: string }
+
+    AdminDashboardStats:
+      type: object
+      properties:
+        totalStudents:
+          type: integer
+        activeUsers:
+          type: integer
+        storageUsed:
+          type: string
+        apiUsage:
+          type: object
+          properties:
+            limit: { type: integer }
+            used: { type: integer }
+        recentActivity:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: integer }
+              action: { type: string }
+              time: { type: string }
+              user: { type: string }
+
+    AnalyticsProfile:
+      type: object
+      properties:
+        overallGpa:
+          type: number
+        gpaTrend:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              gpa: { type: number }
+        studyDistribution:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              hours: { type: number }
+        strengthsWeaknesses:
+          type: array
+          items:
+            type: object
+            properties:
+              title: { type: string }
+              desc: { type: string }
+              val: { type: number }
+              color: { type: string }
+        workload:
+          type: object
+          properties:
+            deadlines: { type: integer }
+            intensity: { type: string }
+            difficulty: { type: string }
+
+    FocusStats:
+      type: object
+      properties:
+        totalFocused:
+          type: string
+        sessionsToday:
+          type: integer
+        streakDays:
+          type: integer
+
+    Flashcard:
+      type: object
+      properties:
+        id:
+          type: integer
+        deck:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+
+    StudyPlanRequest:
+      type: object
+      properties:
+        targetDate:
+          type: string
+          format: date
+        intensity:
+          type: string
+        commitment:
+          type: string
+        documentIds:
+          type: array
+          items:
+            type: integer
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        desc:
+          type: string
+        time:
+          type: string
+        type:
+          type: string
+        read:
+          type: boolean
+
+    UserPreferences:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum: [light, dark, system]
+        language:
+          type: string
+        emailNotifications:
+          type: boolean
+        pushNotifications:
+          type: boolean
+
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Login user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean, example: true }
+                  token: { type: string }
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Register new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [fullName, email, password]
+              properties:
+                fullName: { type: string }
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '201':
+          description: Success
+
+  /auth/forgot-password:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Send password reset link
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string }
+      responses:
+        '200':
+          description: Success
+
+  /dashboard/me:
+    get:
+      tags: [Dashboard]
+      summary: Get user dashboard statistics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardStats'
+
+  /admin/dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Get admin dashboard statistics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminDashboardStats'
+
+  /analytics/me:
+    get:
+      tags: [Analytics]
+      summary: Get user academic analytics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsProfile'
+
+  /ai/flashcards/generate:
+    post:
+      tags: [AI]
+      summary: Generate flashcards from notes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [notes]
+              properties:
+                notes: { type: string }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flashcard'
+
+  /ai/study-plan/generate:
+    post:
+      tags: [AI]
+      summary: Generate study plan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyPlanRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+  /flashcards:
+    get:
+      tags: [AI]
+      summary: Get saved flashcards
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flashcard'
+    post:
+      tags: [AI]
+      summary: Save flashcards
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Flashcard'
+      responses:
+        '201':
+          description: Success
+
+  /flashcards/{id}:
+    delete:
+      tags: [AI]
+      summary: Delete a saved flashcard
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+
+  /focus/stats:
+    get:
+      tags: [Analytics]
+      summary: Get focus timer stats
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FocusStats'
+
+  /notifications:
+    get:
+      tags: [Notifications]
+      summary: Get user notifications
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+
+  /notifications/{id}:
+    put:
+      tags: [Notifications]
+      summary: Update notification (e.g., mark as read)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                read: { type: boolean }
+      responses:
+        '200':
+          description: Success
+
+  /users/me/preferences:
+    get:
+      tags: [Settings]
+      summary: Get user preferences
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferences'
+    put:
+      tags: [Settings]
+      summary: Update user preferences
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreferences'
+      responses:
+        '200':
+          description: Success
+
+  /admin/profile:
+    get:
+      tags: [Admin]
+      summary: Get admin profile
+      responses:
+        '200':
+          description: Returns AdminProfile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminProfile'
+
+  /admin/students:
+    get:
+      tags: [Admin]
+      summary: List all students
+      responses:
+        '200':
+          description: Array of Student
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+    post:
+      tags: [Admin]
+      summary: Add student
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '201':
+          description: Success
+          
+  /admin/students/{id}:
+    put:
+      tags: [Admin]
+      summary: Update student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: Success
+    delete:
+      tags: [Admin]
+      summary: Delete student
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+
+  /admin/resources:
+    get:
+      tags: [Resources]
+      summary: Get uploaded resources
+      responses:
+        '200':
+          description: Array of Resource
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resource'
+
+  /admin/resources/{id}/status:
+    put:
+      tags: [Resources]
+      summary: Update resource status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string }
+      responses:
+        '200':
+          description: Success
+
+  /tasks:
+    get:
+      tags: [Tasks]
+      summary: Get all tasks, exams, and lectures
+      responses:
+        '200':
+          description: Array of Task
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      tags: [Tasks]
+      summary: Create task/exam/lecture
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Created Task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /tasks/{id}:
+    patch:
+      tags: [Tasks]
+      summary: Update task details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string }
+                dueDate: { type: string }
+      responses:
+        '200':
+          description: Success
+    put:
+      tags: [Tasks]
+      summary: Replace task details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Success
+    delete:
+      tags: [Tasks]
+      summary: Delete task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+
+  /library/folders:
+    get:
+      tags: [Library]
+      summary: Get folders
+      responses:
+        '200':
+          description: Array of Folder
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Folder'
+    post:
+      tags: [Library]
+      summary: Create folder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Folder'
+      responses:
+        '201':
+          description: Success
+
+  /library/folders/{id}:
+    delete:
+      tags: [Library]
+      summary: Delete folder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+
+  /library/documents:
+    get:
+      tags: [Library]
+      summary: Get documents
+      responses:
+        '200':
+          description: Array of Document
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Document'
+
+  /library/documents/{id}:
+    delete:
+      tags: [Library]
+      summary: Delete document
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
