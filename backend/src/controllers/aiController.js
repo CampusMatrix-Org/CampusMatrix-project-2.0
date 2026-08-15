@@ -58,3 +58,22 @@ export const generateFlashcards = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Get all saved flashcards
+ * @route   GET /api/v1/flashcards
+ */
+export const getFlashcards = async (req, res) => {
+  try {
+    const cards = await Flashcard.find({ userId: req.user.id });
+    const formatted = cards.map((c, i) => ({
+      id: c._id,
+      deck: c.subject || "General",
+      question: c.question,
+      answer: c.answer
+    }));
+    res.status(200).json(formatted);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
