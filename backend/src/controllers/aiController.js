@@ -97,3 +97,17 @@ export const saveFlashcards = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
+};
+
+/**
+ * @desc    Delete a flashcard
+ * @route   DELETE /api/v1/flashcards/:id
+ */
+export const deleteFlashcard = async (req, res) => {
+  try {
+    await Flashcard.findByIdAndDelete(req.params.id);
+    res.status(200).json({ success: true, message: "Flashcard deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
