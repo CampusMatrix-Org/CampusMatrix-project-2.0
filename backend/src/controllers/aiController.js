@@ -77,3 +77,23 @@ export const getFlashcards = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Save flashcards array
+ * @route   POST /api/v1/flashcards
+ */
+export const saveFlashcards = async (req, res) => {
+  try {
+    const cardsArray = req.body; // Expects an array of flashcards
+    const toSave = cardsArray.map(c => ({
+      question: c.question,
+      answer: c.answer,
+      subject: c.deck || "General",
+      userId: req.user.id
+    }));
+
+    await Flashcard.insertMany(toSave);
+    res.status(201).json({ success: true, message: "Flashcards saved successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
