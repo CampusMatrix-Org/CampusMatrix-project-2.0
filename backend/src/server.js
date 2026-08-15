@@ -23,6 +23,7 @@ connectDB();
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/ai', aiRoutes); 
+app.use('/api/v1/flashcards', flashcardRoutes);
 app.use('/api/v1/library', libraryRoutes);
 
 // Health route
