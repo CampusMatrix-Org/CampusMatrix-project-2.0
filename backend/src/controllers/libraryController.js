@@ -49,3 +49,31 @@ export const deleteFolder = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// --- DOCUMENTS ---
+
+export const getDocuments = async (req, res) => {
+  try {
+    const docs = await Document.find({ userId: req.user.id });
+    const formatted = docs.map(d => ({
+      id: d._id,
+      name: d.name,
+      size: d.size,
+      modified: d.updatedAt.toISOString().split('T')[0],
+      owner: d.owner,
+      type: d.type
+    }));
+    res.status(200).json(formatted);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteDocument = async (req, res) => {
+  try {
+    await Document.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    res.status(200).json({ success: true, message: 'Document deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
