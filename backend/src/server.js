@@ -9,6 +9,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import libraryRoutes from './routes/libraryRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/v1/library', libraryRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/focus', analyticsRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
 
 // Health route
 app.get('/api/v1/health', (req, res) => {
