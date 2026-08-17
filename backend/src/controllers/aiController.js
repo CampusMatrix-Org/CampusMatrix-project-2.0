@@ -111,3 +111,71 @@ export const deleteFlashcard = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Generate a structured study plan using AI
+ * @route   POST /api/v1/ai/study-plan/generate
+ */
+export const generateStudyPlan = async (req, res) => {
+  try {
+    const { targetDate, intensity, commitment, documentIds } = req.body;
+
+    const apiKey = process.env.GROQ_API_KEY;
+    const modelUrl = "https://api.groq.com/openai/v1/chat/completions";
+
+    const prompt = `
+      Act as an academic planner. Create a study plan based on:
+      Target Date: ${targetDate}, Intensity: ${intensity}, Commitment: ${commitment}.
+      Output a valid JSON object with a key named "tasks" containing an array of task objects.
+      Each item in the array must strictly match this format:
+      {
+        "id": 1,
+        "title": "string",
+        "description": "string",
+        "status": "to-do",
+        "priority": "medium",
+        "dueDate": "${targetDate || new Date().toISOString()}",
+        "type": "task",
+        "target": "A"
+      }
+    `;
+
+    const response = await axios.post(
+      modelUrl,
+      {
+        model: "llama-3.1-8b-instant",
+        messages: [
+          { role: "system", content: "You are a helpful assistant that outputs only valid JSON." },
+          { role: "user", content: prompt }
+        ],
+        response_format: { type: "json_object" },
+        temperature: 0.5
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const parsedData = JSON.parse(response.data.choices[0].message.content);
+    const tasks = parsedData.tasks || parsedData.plan || [];
+
+    // Map each item to guarantee integer id as requested by OpenAPI
+    const formattedTasks = tasks.map((task, idx) => ({
+      id: task.id || Date.now() + idx,
+      title: task.title || "Study Session",
+      description: task.description || "",
+      status: task.status || "to-do",
+      priority: task.priority || "medium",
+      dueDate: task.dueDate || targetDate,
+      type: task.type || "task",
+      target: task.target || ""
+    }));
+
+    res.status(200).json(formattedTasks);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
