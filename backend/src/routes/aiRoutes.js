@@ -1,7 +1,7 @@
 import express from 'express';
 import { 
   generateFlashcards, 
-  updateFlashcardReview 
+  generateStudyPlan
 } from '../controllers/aiController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
