@@ -1,15 +1,37 @@
 import mongoose from 'mongoose';
 
 const documentSchema = new mongoose.Schema({
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+  name: {
+    type: String,
+    required: true
   },
-  fileName: { type: String, required: true },
-  fileUrl: { type: String, required: true }, // URL to cloud storage or local path
-  folder: { type: String, default: 'General' },
-  sizeInMB: { type: Number, default: 0 } // Useful for calculating usedGB later
+  size: {
+    type: String,
+    required: true
+  },
+  owner: {
+    type: String,
+    default: 'Me'
+  },
+  type: {
+    type: String,
+    enum: ['pdf', 'word', 'powerpoint', 'image', 'other'],
+    default: 'other'
+  },
+  fileUrl: {
+    type: String,
+    required: true
+  },
+  folderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Folder',
+    default: null
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 }, { timestamps: true });
 
 const Document = mongoose.model('Document', documentSchema);
