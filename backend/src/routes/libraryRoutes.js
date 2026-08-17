@@ -1,22 +1,19 @@
 import express from 'express';
-import { uploadFile, getMyFiles } from '../controllers/libraryController.js';
-import { upload } from '../middlewares/uploadMiddleware.js';
+import {
+  getFolders,
+  createFolder,
+  deleteFolder,
+  getDocuments,
+  deleteDocument
+} from '../controllers/libraryController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-/**
- * @route   POST /api/v1/library/upload
- * @desc    Upload a file to personal library
- * @access  Private
- */
-router.post('/upload', protect, upload.single('file'), uploadFile);
+// Folders routes
+router.route('/folders')
+  .get(protect, getFolders)
+  .post(protect, createFolder);
 
-/**
- * @route   GET /api/v1/library/my-files
- * @desc    Get all files uploaded by the logged-in user
- * @access  Private
- */
-router.get('/my-files', protect, getMyFiles);
-
-export default router;
+router.route('/folders/:id')
+  .delete(protect, deleteFolder);
