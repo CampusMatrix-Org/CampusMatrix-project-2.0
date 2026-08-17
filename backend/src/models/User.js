@@ -15,8 +15,23 @@ const userSchema = new mongoose.Schema({
 
   // --- User Preferences ---
   preferences: {
-    theme: { type: String, enum: ['light', 'dark'], default: 'dark' },
-    language: { type: String, default: 'en' }
+    theme: { 
+      type: String, 
+      enum: ['light', 'dark', 'system'], 
+      default: 'system' 
+    },
+    language: { 
+      type: String, 
+      default: 'en' 
+    },
+    emailNotifications: { 
+      type: Boolean, 
+      default: true 
+    },
+    pushNotifications: { 
+      type: Boolean, 
+      default: true 
+    }
   },
 
   // --- Focus & Dashboard Settings ---
