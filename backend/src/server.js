@@ -10,6 +10,7 @@ import libraryRoutes from './routes/libraryRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import flashcardRoutes from './routes/flashcardRoutes.js';
 
 dotenv.config();
 
