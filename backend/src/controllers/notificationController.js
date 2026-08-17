@@ -44,3 +44,30 @@ export const getNotifications = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Update notification (e.g., mark as read)
+ * @route   PUT /api/v1/notifications/:id
+ */
+export const updateNotification = async (req, res) => {
+  try {
+    const { read } = req.body;
+
+    const notification = await Notification.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      { $set: { read } },
+      { new: true }
+    );
+
+    if (!notification) {
+      return res.status(404).json({ success: false, message: 'Notification not found' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Notification updated successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
