@@ -17,3 +17,12 @@ router.route('/folders')
 
 router.route('/folders/:id')
   .delete(protect, deleteFolder);
+
+// Documents routes
+router.route('/documents')
+  .get(protect, getDocuments);
+
+router.route('/documents/:id')
+  .delete(protect, deleteDocument);
+
+export default router;
