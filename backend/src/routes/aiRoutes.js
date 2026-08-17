@@ -13,5 +13,6 @@ const router = express.Router();
  * @access  Private
  */
 router.post('/flashcards/generate', protect, generateFlashcards);
+router.post('/study-plan/generate', protect, generateStudyPlan);
 
 export default router;
