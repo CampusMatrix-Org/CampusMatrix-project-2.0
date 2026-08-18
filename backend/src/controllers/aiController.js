@@ -26,7 +26,7 @@ export const generateFlashcards = async (req, res) => {
     const response = await axios.post(
       modelUrl,
       {
-        model: "llama-3.1-8b-instant",
+        model: "openai/gpt-oss-20b",
         messages: [
           { role: "system", content: "You are a helpful assistant that outputs only valid JSON." },
           { role: "user", content: prompt },
@@ -55,7 +55,11 @@ export const generateFlashcards = async (req, res) => {
 
     res.status(200).json(formattedCards);
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Groq Flashcards Error Details:", error.response?.data || error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: error.response?.data?.error?.message || error.message 
+    });
   }
 };
 
@@ -143,7 +147,7 @@ export const generateStudyPlan = async (req, res) => {
     const response = await axios.post(
       modelUrl,
       {
-        model: "llama-3.1-8b-instant",
+        model: "openai/gpt-oss-20b",
         messages: [
           { role: "system", content: "You are a helpful assistant that outputs only valid JSON." },
           { role: "user", content: prompt }
