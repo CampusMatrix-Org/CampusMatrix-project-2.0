@@ -176,6 +176,10 @@ export const generateStudyPlan = async (req, res) => {
 
     res.status(200).json(formattedTasks);
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Groq API Error Details (Study Plan):", error.response?.data || error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: error.response?.data?.error?.message || error.message 
+    });
   }
 };
