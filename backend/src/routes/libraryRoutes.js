@@ -4,11 +4,16 @@ import {
   createFolder,
   deleteFolder,
   getDocuments,
-  deleteDocument
+  deleteDocument,
+  uploadDocument
 } from '../controllers/libraryController.js';
 import { protect } from '../middlewares/authMiddleware.js';
+import { upload } from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
+
+// Upload route
+router.post('/upload', protect, upload.single('file'), uploadDocument);
 
 // Folders routes
 router.route('/folders')

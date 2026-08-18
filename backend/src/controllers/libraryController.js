@@ -69,10 +69,49 @@ export const getDocuments = async (req, res) => {
   }
 };
 
+// uplaod Documents 
+
 export const deleteDocument = async (req, res) => {
   try {
     await Document.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
     res.status(200).json({ success: true, message: 'Document deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const uploadDocument = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Please upload a file' });
+    }
+
+    // Convert bytes to readable MB/KB string
+    const sizeInMB = (req.file.size / (1024 * 1024)).toFixed(2);
+    const formattedSize = sizeInMB > 0.1 ? `${sizeInMB} MB` : `${(req.file.size / 1024).toFixed(1)} KB`;
+
+    const doc = await Document.create({
+      name: req.body.name || req.file.originalname,
+      filePath: req.file.path,
+      size: formattedSize,
+      owner: req.user?.name || 'You',
+      type: req.file.mimetype,
+      userId: req.user.id,
+      folderId: req.body.folderId || null
+    });
+
+    if (req.body.folderId) {
+      await Folder.findByIdAndUpdate(req.body.folderId, { $inc: { filesCount: 1 } });
+    }
+
+    res.status(201).json({
+      id: doc._id,
+      name: doc.name,
+      size: doc.size,
+      modified: doc.updatedAt ? doc.updatedAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      owner: doc.owner,
+      type: doc.type
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
