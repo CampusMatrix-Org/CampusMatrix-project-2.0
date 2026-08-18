@@ -59,7 +59,7 @@ export const updateMyPreferences = async (req, res) => {
 
     await user.save();
 
-    es.status(200).json({
+    res.status(200).json({
       theme: user.preferences.theme,
       language: user.preferences.language,
       emailNotifications: user.preferences.emailNotifications,
