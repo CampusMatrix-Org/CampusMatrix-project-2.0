@@ -69,7 +69,14 @@ export const getDocuments = async (req, res) => {
   }
 };
 
-// uplaod Documents 
+export const deleteDocument = async (req, res) => {
+  try {
+    await Document.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    res.status(200).json({ success: true, message: 'Document deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export const uploadDocument = async (req, res) => {
   try {
@@ -77,11 +84,9 @@ export const uploadDocument = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please upload a file' });
     }
 
-    // Convert bytes to readable MB/KB string
     const sizeInMB = (req.file.size / (1024 * 1024)).toFixed(2);
     const formattedSize = sizeInMB > 0.1 ? `${sizeInMB} MB` : `${(req.file.size / 1024).toFixed(1)} KB`;
 
-    // File type enum mapping (Fix for validation error)
     let docType = 'pdf';
     const ext = req.file.originalname.split('.').pop().toLowerCase();
     if (['jpg', 'jpeg', 'png'].includes(ext)) {
@@ -94,9 +99,10 @@ export const uploadDocument = async (req, res) => {
 
     const doc = await Document.create({
       name: req.body.name || req.file.originalname,
-      fileUrl: req.file.path, 
+      fileUrl: req.file.path,
+      size: formattedSize,
       owner: req.user?.name || 'You',
-      type: docType,          
+      type: docType,
       userId: req.user.id,
       folderId: req.body.folderId || null
     });
