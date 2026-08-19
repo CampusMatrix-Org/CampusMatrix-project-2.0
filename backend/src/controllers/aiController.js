@@ -1,5 +1,6 @@
 import axios from "axios";
 import Flashcard from "../models/Flashcard.js";
+import ChatSession from "../models/ChatSession.js";
 
 /**
  * @desc    Generate flashcards using Groq AI
@@ -181,6 +182,88 @@ export const generateStudyPlan = async (req, res) => {
     res.status(200).json(formattedTasks);
   } catch (error) {
     console.error("Groq API Error Details (Study Plan):", error.response?.data || error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: error.response?.data?.error?.message || error.message 
+    });
+  }
+};
+
+/**
+ * @desc    Send a message to AI / Summarize / Quiz using Groq AI
+ * @route   POST /api/v1/ai/chat
+ */
+export const handleAIChat = async (req, res) => {
+  try {
+    const { sessionId, messages, intent } = req.body;
+
+    if (!messages || messages.length === 0) {
+      return res.status(400).json({ success: false, message: "Messages are required." });
+    }
+
+    let session;
+    if (sessionId) {
+      session = await ChatSession.findOne({ _id: sessionId, user: req.user._id });
+    }
+
+    if (!session) {
+      session = new ChatSession({
+        user: req.user._id,
+        title: messages[0].content.substring(0, 30) + "...",
+        messages: []
+      });
+    }
+
+    const latestUserMsg = messages[messages.length - 1];
+    session.messages.push(latestUserMsg);
+
+    // Prepare system instruction based on OpenAPI intent
+    let systemInstruction = "You are an intelligent campus academic assistant.";
+    if (intent === "summary") {
+      systemInstruction = "You are an academic summarizer. Provide concise, clear summaries with bullet points.";
+    } else if (intent === "quiz") {
+      systemInstruction = "You are an exam tutor. Generate multiple choice or short questions to test understanding.";
+    }
+
+    // Call Groq API
+    const apiKey = process.env.GROQ_API_KEY;
+    const modelUrl = "https://api.groq.com/openai/v1/chat/completions";
+
+    const aiMessages = [
+      { role: "system", content: systemInstruction },
+      ...messages.map(m => ({ role: m.role, content: m.content }))
+    ];
+
+    const response = await axios.post(
+      modelUrl,
+      {
+        model: "openai/gpt-oss-20b",
+        messages: aiMessages,
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const replyContent = response.data.choices[0].message.content;
+    const assistantMsg = {
+      role: "assistant",
+      content: replyContent
+    };
+
+    session.messages.push(assistantMsg);
+    await session.save();
+
+    res.status(200).json({
+      sessionId: session._id,
+      reply: assistantMsg
+    });
+  } catch (error) {
+    console.error("Groq AI Chat Error:", error.response?.data || error.message);
     res.status(500).json({ 
       success: false, 
       message: error.response?.data?.error?.message || error.message 
