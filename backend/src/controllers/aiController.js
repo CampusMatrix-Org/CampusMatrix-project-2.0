@@ -340,3 +340,20 @@ export const getChatSessionById = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Delete a chat session
+ * @route   DELETE /api/v1/ai/sessions/:id
+ */
+export const deleteChatSession = async (req, res) => {
+  try {
+    const session = await ChatSession.findOneAndDelete({ _id: req.params.id, user: req.user._id });
+    if (!session) {
+      return res.status(404).json({ success: false, message: "Session not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Session deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
