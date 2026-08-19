@@ -270,3 +270,26 @@ export const handleAIChat = async (req, res) => {
     });
   }
 };
+
+/**
+ * @desc    Get all chat sessions for user
+ * @route   GET /api/v1/ai/sessions
+ */
+export const getChatSessions = async (req, res) => {
+  try {
+    const sessions = await ChatSession.find({ user: req.user._id })
+      .select("title createdAt updatedAt")
+      .sort({ updatedAt: -1 });
+
+    const formatted = sessions.map(s => ({
+      id: s._id,
+      title: s.title,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
