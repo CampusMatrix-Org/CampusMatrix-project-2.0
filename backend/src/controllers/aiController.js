@@ -293,3 +293,27 @@ export const getChatSessions = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Create new chat session manually
+ * @route   POST /api/v1/ai/sessions
+ */
+export const createChatSession = async (req, res) => {
+  try {
+    const { title } = req.body;
+    const session = await ChatSession.create({
+      user: req.user._id,
+      title: title || "New Conversation",
+      messages: []
+    });
+
+    res.status(201).json({
+      id: session._id,
+      title: session.title,
+      createdAt: session.createdAt,
+      updatedAt: session.updatedAt
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
