@@ -283,6 +283,73 @@ components:
         pushNotifications:
           type: boolean
 
+    AIChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, assistant, system]
+        content:
+          type: string
+
+    AIChatRequest:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+          description: Optional. The ID of an existing chat session to append to. If not provided, a new session is created.
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/AIChatMessage'
+        contextFiles:
+          type: array
+          items:
+            type: integer
+          description: Optional list of document IDs for context (e.g. summarization/quiz)
+        intent:
+          type: string
+          enum: [general, summary, quiz]
+          description: Optional hint for the backend to steer the AI model
+
+    AIChatResponse:
+      type: object
+      properties:
+        sessionId:
+          type: integer
+          description: The ID of the session the message belongs to.
+        reply:
+          $ref: '#/components/schemas/AIChatMessage'
+
+    ChatSession:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+
+    ChatSessionDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/AIChatMessage'
+
 paths:
   /auth/login:
     post:
@@ -380,6 +447,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AnalyticsProfile'
+
+  /ai/chat:
+    post:
+      tags: [AI]
+      summary: Send a message to the AI Assistant
+      description: Handles general chat, document summarization, and quiz generation through conversational context.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIChatRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIChatResponse'
+
+  /ai/sessions:
+    get:
+      tags: [AI]
+      summary: Get all chat sessions for the user
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSession'
+    post:
+      tags: [AI]
+      summary: Create a new chat session manually
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: { type: string }
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+
+  /ai/sessions/{id}:
+    get:
+      tags: [AI]
+      summary: Get details and messages for a specific chat session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionDetails'
+    delete:
+      tags: [AI]
+      summary: Delete a chat session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
 
   /ai/flashcards/generate:
     post:
