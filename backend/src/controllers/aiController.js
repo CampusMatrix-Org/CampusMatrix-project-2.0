@@ -317,3 +317,26 @@ export const createChatSession = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+/**
+ * @desc    Get chat session details & messages
+ * @route   GET /api/v1/ai/sessions/:id
+ */
+export const getChatSessionById = async (req, res) => {
+  try {
+    const session = await ChatSession.findOne({ _id: req.params.id, user: req.user._id });
+    if (!session) {
+      return res.status(404).json({ success: false, message: "Session not found" });
+    }
+
+    res.status(200).json({
+      id: session._id,
+      title: session.title,
+      createdAt: session.createdAt,
+      updatedAt: session.updatedAt,
+      messages: session.messages
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
