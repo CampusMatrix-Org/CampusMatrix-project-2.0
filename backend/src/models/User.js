@@ -7,7 +7,9 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true }, // Will be hashed later
   role: { type: String, enum: ['Student', 'Admin'], default: 'Student' },
   degree: { type: String },
-  status: { type: String, enum: ['Active', 'Suspended'], default: 'Active' },
+  studentId: { type: String },
+  bio: { type: String, default: '' },
+  status: { type: String, enum: ['Active', 'Suspended', 'Inactive'], default: 'Active' },
 
   // --- Password Reset ---
   resetPasswordToken: { type: String },
