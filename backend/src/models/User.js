@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   studentId: { type: String },
   bio: { type: String, default: '' },
   status: { type: String, enum: ['Active', 'Suspended', 'Inactive'], default: 'Active' },
+  lastLogin: { type: Date },
 
   // --- Password Reset ---
   resetPasswordToken: { type: String },
