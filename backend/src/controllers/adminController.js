@@ -66,17 +66,33 @@ export const getAdminDashboard = async (req, res) => {
   }
 };
 
-// GET /api/v1/admin/students
+// GET /api/v1/admin/students (with optional ?search=&status=)
 export const getStudents = async (req, res) => {
   try {
-    const students = await User.find({ role: 'Student' })
+    const { search, status } = req.query;
+
+    const query = { role: 'Student' };
+
+    if (status) {
+      query.status = status;
+    }
+
+    if (search) {
+      query.$or = [
+        { fullName: { $regex: search.trim(), $options: 'i' } },
+        { email: { $regex: search.trim(), $options: 'i' } },
+        { studentId: { $regex: search.trim(), $options: 'i' } }
+      ];
+    }
+
+    const students = await User.find(query)
       .sort({ createdAt: -1 })
       .select('-password');
 
     const formatted = students.map((s) => {
       const parts = (s.fullName || '').trim().split(' ');
       const initials = parts.map((p) => p[0]).join('').toUpperCase().slice(0, 2) || 'ST';
-      const status = s.status === 'Suspended' ? 'Inactive' : (s.status || 'Active');
+      const userStatus = s.status === 'Suspended' ? 'Inactive' : (s.status || 'Active');
 
       return {
         id: s._id,
@@ -84,8 +100,9 @@ export const getStudents = async (req, res) => {
         email: s.email,
         studentId: s.studentId || `STU-${s._id.toString().slice(-4).toUpperCase()}`,
         joinDate: s.createdAt ? s.createdAt.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-        status,
-        initials
+        status: userStatus,
+        initials,
+        lastLogin: s.lastLogin ? s.lastLogin.toISOString() : null
       };
     });
 
