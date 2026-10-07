@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import crypto from 'crypto';
+import { sendEmail, getPasswordResetTemplate } from '../utils/sendEmail.js';
 
 // Register User
 
@@ -105,6 +106,10 @@ export const loginUser = async (req, res) => {
       { expiresIn }
     );
 
+    // Track user's last login timestamp
+    user.lastLogin = new Date();
+    await user.save();
+
     res.status(200).json({
       success: true,
       token,
@@ -191,17 +196,31 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
+    // Construct frontend reset password URL
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+    const resetUrl = `${clientUrl}/reset-password?token=${resetToken}`;
+
+    // Send email using branded HTML template
+    const html = getPasswordResetTemplate({ name: user.fullName, resetUrl });
+    await sendEmail({
+      to: user.email,
+      subject: 'Reset Your CampusMatrix Password',
+      html,
+      text: `Reset your CampusMatrix password using this link: ${resetUrl} (Valid for 10 minutes)`
+    });
+
     res.status(200).json({
       success: true,
-      message: 'Password reset token generated successfully',
-      resetToken // only for testing in Postman
+      message: 'Password reset link sent to your email',
+      // Include token in non-production environments to facilitate automated testing
+      ...(process.env.NODE_ENV !== 'production' && { devResetToken: resetToken })
     });
   } catch (error) {
     console.error('FORGOT PASSWORD ERROR:', error);
 
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: error.message || 'Server error'
     });
   }
 };
@@ -249,6 +268,48 @@ export const resetPassword = async (req, res) => {
     });
   } catch (error) {
     console.error('RESET PASSWORD ERROR:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Change Password for authenticated user (FR.03 Manage Account)
+export const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect'
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    console.error('CHANGE PASSWORD ERROR:', error);
 
     res.status(500).json({
       success: false,
