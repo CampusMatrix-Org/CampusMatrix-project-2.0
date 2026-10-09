@@ -1,112 +1,100 @@
 import bcrypt from 'bcryptjs';
-import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Task from '../models/Task.js';
 import Document from '../models/Document.js';
 import SystemLog from '../models/SystemLog.js';
 import SystemSetting from '../models/SystemSetting.js';
 
+const SAFE_USER = '-password -resetPasswordToken -resetPasswordExpire';
+const MODERATION = ['pending', 'approved', 'rejected', 'flagged'];
+
+const handleError = (res, error) => {
+  if (error.name === 'ValidationError' || error.name === 'CastError') {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+  if (error.code === 11000) {
+    return res.status(409).json({ success: false, message: 'Email or student ID already exists' });
+  }
+  console.error(error);
+  return res.status(500).json({ success: false, message: 'Server error' });
+};
+
+const pickFields = (body, allowed) =>
+  Object.fromEntries(Object.entries(body).filter(([key]) => allowed.includes(key)));
+
+const escapeRegex = (text) => String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const getPaging = (query) => {
+  const page = Math.max(parseInt(query.page, 10) || 1, 1);
+  const limit = Math.min(Math.max(parseInt(query.limit, 10) || 10, 1), 100);
+  return { page, limit, skip: (page - 1) * limit };
+};
+
+const getSettings = async () => (await SystemSetting.findOne()) || SystemSetting.create({});
+
+// ---------- Dashboard ----------
 export const getAdminDashboardSummary = async (req, res) => {
   try {
-    const totalStudents = await User.countDocuments({ role: 'Student' });
-    const activeTasks = await Task.countDocuments({
-      status: { $in: ['pending', 'in-progress'] }
-    });
-    const resourceUploads = await Document.countDocuments();
-
-    const systemAlerts = await SystemLog.countDocuments({
-      type: { $in: ['warning', 'error'] }
-    });
-
-    const recentLogs = await SystemLog.find()
-      .sort({ createdAt: -1 })
-      .limit(5)
-      .populate('createdBy', 'fullName email');
+    const [totalStudents, activeUsers, activeTasks, resourceUploads, systemAlerts, recentLogs, settings] =
+      await Promise.all([
+        User.countDocuments({ role: 'Student' }),
+        User.countDocuments({ role: 'Student', status: 'Active' }),
+        Task.countDocuments({ status: { $in: ['to-do', 'in-progress'] } }),
+        Document.countDocuments(),
+        SystemLog.countDocuments({ type: { $in: ['warning', 'error'] } }),
+        SystemLog.find().sort({ createdAt: -1 }).limit(5).populate('createdBy', 'fullName email'),
+        getSettings()
+      ]);
 
     res.status(200).json({
       success: true,
       data: {
         totalStudents,
+        activeUsers,
         activeTasks,
         resourceUploads,
         systemAlerts,
+        apiUsage: { limit: settings.dailyApiLimit, used: settings.tokensUsed },
         recentLogs
       }
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
-export const getSystemSettings = async (req, res) => {
-  try {
-    let settings = await SystemSetting.findOne();
-
-    if (!settings) {
-      settings = await SystemSetting.create({});
-    }
-
-    res.status(200).json({
-      success: true,
-      data: settings
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
+// ---------- Students ----------
 export const getStudents = async (req, res) => {
   try {
-    const { search, status, sort = 'newest', page = 1, limit = 10 } = req.query;
+    const { search, status, sort = 'newest' } = req.query;
+    const { page, limit, skip } = getPaging(req.query);
 
     const filter = { role: 'Student' };
-
-    if (status && status !== 'All') {
-      filter.status = status;
-    }
-
+    if (status && status !== 'All') filter.status = status;
     if (search) {
-      filter.$or = [
-        { fullName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { studentId: { $regex: search, $options: 'i' } }
-      ];
+      const rx = { $regex: escapeRegex(search), $options: 'i' };
+      filter.$or = [{ fullName: rx }, { email: rx }, { studentId: rx }];
     }
 
     let sortOption = { createdAt: -1 };
-
     if (sort === 'oldest') sortOption = { createdAt: 1 };
     if (sort === 'byId') sortOption = { studentId: 1 };
 
-    const skip = (Number(page) - 1) * Number(limit);
-
-    const students = await User.find(filter)
-      .select('-password -resetPasswordToken -resetPasswordExpire')
-      .sort(sortOption)
-      .skip(skip)
-      .limit(Number(limit));
-
-    const total = await User.countDocuments(filter);
+    const [students, total] = await Promise.all([
+      User.find(filter).select(SAFE_USER).sort(sortOption).skip(skip).limit(limit),
+      User.countDocuments(filter)
+    ]);
 
     res.status(200).json({
       success: true,
       count: students.length,
       total,
-      page: Number(page),
-      pages: Math.ceil(total / Number(limit)),
+      page,
+      pages: Math.ceil(total / limit),
       data: students
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
@@ -120,26 +108,26 @@ export const addStudent = async (req, res) => {
         message: 'Full name, email and password are required'
       });
     }
+    if (String(password).length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
+    }
 
-    const existingUser = await User.findOne({
-      $or: [{ email }, { studentId }]
-    });
+    const conditions = [{ email: String(email).toLowerCase() }];
+    if (studentId) conditions.push({ studentId });
 
-    if (existingUser) {
-      return res.status(400).json({
+    if (await User.findOne({ $or: conditions })) {
+      return res.status(409).json({
         success: false,
         message: 'Student with this email or student ID already exists'
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const student = await User.create({
       fullName,
       email,
-      password: hashedPassword,
+      password: await bcrypt.hash(password, 10),
       degree,
-      studentId,
+      studentId: studentId || undefined,
       role: 'Student',
       status: 'Active'
     });
@@ -147,234 +135,141 @@ export const addStudent = async (req, res) => {
     const safeStudent = student.toObject();
     delete safeStudent.password;
 
-    res.status(201).json({
-      success: true,
-      message: 'Student added successfully',
-      data: safeStudent
-    });
+    res.status(201).json({ success: true, message: 'Student added successfully', data: safeStudent });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const updateStudent = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid student ID'
-      });
-    }
-
-    const allowedUpdates = {
-      fullName: req.body.fullName,
-      email: req.body.email,
-      degree: req.body.degree,
-      studentId: req.body.studentId,
-      status: req.body.status
-    };
-
-    Object.keys(allowedUpdates).forEach(
-      key => allowedUpdates[key] === undefined && delete allowedUpdates[key]
-    );
+    const updates = pickFields(req.body, ['fullName', 'email', 'degree', 'studentId', 'status']);
 
     const student = await User.findOneAndUpdate(
-      { _id: id, role: 'Student' },
-      allowedUpdates,
+      { _id: req.params.id, role: 'Student' },
+      updates,
       { new: true, runValidators: true }
-    ).select('-password -resetPasswordToken -resetPasswordExpire');
+    ).select(SAFE_USER);
 
     if (!student) {
-      return res.status(404).json({
-        success: false,
-        message: 'Student not found'
-      });
+      return res.status(404).json({ success: false, message: 'Student not found' });
     }
 
-    res.status(200).json({
-      success: true,
-      message: 'Student updated successfully',
-      data: student
-    });
+    res.status(200).json({ success: true, message: 'Student updated successfully', data: student });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const updateStudentStatus = async (req, res) => {
   try {
-    const { id } = req.params;
     const { status } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid student ID'
-      });
-    }
-
     if (!['Active', 'Suspended'].includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Status must be Active or Suspended'
-      });
+      return res.status(400).json({ success: false, message: 'Status must be Active or Suspended' });
     }
 
     const student = await User.findOneAndUpdate(
-      { _id: id, role: 'Student' },
+      { _id: req.params.id, role: 'Student' },
       { status },
       { new: true, runValidators: true }
-    ).select('-password -resetPasswordToken -resetPasswordExpire');
+    ).select(SAFE_USER);
 
     if (!student) {
-      return res.status(404).json({
-        success: false,
-        message: 'Student not found'
-      });
+      return res.status(404).json({ success: false, message: 'Student not found' });
     }
 
-    res.status(200).json({
-      success: true,
-      message: `Student status updated to ${status}`,
-      data: student
-    });
+    res.status(200).json({ success: true, message: `Student status updated to ${status}`, data: student });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
+export const deleteStudent = async (req, res) => {
+  try {
+    
+    const student = await User.findOneAndDelete({ _id: req.params.id, role: 'Student' });
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student not found' });
+    }
+    res.status(200).json({ success: true, message: 'Student deleted successfully' });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+// ---------- Resources ----------
 export const getResources = async (req, res) => {
   try {
-    const {
-      search,
-      status,
-      fileType,
-      page = 1,
-      limit = 10
-    } = req.query;
+    const { search, status, fileType } = req.query;
+    const { page, limit, skip } = getPaging(req.query);
 
     const filter = {};
-
-    if (status && status !== 'all') {
-      filter.moderationStatus = status;
-    }
-
-    if (fileType && fileType !== 'all') {
-      filter.fileType = fileType;
-    }
-
+    if (status && status !== 'all') filter.moderationStatus = String(status).toLowerCase();
+    if (fileType && fileType !== 'all') filter.fileType = fileType;
     if (search) {
-      filter.$or = [
-        { fileName: { $regex: search, $options: 'i' } },
-        { folder: { $regex: search, $options: 'i' } }
-      ];
+      const rx = { $regex: escapeRegex(search), $options: 'i' };
+      filter.$or = [{ fileName: rx }, { folder: rx }];
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
-
-    const resources = await Document.find(filter)
-      .populate('userId', 'fullName email')
-      .populate('reviewedBy', 'fullName email')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(Number(limit));
-
-    const total = await Document.countDocuments(filter);
+    const [resources, total] = await Promise.all([
+      Document.find(filter)
+        .populate('userId', 'fullName email')
+        .populate('reviewedBy', 'fullName email')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Document.countDocuments(filter)
+    ]);
 
     res.status(200).json({
       success: true,
       count: resources.length,
       total,
-      page: Number(page),
-      pages: Math.ceil(total / Number(limit)),
+      page,
+      pages: Math.ceil(total / limit),
       data: resources
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const getResourceById = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid resource ID'
-      });
-    }
-
-    const resource = await Document.findById(id)
+    const resource = await Document.findById(req.params.id)
       .populate('userId', 'fullName email')
       .populate('reviewedBy', 'fullName email');
 
     if (!resource) {
-      return res.status(404).json({
-        success: false,
-        message: 'Resource not found'
-      });
+      return res.status(404).json({ success: false, message: 'Resource not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      data: resource
-    });
+    res.status(200).json({ success: true, data: resource });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
+
 export const updateResourceModerationStatus = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { moderationStatus, reviewedBy, rejectionReason } = req.body;
+    const raw = req.body.moderationStatus ?? req.body.status;
+    const moderationStatus = String(raw || '').toLowerCase();
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!MODERATION.includes(moderationStatus)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid resource ID'
-      });
-    }
-
-    if (!['pending', 'approved', 'rejected', 'flagged'].includes(moderationStatus)) {
-      return res.status(400).json({
-        success: false,
-        message: 'moderationStatus must be pending, approved, rejected or flagged'
-      });
-    }
-
-    if (reviewedBy && !mongoose.Types.ObjectId.isValid(reviewedBy)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid reviewer ID'
+        message: 'status must be pending, approved, rejected or flagged'
       });
     }
 
     const resource = await Document.findByIdAndUpdate(
-      id,
+      req.params.id,
       {
         moderationStatus,
-        reviewedBy: reviewedBy || null,
+        reviewedBy: req.user.id,            
         reviewedAt: new Date(),
-        rejectionReason: rejectionReason || ''
+        rejectionReason: req.body.rejectionReason || ''
       },
       { new: true, runValidators: true }
     )
@@ -382,305 +277,155 @@ export const updateResourceModerationStatus = async (req, res) => {
       .populate('reviewedBy', 'fullName email');
 
     if (!resource) {
-      return res.status(404).json({
-        success: false,
-        message: 'Resource not found'
-      });
+      return res.status(404).json({ success: false, message: 'Resource not found' });
     }
 
-    res.status(200).json({
-      success: true,
-      message: `Resource marked as ${moderationStatus}`,
-      data: resource
-    });
+    res.status(200).json({ success: true, message: `Resource marked as ${moderationStatus}`, data: resource });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const deleteResource = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid resource ID'
-      });
-    }
-
-    const resource = await Document.findByIdAndDelete(id);
-
+    const resource = await Document.findByIdAndDelete(req.params.id);
     if (!resource) {
-      return res.status(404).json({
-        success: false,
-        message: 'Resource not found'
-      });
+      return res.status(404).json({ success: false, message: 'Resource not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Resource deleted successfully'
-    });
+    res.status(200).json({ success: true, message: 'Resource deleted successfully' });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
+};
+
+// ---------- System settings ----------
+export const getSystemSettings = async (req, res) => {
+  try {
+    res.status(200).json({ success: true, data: await getSettings() });
+  } catch (error) {
+    handleError(res, error);
+  }
+};
+
+const saveSettings = async (updates) => {
+  const settings = await getSettings();
+  return SystemSetting.findByIdAndUpdate(settings._id, updates, { new: true, runValidators: true });
 };
 
 export const updateSystemSettings = async (req, res) => {
   try {
-    let settings = await SystemSetting.findOne();
-
-    if (!settings) {
-      settings = await SystemSetting.create({});
-    }
-
-    const allowedUpdates = {
-      maintenanceMode: req.body.maintenanceMode,
-      twoFactorAuth: req.body.twoFactorAuth,
-      dailyApiLimit: req.body.dailyApiLimit,
-      tokensUsed: req.body.tokensUsed,
-      geminiApiKeyMasked: req.body.geminiApiKeyMasked
-    };
-
-    Object.keys(allowedUpdates).forEach(
-      key => allowedUpdates[key] === undefined && delete allowedUpdates[key]
-    );
-
-    const updatedSettings = await SystemSetting.findByIdAndUpdate(
-      settings._id,
-      allowedUpdates,
-      { new: true, runValidators: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: 'System settings updated successfully',
-      data: updatedSettings
-    });
+    const updates = pickFields(req.body, [
+      'maintenanceMode', 'twoFactorAuth', 'dailyApiLimit', 'tokensUsed', 'geminiApiKeyMasked'
+    ]);
+    const data = await saveSettings(updates);
+    res.status(200).json({ success: true, message: 'System settings updated successfully', data });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const updateMaintenanceMode = async (req, res) => {
   try {
     const { maintenanceMode } = req.body;
-
     if (typeof maintenanceMode !== 'boolean') {
-      return res.status(400).json({
-        success: false,
-        message: 'maintenanceMode must be true or false'
-      });
+      return res.status(400).json({ success: false, message: 'maintenanceMode must be true or false' });
     }
-
-    let settings = await SystemSetting.findOne();
-
-    if (!settings) {
-      settings = await SystemSetting.create({});
-    }
-
-    settings.maintenanceMode = maintenanceMode;
-    await settings.save();
-
+    const data = await saveSettings({ maintenanceMode });
     res.status(200).json({
       success: true,
       message: `Maintenance mode ${maintenanceMode ? 'enabled' : 'disabled'}`,
-      data: settings
+      data
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const updateTwoFactorAuth = async (req, res) => {
   try {
     const { twoFactorAuth } = req.body;
-
     if (typeof twoFactorAuth !== 'boolean') {
-      return res.status(400).json({
-        success: false,
-        message: 'twoFactorAuth must be true or false'
-      });
+      return res.status(400).json({ success: false, message: 'twoFactorAuth must be true or false' });
     }
-
-    let settings = await SystemSetting.findOne();
-
-    if (!settings) {
-      settings = await SystemSetting.create({});
-    }
-
-    settings.twoFactorAuth = twoFactorAuth;
-    await settings.save();
-
+    const data = await saveSettings({ twoFactorAuth });
     res.status(200).json({
       success: true,
       message: `Two-factor authentication ${twoFactorAuth ? 'enabled' : 'disabled'}`,
-      data: settings
+      data
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const updateApiUsageSettings = async (req, res) => {
   try {
     const { dailyApiLimit, tokensUsed, geminiApiKeyMasked } = req.body;
-
     const updates = {};
 
-    if (dailyApiLimit !== undefined) {
-      if (typeof dailyApiLimit !== 'number' || dailyApiLimit < 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'dailyApiLimit must be a positive number'
-        });
+    for (const [key, value] of Object.entries({ dailyApiLimit, tokensUsed })) {
+      if (value !== undefined) {
+        if (typeof value !== 'number' || value < 0) {
+          return res.status(400).json({ success: false, message: `${key} must be a non-negative number` });
+        }
+        updates[key] = value;
       }
-      updates.dailyApiLimit = dailyApiLimit;
     }
+    if (geminiApiKeyMasked !== undefined) updates.geminiApiKeyMasked = geminiApiKeyMasked;
 
-    if (tokensUsed !== undefined) {
-      if (typeof tokensUsed !== 'number' || tokensUsed < 0) {
-        return res.status(400).json({
-          success: false,
-          message: 'tokensUsed must be a positive number'
-        });
-      }
-      updates.tokensUsed = tokensUsed;
-    }
-
-    if (geminiApiKeyMasked !== undefined) {
-      updates.geminiApiKeyMasked = geminiApiKeyMasked;
-    }
-
-    let settings = await SystemSetting.findOne();
-
-    if (!settings) {
-      settings = await SystemSetting.create({});
-    }
-
-    const updatedSettings = await SystemSetting.findByIdAndUpdate(
-      settings._id,
-      updates,
-      { new: true, runValidators: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: 'API usage settings updated successfully',
-      data: updatedSettings
-    });
+    const data = await saveSettings(updates);
+    res.status(200).json({ success: true, message: 'API usage settings updated successfully', data });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
+};
+
+// ---------- Admin profile (hamadama token eke admin ge ekama) ----------
+const ownProfileGuard = (req, res) => {
+  if (req.params.id && req.params.id !== req.user.id) {
+    res.status(403).json({ success: false, message: 'You can only access your own profile' });
+    return false;
+  }
+  return true;
 };
 
 export const getAdminProfile = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid admin ID'
-      });
-    }
-
-    const admin = await User.findOne({ _id: id, role: 'Admin' })
-      .select('-password -resetPasswordToken -resetPasswordExpire');
-
+    if (!ownProfileGuard(req, res)) return;
+    const admin = await User.findOne({ _id: req.user.id, role: 'Admin' }).select(SAFE_USER);
     if (!admin) {
-      return res.status(404).json({
-        success: false,
-        message: 'Admin profile not found'
-      });
+      return res.status(404).json({ success: false, message: 'Admin profile not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      data: admin
-    });
+    res.status(200).json({ success: true, data: admin });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const updateAdminProfile = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { fullName, email, degree } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid admin ID'
-      });
-    }
-
-    const updates = {};
-
-    if (fullName !== undefined) updates.fullName = fullName;
-    if (email !== undefined) updates.email = email;
-    if (degree !== undefined) updates.degree = degree;
+    if (!ownProfileGuard(req, res)) return;
+    const updates = pickFields(req.body, ['fullName', 'email', 'degree']);
 
     const admin = await User.findOneAndUpdate(
-      { _id: id, role: 'Admin' },
+      { _id: req.user.id, role: 'Admin' },
       updates,
       { new: true, runValidators: true }
-    ).select('-password -resetPasswordToken -resetPasswordExpire');
+    ).select(SAFE_USER);
 
     if (!admin) {
-      return res.status(404).json({
-        success: false,
-        message: 'Admin profile not found'
-      });
+      return res.status(404).json({ success: false, message: 'Admin profile not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Admin profile updated successfully',
-      data: admin
-    });
+    res.status(200).json({ success: true, message: 'Admin profile updated successfully', data: admin });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
 
 export const changeAdminPassword = async (req, res) => {
   try {
-    const { id } = req.params;
+    if (!ownProfileGuard(req, res)) return;
     const { currentPassword, newPassword } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid admin ID'
-      });
-    }
 
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
@@ -688,43 +433,24 @@ export const changeAdminPassword = async (req, res) => {
         message: 'Current password and new password are required'
       });
     }
-
-    if (newPassword.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: 'New password must be at least 6 characters'
-      });
+    if (String(newPassword).length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters' });
     }
 
-    const admin = await User.findOne({ _id: id, role: 'Admin' });
-
+    const admin = await User.findOne({ _id: req.user.id, role: 'Admin' });
     if (!admin) {
-      return res.status(404).json({
-        success: false,
-        message: 'Admin profile not found'
-      });
+      return res.status(404).json({ success: false, message: 'Admin profile not found' });
     }
 
-    const isPasswordMatch = await bcrypt.compare(currentPassword, admin.password);
-
-    if (!isPasswordMatch) {
-      return res.status(400).json({
-        success: false,
-        message: 'Current password is incorrect'
-      });
+    if (!(await bcrypt.compare(currentPassword, admin.password))) {
+      return res.status(400).json({ success: false, message: 'Current password is incorrect' });
     }
 
     admin.password = await bcrypt.hash(newPassword, 10);
     await admin.save();
 
-    res.status(200).json({
-      success: true,
-      message: 'Password changed successfully'
-    });
+    res.status(200).json({ success: true, message: 'Password changed successfully' });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    handleError(res, error);
   }
 };
