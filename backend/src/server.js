@@ -10,7 +10,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import examRoutes from './routes/examRoutes.js';
 import calendarRoutes from './routes/calendarRoutes.js';
-import studySessionRoutes from './routes/studySessionRoutes.js';
+import studySessionRoutes, { focusRouter } from './routes/studySessionRoutes.js';
 
 dotenv.config();
 
@@ -29,6 +29,7 @@ app.use('/api/v1/tasks', taskRoutes);
 app.use('/api/v1/exams', examRoutes);
 app.use('/api/v1/calendar', calendarRoutes);
 app.use('/api/v1/study-sessions', studySessionRoutes);
+app.use('/api/v1/focus', focusRouter);
 app.use('/api/v1/admin', adminRoutes);
 
 // Health route
