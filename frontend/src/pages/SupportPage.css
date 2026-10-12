@@ -1,0 +1,434 @@
+/* --- Support Page Layout --- */
+.support-container {
+  min-height: 100vh;
+  width: 100vw;
+  background: #FDF4ED;
+  position: relative;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Concentric Warm Arches Background */
+.support-bg-rings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% -20%,
+    #FFF8F3 0%,
+    #FCEEE4 20%,
+    #F8DFCC 38%,
+    #F2CCB4 54%,
+    #E9B598 70%,
+    #DE9D7D 86%,
+    #D48967 100%
+  );
+  opacity: 0.85;
+}
+
+.support-bg-rings::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-radial-gradient(
+      circle at 50% -10%,
+      transparent 0px,
+      transparent 70px,
+      rgba(240, 160, 120, 0.12) 71px,
+      rgba(240, 160, 120, 0.12) 130px,
+      transparent 131px,
+      transparent 190px,
+      rgba(230, 130, 90, 0.1) 191px,
+      rgba(230, 130, 90, 0.1) 250px
+    );
+  pointer-events: none;
+}
+
+/* --- Top Navigation Header --- */
+.support-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 60px;
+  position: relative;
+  z-index: 10;
+}
+
+.support-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.support-logo-link:hover {
+  transform: scale(1.02);
+}
+
+.support-logo-badge {
+  width: 38px;
+  height: 38px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.support-logo-icon {
+  font-size: 1.25rem;
+}
+
+.support-logo-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  letter-spacing: -0.4px;
+}
+
+.support-pill-badge {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 9px 22px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #FF5722;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 16px rgba(180, 80, 40, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.support-badge-dot {
+  color: #FF5722;
+  font-size: 0.65rem;
+}
+
+.support-nav-spacer {
+  width: 140px; /* Balance logo width */
+}
+
+/* --- Main Content Section --- */
+.support-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 50px 50px;
+  position: relative;
+  z-index: 10;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: 1.58fr 1fr;
+  gap: 28px;
+  width: 100%;
+  max-width: 1260px;
+  align-items: stretch;
+}
+
+/* Card Common */
+.support-card {
+  background: #FFFFFF;
+  border-radius: 28px;
+  padding: 42px 45px;
+  box-shadow: 0 20px 50px rgba(160, 90, 50, 0.07);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.support-section-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #FF5722;
+  letter-spacing: 1.4px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* Left Card: OUR MISSION */
+.support-mission-card {
+  justify-content: space-between;
+}
+
+.support-mission-title {
+  font-size: 2.15rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  line-height: 1.25;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.4px;
+}
+
+.support-mission-desc {
+  font-size: 0.94rem;
+  color: #555555;
+  line-height: 1.65;
+  margin: 0 0 32px 0;
+  font-weight: 450;
+}
+
+.support-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: auto;
+}
+
+.support-feature-box {
+  background: #FFFFFF;
+  border: 1.5px solid #F2EFEB;
+  border-radius: 20px;
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.support-feature-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+  border-color: #FFE0D0;
+}
+
+.feature-icon-wrapper {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #FFF7F2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  margin-bottom: 14px;
+  border: 1px solid #FFEADB;
+}
+
+.feature-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+}
+
+.feature-desc {
+  font-size: 0.8rem;
+  color: #666666;
+  line-height: 1.55;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Right Card: HELP DESK */
+.support-helpdesk-title {
+  font-size: 2.15rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  margin: 0 0 16px 0;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+}
+
+.support-helpdesk-desc {
+  font-size: 0.94rem;
+  color: #555555;
+  line-height: 1.6;
+  margin: 0 0 26px 0;
+}
+
+/* Direct Support Email Box */
+.support-email-box {
+  border: 1.5px solid #FFE4D8;
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.support-email-box:hover {
+  border-color: #FF5722;
+  box-shadow: 0 6px 20px rgba(255, 87, 34, 0.1);
+}
+
+.support-email-icon {
+  width: 44px;
+  height: 44px;
+  background: #FF5722;
+  color: white;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.35);
+}
+
+.support-email-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.support-email-sub {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #888888;
+  letter-spacing: 0.8px;
+}
+
+.support-email-address {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1A1A1A;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.support-email-address:hover {
+  color: #FF5722;
+}
+
+.support-email-reply {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #FF5722;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reply-dot {
+  font-size: 0.65rem;
+}
+
+/* Operating Hours */
+.support-hours-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #F2EFEB;
+}
+
+.hours-text {
+  font-size: 0.8rem;
+  color: #666666;
+  font-weight: 500;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Frequently Searched Guides */
+.support-guides-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.support-guides-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #888888;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.support-guides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.support-guide-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 6px 0;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #2D3436;
+  transition: color 0.2s ease, transform 0.2s ease;
+  font-family: inherit;
+}
+
+.support-guide-row:hover {
+  color: #FF5722;
+  transform: translateX(4px);
+}
+
+.guide-arrow {
+  color: #CBD5E1;
+  font-size: 1.1rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.support-guide-row:hover .guide-arrow {
+  color: #FF5722;
+  transform: translateX(3px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .support-grid {
+    grid-template-columns: 1fr;
+  }
+  .support-navbar {
+    padding: 20px 30px;
+  }
+  .support-main {
+    padding: 10px 20px 40px;
+  }
+  .support-nav-spacer {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .support-features-grid {
+    grid-template-columns: 1fr;
+  }
+  .support-card {
+    padding: 28px 24px;
+    border-radius: 20px;
+  }
+  .support-hours-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .text-right {
+    text-align: left;
+  }
+}

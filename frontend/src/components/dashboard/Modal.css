@@ -1,0 +1,192 @@
+/* Modal Overlay with Blur effect */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px); 
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+/* Modal Card */
+.modal-card {
+  background: white;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 35px 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  position: relative;
+  box-sizing: border-box;
+  animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.modal-card::-webkit-scrollbar-thumb {
+  background-color: #D1D5DB;
+  border-radius: 4px;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #A0A0A0;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #D63031;
+}
+
+.modal-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.6rem;
+  color: #1A1A1A;
+  font-weight: 800;
+}
+
+.modal-header p {
+  margin: 0 0 25px 0;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2D3436;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1.5px solid #EAEAEA;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #FF7043;
+  box-shadow: 0 0 0 3px rgba(255, 112, 67, 0.1);
+}
+
+.btn-primary {
+  background: #FF7043;
+  color: white;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #E64A19;
+  box-shadow: 0 5px 15px rgba(230, 74, 25, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #FFB09C;
+  cursor: not-allowed;
+}
+
+.modal-error {
+  background: #FFEAA7;
+  color: #D63031;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Date Input Calendar Icon Customization & Hover */
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #FFF0EB;
+}
+
+/* Dark Mode Styles */
+body.dark-mode .modal-card {
+  background: #1E1E24;
+  border: 1px solid #33333C;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .modal-header h2 {
+  color: #FFFFFF;
+}
+
+body.dark-mode .modal-header p {
+  color: #9E9EA7;
+}
+
+body.dark-mode .form-group label {
+  color: #E2E8F0;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select {
+  background: #282830;
+  border-color: #3E3E4A;
+  color: #FFFFFF;
+}
+
+body.dark-mode .modal-close {
+  color: #888899;
+}
+
+body.dark-mode .modal-close:hover {
+  color: #FF7043;
+}

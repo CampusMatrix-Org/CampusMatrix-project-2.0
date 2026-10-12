@@ -1,121 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// --- Context Providers ---
+import { TaskProvider } from './context/TaskContext'; 
+import { SettingsProvider } from './context/SettingsContext';
+import { MaintenanceProvider } from './context/MaintenanceContext';
+import { ThemeProvider } from './context/ThemeContext';
+
+// --- Auth Pages ---
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import SupportPage from './pages/SupportPage';
+
+// --- Main App Pages ---
+import DashboardPage from './pages/DashboardPage';
+import TaskManagementPage from './pages/TaskManagementPage'; 
+import CalendarPage from './pages/CalendarPage';
+import StudyToolsPage from './pages/StudyToolsPage';
+import FlashcardsPage from './pages/FlashcardsPage';
+import AIAssistantPage from './pages/AIAssistantPage';
+import SettingsPage from './pages/SettingsPage';
+import ProfilePage from './pages/ProfilePage';
+import ChangePasswordPage from './pages/ChangePasswordPage';
+import NotificationsPage from './pages/NotificationsPage';
+import FocusTimerPage from './pages/FocusTimerPage';
+import PersonalLibraryPage from './pages/PersonalLibraryPage';
+import AcademicAnalyticsPage from './pages/AcademicAnalyticsPage';
+import ExamCountdownPage from './pages/ExamCountdownPage';
+import StudyPlanGeneratorPage from './pages/StudyPlanGeneratorPage';
+
+import ThemeController from './components/ThemeController';
+
+import './App.css';
+import './responsive.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <SettingsProvider>
+      <ThemeProvider> 
+        <MaintenanceProvider> 
+          <Router>
+            <ThemeController />
+            <TaskProvider> 
+              <Routes>
+                {/* Public Auth Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/support" element={<SupportPage />} />
+                
+                {/* Protected Main Routes (Student Dashboard & Tools) */}
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/tasks" element={<TaskManagementPage />} />
+                <Route path="/task-manager" element={<TaskManagementPage />} />
+                <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/study-tools" element={<StudyToolsPage />} />
+                <Route path="/smart-flashcards" element={<FlashcardsPage />}/>
+                <Route path="/focus-timer" element={<FocusTimerPage />} />
+                <Route path="/ai-assistant" element={<AIAssistantPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/change-password" element={<ChangePasswordPage />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
+                <Route path="/personal-library" element={<PersonalLibraryPage />} />
+                <Route path="/academic-analytics" element={<AcademicAnalyticsPage />} />
+                <Route path="/exam-countdown" element={<ExamCountdownPage />} />
+                <Route path="/study-plan-generator" element={<StudyPlanGeneratorPage />} />
+              </Routes>
+            </TaskProvider>
+          </Router>
+        </MaintenanceProvider>
+      </ThemeProvider>
+    </SettingsProvider>
+  );
 }
 
-export default App
+export default App;
