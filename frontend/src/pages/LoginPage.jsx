@@ -101,6 +101,21 @@ function LoginPage() {
           <p className="auth-login-link">Don't have an account? <Link to="/register">Register here</Link></p>
           <p className="auth-forgot-password"><Link to="/forgot-password">Forgot Password</Link></p>
 
+         
+          <div className="auth-portal-divider"></div>
+
+          <button 
+            type="button" 
+            className="auth-portal-switch-btn"
+            onClick={() => navigate('/admin/login')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+            Go to Admin Portal
+          </button>
+
           <div className="auth-portal-footer-links">
             <span>TERMS OF SERVICE</span>
             <span>PRIVACY POLICY</span>
