@@ -10,6 +10,8 @@
     "seed:admin": "node src/scripts/seedAdmin.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.15.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -18,9 +20,13 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.3.2",
+<<<<<<< HEAD
     "nodemailer": "^10.0.16"
+=======
+    "multer": "^2.1.1"
+>>>>>>> feat/api-v2-alignment
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.14"
   }
 }

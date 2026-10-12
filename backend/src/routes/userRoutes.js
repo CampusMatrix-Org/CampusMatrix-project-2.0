@@ -4,7 +4,8 @@ import { getMyPreferences, updateMyPreferences } from '../controllers/userContro
 
 const router = express.Router();
 
-router.get('/me/preferences', protect, getMyPreferences);
-router.put('/me/preferences', protect, updateMyPreferences);
+router.route('/me/preferences')
+  .get(protect, getMyPreferences)
+  .put(protect, updateMyPreferences);
 
 export default router;
