@@ -1,28 +1,60 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import { sanitizeInputs } from './middlewares/validateMiddleware.js';
+import { apiLimiter } from './middlewares/rateLimitMiddleware.js';
+import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Middlewares
-app.use(cors()); // Allow frontend to make requests
-app.use(express.json()); // Allow server to accept JSON data
+// Security HTTP headers
+app.use(helmet());
 
-// A simple test route to ensure the server is working
+// Cross-Origin Resource Sharing
+app.use(cors());
+
+// Body parser
+app.use(express.json({ limit: '10mb' }));
+
+// Input sanitization against NoSQL injection
+app.use(sanitizeInputs);
+
+// General API rate limiter
+app.use('/api/v1', apiLimiter);
+
+// Connect Database
+connectDB();
+
+// Routes
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/admin', adminRoutes);
+
+// Health check endpoint
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'CampusMatrix API is running smoothly!'
+    message: 'CampusMatrix API is running smoothly in production mode!'
   });
 });
 
-// Set the port
+app.get('/', (req, res) => {
+  res.send('CampusMatrix API is running...');
+});
+
+// Centralized 404 & Error Handling Middlewares
+app.use(notFound);
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 8080;
 
-// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
