@@ -42,7 +42,7 @@ function ForgotPasswordPage() {
           {message && <div className="auth-success-message">{message}</div>}
           <form onSubmit={handleSubmit}>
             <div className="auth-input-group" style={{ textAlign: 'left' }}>
-              <label>University Email</label>
+              <label>Email</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <button type="submit" className="auth-btn auth-primary-btn" disabled={loading}>{loading ? "Sending..." : "Reset Password"}</button>

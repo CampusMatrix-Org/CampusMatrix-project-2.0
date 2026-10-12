@@ -40,6 +40,8 @@ import AdminProfilePage from './pages/AdminProfilePage';
 import AdminNotificationsPage from './pages/AdminNotificationsPage';
 
 import ThemeController from './components/ThemeController';
+import AdminLoginPage from './pages/AdminLoginPage';
+import AdminRegisterPage from './pages/AdminRegisterPage';
 
 import './App.css';
 import './responsive.css';
@@ -85,6 +87,9 @@ function App() {
                   <Route path="/admin/profile" element={<AdminProfilePage />} />
                   
                   <Route path="/admin/notifications" element={<AdminNotificationsPage />} />
+
+                  <Route path="/admin/login" element={<AdminLoginPage />} />
+                  <Route path="/admin/register" element={<AdminRegisterPage />} />
 
                 </Routes>
               </TaskProvider>
