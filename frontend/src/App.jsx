@@ -13,6 +13,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import SupportPage from './pages/SupportPage';
 
 // --- Main App Pages ---
 import DashboardPage from './pages/DashboardPage';
@@ -61,6 +62,7 @@ function App() {
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                  <Route path="/support" element={<SupportPage />} />
                   
                   {/* Protected Main Routes (Student Dashboard & Tools) */}
                   <Route path="/dashboard" element={<DashboardPage />} />

@@ -16,7 +16,9 @@ function LandingPage() {
         <div className="landing-logo">
           <span className="icon">🏛️</span> CampusMatrix
         </div>
-        <button className="landing-support-btn">Support</button>
+        <Link to="/support">
+          <button className="landing-support-btn">Support</button>
+        </Link>
       </header>
 
       <main className="landing-main">

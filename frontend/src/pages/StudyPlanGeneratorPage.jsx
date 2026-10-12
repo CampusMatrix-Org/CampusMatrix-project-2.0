@@ -275,14 +275,6 @@ const StudyPlanGeneratorPage = () => {
                   </button>
                 </div>
 
-        
-                <div className="spg-info-card">
-                  <p>Link your calendar to automatically block study times based on your existing schedule.</p>
-                  <button className="spg-link-btn">
-                    Configure Integration <span style={{ fontWeight: 'bold' }}>&gt;</span>
-                  </button>
-                </div>
-
               </div>
             </div>
 

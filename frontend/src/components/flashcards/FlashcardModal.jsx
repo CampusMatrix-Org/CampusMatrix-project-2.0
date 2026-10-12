@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import '../dashboard/Modal.css'; // Reusing existing modal styles
 
 function FlashcardModal({ isOpen, onClose, editData }) {
@@ -38,7 +39,7 @@ function FlashcardModal({ isOpen, onClose, editData }) {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ width: '500px' }}>
         <button className="modal-close" onClick={onClose}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -90,7 +91,8 @@ function FlashcardModal({ isOpen, onClose, editData }) {
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

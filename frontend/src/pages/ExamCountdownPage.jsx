@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ExamCountdownPage.css';
-import { LuCalendar, LuLightbulb, LuUsers, LuTrendingUp, LuPlus, LuX, LuCalendarDays } from "react-icons/lu";
+import { LuCalendar, LuPlus, LuX, LuCalendarDays } from "react-icons/lu";
 
 // Layout Components Import
 import Sidebar from '../components/layout/Sidebar';
@@ -202,13 +202,6 @@ const ExamCountdownPage = () => {
             </div>
 
             <button className="fab-button" onClick={openAddModal}>+</button>
-
-            {/* Bottom Cards */}
-            <div className="ec-bottom-cards">
-              <div className="ec-info-card"><LuLightbulb className="ec-info-icon" size={24} color="#FF7043" /><h3>Study Tip</h3><p>Active recall and spaced repetition are your best friends.</p></div>
-              <div className="ec-info-card"><LuUsers className="ec-info-icon" size={24} color="#5C7CFA" /><h3>Study Groups</h3><p>Join the active study group for your upcoming exams.</p></div>
-              <div className="ec-info-card"><LuTrendingUp className="ec-info-icon" size={24} color="#20C997" /><h3>Overall Progress</h3><div className="ec-progress-bar"><div className="ec-progress-fill" style={{ width: '65%' }}></div></div><p className="ec-progress-text">65% of course materials covered.</p></div>
-            </div>
 
           </div>
         </div>

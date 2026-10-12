@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
@@ -133,7 +134,7 @@ function CalendarWidget() {
         <span className="legend-item"><div className="color-box green"></div> Personal Study</span>
       </div>
 
-      {selectedEvent && (
+      {selectedEvent && createPortal(
         <div className="modal-overlay" onClick={() => setSelectedEvent(null)}>
           <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ width: '380px' }}>
             <button className="modal-close" onClick={() => setSelectedEvent(null)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
@@ -164,7 +165,8 @@ function CalendarWidget() {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
